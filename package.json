@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "audit:slop": "node ../anti-ai-tools/avoid-ai-design/scripts/detect.mjs src/",
-    "lint:ui": "python ../anti-ai-tools/anti-ai-slop-ui/scripts/ui_lint.py src/"
+    "lint:ui": "python ../anti-ai-tools/anti-ai-slop-ui/scripts/ui_lint.py src/",
+    "validate:trees": "node scripts/validate_trees.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.105.6",

@@ -234,12 +234,12 @@ export const CameraController: React.FC = () => {
           Math.PI - 0.08
         )
       } else if (viewMode === 'skyline') {
-        // Free orbit around the towers above ground
+        // Free orbit around the forest glade with elevated perspective
         current.current.theta += velocity.current.theta
         current.current.phi = THREE.MathUtils.clamp(
           current.current.phi + velocity.current.phi,
-          0.15,
-          Math.PI / 2 - 0.05
+          0.28,
+          Math.PI / 2 - 0.25
         )
       } else {
         dragOffset.current.theta += velocity.current.theta
@@ -413,14 +413,14 @@ export const CameraController: React.FC = () => {
 
     if (viewMode === 'skyline') {
       const target = {
-        radius: 17.5,
-        phi: 56 * DEG2RAD,
-        theta: 40 * DEG2RAD,
+        radius: 21.0,
+        phi: 50 * DEG2RAD,
+        theta: 38 * DEG2RAD,
         targetX: 0,
-        targetY: 2.2,
+        targetY: 2.5,
         targetZ: 0
       }
-      targetRadius.current = 17.5
+      targetRadius.current = 21.0
       isTargetingCampus.current = true
       tweenRef.current = gsap.to(current.current, {
         ...target,
