@@ -18,7 +18,6 @@ import { useWorldStore } from '../../store/useWorldStore'
 import { KineticScrambleText } from './KineticScrambleText'
 import { ToxicityMatrix } from './ToxicityMatrix'
 import { ElementalHarvest } from './ElementalHarvest'
-import { HardwareFootprintTerminal } from './HardwareFootprintTerminal'
 
 export const ScrollStorySections: React.FC = () => {
   const {
@@ -523,14 +522,9 @@ export const ScrollStorySections: React.FC = () => {
                 transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 className="text-base text-text-secondary max-w-xl mx-auto leading-relaxed"
               >
-                Calculate your personal hardware footprint and deploy an automated kiosk node to your university.
+                Deploy an automated kiosk node to your university, sponsor campus hardware diversion, or explore verified metallurgical recovery telemetry.
               </motion.p>
             </div>
-          </div>
-
-          {/* Integrated Personal Hardware Footprint Terminal */}
-          <div className="pt-2">
-            <HardwareFootprintTerminal />
           </div>
 
           {/* 3 Refined Action Pills */}
