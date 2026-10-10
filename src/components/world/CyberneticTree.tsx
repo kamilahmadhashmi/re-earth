@@ -546,67 +546,97 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
         />
       </mesh>
 
-      {/* 10. REFINED ENVIRONMENTAL PLACARD (Sponsor Name & Environmental Good Done) */}
+      {/* 9c. INVISIBLE CYLINDER FOR SMOOTH HOVER HIT DETECTION */}
+      <mesh position={[0, config.treeHeight / 2, 0]}>
+        <cylinderGeometry args={[config.canopyRadius, config.canopyRadius, config.treeHeight + 0.8, 12]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+
+      {/* 10. REFINED ENVIRONMENTAL PLACARD (Minimal Badge by Default, Full Detail Rectangle on Hover) */}
       <Html
         position={[0, config.treeHeight + 0.74, 0]}
         center
         distanceFactor={11.0}
-        className="pointer-events-none select-none transition-all duration-200"
+        className="pointer-events-auto select-none transition-all duration-200"
       >
         <div
-          className={`flex flex-col items-center transition-transform duration-200 ${
-            hovered || isSelected ? 'scale-105 z-30' : 'scale-100 z-10'
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={(e) => {
+            e.stopPropagation()
+            onSelect()
+          }}
+          className={`flex flex-col items-center cursor-pointer transition-transform duration-200 ${
+            hovered || isSelected ? 'scale-105 z-40' : 'scale-100 z-10'
           }`}
         >
-          <div
-            className="w-[224px] px-3 py-2 rounded-md border shadow-2xl flex flex-col text-left gap-1"
-            style={{
-              backgroundColor: '#131922',
-              borderColor: hovered || isSelected ? sponsor.color : `${sponsor.color}80`,
-              boxShadow: hovered || isSelected
-                ? `0 10px 28px -4px ${sponsor.color}50`
-                : '0 6px 18px -4px rgba(0, 0, 0, 0.75)'
-            }}
-          >
-            {/* Header: Rank, Sponsor Name & Verified Weight */}
-            <div className="flex items-center justify-between w-full pb-1.5 border-b border-white/[0.08] gap-2">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span
-                  className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0"
-                  style={{ backgroundColor: `${sponsor.color}25`, color: sponsor.color }}
-                >
-                  #{sponsor.rank}
-                </span>
-                <span className="font-bold text-xs text-white tracking-tight truncate">
-                  {sponsor.name}
+          {hovered || isSelected ? (
+            /* Full Detailed Rectangle (Visible Only on Cursor Hover / Selection) */
+            <div
+              className="w-[228px] px-3 py-2.5 rounded-md border shadow-2xl flex flex-col text-left gap-1.5 transition-all duration-200"
+              style={{
+                backgroundColor: '#131922',
+                borderColor: sponsor.color,
+                boxShadow: `0 10px 28px -4px ${sponsor.color}50`
+              }}
+            >
+              {/* Header: Rank, Sponsor Name & Verified Weight */}
+              <div className="flex items-center justify-between w-full pb-1.5 border-b border-white/[0.08] gap-2">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span
+                    className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0"
+                    style={{ backgroundColor: `${sponsor.color}25`, color: sponsor.color }}
+                  >
+                    #{sponsor.rank}
+                  </span>
+                  <span className="font-bold text-xs text-white tracking-tight truncate">
+                    {sponsor.name}
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] font-bold text-emerald shrink-0">
+                  {Math.round(sponsor.totalKg).toLocaleString()} kg
                 </span>
               </div>
-              <span className="font-mono text-[10px] font-bold text-emerald shrink-0">
+
+              {/* Environmental Good Extra Details */}
+              <div className="w-full space-y-1">
+                <div className="flex items-center justify-between text-[8px] font-mono tracking-wider uppercase text-emerald">
+                  <span className="flex items-center gap-1 font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald shrink-0 animate-pulse" />
+                    ENVIRONMENTAL GOOD
+                  </span>
+                  <span className="text-text-muted text-[8px]">
+                    {sponsor.campusCount} {sponsor.campusCount === 1 ? 'Campus' : 'Campuses'}
+                  </span>
+                </div>
+                <p className="text-[10px] font-semibold text-text-primary leading-snug">
+                  {theme?.esgPledge || sponsor.description}
+                </p>
+                {theme?.tagline && (
+                  <p className="text-[8.5px] text-text-muted leading-tight font-mono">
+                    {theme.tagline}
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : (
+            /* Minimal Badge by Default (Only Company Name and kg) */
+            <div
+              className="px-2.5 py-1 rounded-md border shadow-lg flex items-center gap-2 transition-all duration-150 backdrop-blur-sm whitespace-nowrap"
+              style={{
+                backgroundColor: 'rgba(19, 25, 34, 0.92)',
+                borderColor: `${sponsor.color}60`,
+                boxShadow: '0 4px 14px -2px rgba(0, 0, 0, 0.7)'
+              }}
+            >
+              <span className="font-bold text-[11px] text-white tracking-tight">
+                {sponsor.name}
+              </span>
+              <span className="font-mono text-[10px] font-bold text-emerald">
                 {Math.round(sponsor.totalKg).toLocaleString()} kg
               </span>
             </div>
-
-            {/* Environmental Good They Did */}
-            <div className="w-full space-y-1">
-              <div className="flex items-center justify-between text-[8px] font-mono tracking-wider uppercase text-emerald">
-                <span className="flex items-center gap-1 font-semibold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald shrink-0 animate-pulse" />
-                  ENVIRONMENTAL GOOD
-                </span>
-                <span className="text-text-muted text-[8px]">
-                  {sponsor.campusCount} {sponsor.campusCount === 1 ? 'Campus' : 'Campuses'}
-                </span>
-              </div>
-              <p className="text-[10px] font-semibold text-text-primary leading-snug">
-                {theme?.esgPledge || sponsor.description}
-              </p>
-              {theme?.tagline && (
-                <p className="text-[8.5px] text-text-muted leading-tight font-mono">
-                  {theme.tagline}
-                </p>
-              )}
-            </div>
-          </div>
+          )}
         </div>
       </Html>
     </group>
