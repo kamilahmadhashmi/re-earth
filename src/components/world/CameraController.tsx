@@ -413,14 +413,14 @@ export const CameraController: React.FC = () => {
 
     if (viewMode === 'skyline') {
       const target = {
-        radius: 14.0,
-        phi: 52 * DEG2RAD,
-        theta: 35 * DEG2RAD,
+        radius: 17.5,
+        phi: 56 * DEG2RAD,
+        theta: 40 * DEG2RAD,
         targetX: 0,
-        targetY: 1.0,
+        targetY: 2.2,
         targetZ: 0
       }
-      targetRadius.current = 14.0
+      targetRadius.current = 17.5
       isTargetingCampus.current = true
       tweenRef.current = gsap.to(current.current, {
         ...target,
