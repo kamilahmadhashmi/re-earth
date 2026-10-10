@@ -622,9 +622,9 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
           ) : (
             /* Minimal Badge by Default (Only Company Name and kg) */
             <div
-              className="px-2.5 py-1 rounded-md border shadow-lg flex items-center gap-2 transition-all duration-150 backdrop-blur-sm whitespace-nowrap"
+              className="px-2.5 py-1 rounded-md border shadow-lg flex items-center gap-2 transition-all duration-150 whitespace-nowrap"
               style={{
-                backgroundColor: 'rgba(19, 25, 34, 0.92)',
+                backgroundColor: '#131922',
                 borderColor: `${sponsor.color}60`,
                 boxShadow: '0 4px 14px -2px rgba(0, 0, 0, 0.7)'
               }}
