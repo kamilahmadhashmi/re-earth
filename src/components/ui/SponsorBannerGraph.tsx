@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Sparkles,
   TrendingUp,
   ShieldCheck,
-  Zap,
   Info,
   Calendar,
   Layers,
@@ -137,15 +135,10 @@ export const SponsorBannerGraph: React.FC<SponsorBannerGraphProps> = ({
       </div>
 
       {/* Radiant Sponsor Brand Light Beam behind Graph Apex */}
-      <div
-        className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none blur-3xl opacity-25 transition-all duration-700"
-        style={{ backgroundColor: sponsor.color }}
-      />
-
       {/* ========================================================= */}
       {/* LAYER 2: SPONSOR IDENTITY HEADER INTEGRATED INTO CHART     */}
       {/* ========================================================= */}
-      <div className="relative z-10 px-4 pt-3.5 pb-2 flex items-center justify-between border-b border-white/[0.06] bg-black/30 backdrop-blur-md">
+      <div className="relative z-10 px-4 pt-3.5 pb-2 flex items-center justify-between border-b border-white/[0.08] bg-surface-elevated">
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center font-black font-mono text-[10px] tracking-wider shadow-sm transition-transform duration-300 group-hover:scale-105"
@@ -289,7 +282,7 @@ export const SponsorBannerGraph: React.FC<SponsorBannerGraphProps> = ({
 
               return (
                 <g key={i} className="cursor-pointer">
-                  {/* Invisible broad hit-area for effortless pointer tracking */}
+                  {/* Invisible broad hit-area for precise pointer tracking */}
                   <rect
                     x={pt.x - 16}
                     y={0}

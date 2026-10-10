@@ -88,7 +88,7 @@ export const SpatialCyberneticCursor: React.FC = () => {
             backgroundColor: cursorVariant === 'interactive' ? 'rgba(48, 209, 88, 0.08)' : 'rgba(255, 255, 255, 0.02)'
           }}
           transition={{ type: 'spring', stiffness: 450, damping: 25 }}
-          className="rounded-full border border-dashed flex items-center justify-center backdrop-blur-[1px]"
+          className="rounded-full border border-dashed flex items-center justify-center"
         >
           {/* Micro Corner Crosshairs */}
           {(cursorVariant === 'orbit' || cursorVariant === 'inspect') && (
@@ -105,7 +105,7 @@ export const SpatialCyberneticCursor: React.FC = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute -top-7 whitespace-nowrap px-2 py-0.5 rounded-full bg-black/80 border border-white/20 text-[9px] font-mono tracking-wider font-bold text-emerald shadow-lg"
+            className="absolute -top-7 whitespace-nowrap px-2 py-0.5 rounded-md bg-[#131922] border border-white/20 text-[9px] font-mono font-medium text-emerald shadow-lg"
           >
             {cursorText}
           </motion.div>

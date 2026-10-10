@@ -179,9 +179,9 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
           className="pointer-events-none select-none transition-all duration-200"
         >
           <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full backdrop-blur-xl border shadow-spatial scale-105"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-md border shadow-spatial scale-105"
             style={{
-              backgroundColor: 'rgba(5, 6, 8, 0.92)',
+              backgroundColor: 'rgba(11, 15, 20, 0.94)',
               borderColor: `${sponsor.color}88`,
               boxShadow: `0 4px 16px ${sponsor.color}33`
             }}
@@ -349,7 +349,7 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
         document.body.style.cursor = 'default'
       }}
     >
-      {/* Invisible enlarged hit-target cylinder for effortless clicking */}
+      {/* Enlarged hit-target cylinder for raycast picking */}
       <mesh position={[0, height / 2, 0]}>
         <cylinderGeometry args={[towerWidth * 1.6, towerWidth * 1.6, height + 0.1, 8]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
@@ -418,9 +418,9 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
             }`}
           >
             <div
-              className="px-2.5 py-0.5 rounded-full flex items-center gap-1.5 backdrop-blur-md border text-[11px] font-semibold shadow-spatial"
+              className="px-2.5 py-0.5 rounded-md flex items-center gap-1.5 border text-[11px] font-semibold shadow-spatial"
               style={{
-                backgroundColor: 'rgba(5, 6, 8, 0.92)',
+                backgroundColor: '#131922',
                 borderColor: `${sponsor.color}88`,
                 color: '#FFFFFF'
               }}

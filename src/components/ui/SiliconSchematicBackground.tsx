@@ -40,8 +40,8 @@ export const SiliconSchematicBackground: React.FC = () => {
         // Chapter 3: The Derby & Live Hub — High-voltage emerald & solar gold
         return 'radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.65) 0%, rgba(217, 119, 6, 0.38) 32%, rgba(8, 70, 55, 0.25) 58%, rgba(5, 8, 14, 0) 78%)'
       case 4:
-        // Chapter 4: Circular OS — Closed-loop cyan & silicon lavender
-        return 'radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.62) 0%, rgba(124, 58, 237, 0.35) 34%, rgba(16, 185, 129, 0.22) 58%, rgba(5, 8, 14, 0) 78%)'
+        // Chapter 4: Circular OS — Reclaimed gold, copper & closed-loop attestation
+        return 'radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.50) 0%, rgba(200, 100, 50, 0.35) 34%, rgba(234, 179, 8, 0.20) 58%, rgba(11, 15, 20, 0) 78%)'
       case 0:
       default:
         // Chapter 0: Genesis — Celestial deep cyan, verdigris & reclaimed copper

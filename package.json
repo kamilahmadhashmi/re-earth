@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "audit:slop": "node ../anti-ai-tools/avoid-ai-design/scripts/detect.mjs src/",
+    "lint:ui": "python ../anti-ai-tools/anti-ai-slop-ui/scripts/ui_lint.py src/"
   },
   "dependencies": {
     "@react-three/drei": "^9.105.6",

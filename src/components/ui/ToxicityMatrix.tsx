@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AlertTriangle, Droplets, ShieldAlert, Skull, Info } from 'lucide-react'
+import { Skull } from 'lucide-react'
 
 interface ToxicElement {
   id: string
@@ -65,24 +65,24 @@ export const ToxicityMatrix: React.FC = () => {
   const [activeElement, setActiveElement] = useState<ToxicElement>(TOXIC_ELEMENTS[0])
 
   return (
-    <div className="w-full liquid-glass specular-rim rounded-3xl p-5 space-y-4 shadow-2xl border border-white/[0.08]">
+    <div className="w-full bg-[#131922] rounded-xl p-5 space-y-4 shadow-xl border border-white/10">
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
+          <div className="w-6 h-6 rounded-md bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400">
             <Skull className="w-3.5 h-3.5" />
           </div>
           <div>
-            <span className="text-[10px] font-mono tracking-widest uppercase font-bold text-rose-400 block">
+            <span className="text-xs font-semibold text-rose-400 block">
               Landfill Leach Matrix
             </span>
-            <span className="text-xs font-semibold text-text-primary">
+            <span className="text-xs text-text-secondary">
               Chemical Dispersion Telemetry
             </span>
           </div>
         </div>
-        <span className="text-[10px] font-mono text-text-muted bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-          SELECT ISOTOPE
+        <span className="text-xs font-mono text-text-muted bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+          Isotope Telemetry
         </span>
       </div>
 
@@ -94,16 +94,16 @@ export const ToxicityMatrix: React.FC = () => {
             <button
               key={el.id}
               onClick={() => setActiveElement(el)}
-              className={`p-2.5 rounded-2xl border transition-all text-left flex flex-col justify-between h-20 liquid-glass-control ${
+              className={`p-2.5 rounded-md border transition-all text-left flex flex-col justify-between h-20 ${
                 isSelected
-                  ? 'bg-white/[0.12] border-white/40 shadow-md scale-[1.02]'
+                  ? 'bg-white/[0.12] border-white/40 shadow-sm'
                   : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.06]'
               }`}
             >
               <div className="flex justify-between items-baseline">
-                <span className="text-[10px] font-mono text-text-muted">{el.atomicNumber}</span>
+                <span className="text-xs font-mono text-text-muted">{el.atomicNumber}</span>
                 <span
-                  className="w-1.5 h-1.5 rounded-full"
+                  className="w-1.5 h-1.5 rounded-[2px]"
                   style={{ backgroundColor: el.color }}
                 />
               </div>
@@ -111,7 +111,7 @@ export const ToxicityMatrix: React.FC = () => {
                 <span className="text-xl font-bold font-mono block leading-none" style={{ color: el.color }}>
                   {el.symbol}
                 </span>
-                <span className="text-[10px] text-text-secondary truncate block mt-0.5">
+                <span className="text-xs text-text-secondary truncate block mt-0.5">
                   {el.name}
                 </span>
               </div>
@@ -120,15 +120,15 @@ export const ToxicityMatrix: React.FC = () => {
         })}
       </div>
 
-      {/* Active Element Detail Breakdown with Animated Transition */}
+      {/* Active Element Detail Breakdown */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeElement.id}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl bg-black/40 border border-white/[0.06] p-4 space-y-3"
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="rounded-lg bg-black/40 border border-white/[0.06] p-4 space-y-3"
         >
           <div className="flex items-baseline justify-between">
             <h4 className="text-sm font-bold text-text-primary flex items-center gap-2">
@@ -137,25 +137,25 @@ export const ToxicityMatrix: React.FC = () => {
                 ({activeElement.symbol} #{activeElement.atomicNumber})
               </span>
             </h4>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">
-              Leach Half-Life: {activeElement.leachHalfLife}
+            <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-300 border border-rose-500/20">
+              Half-Life: {activeElement.leachHalfLife}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-            <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.04]">
-              <span className="text-[10px] font-mono text-text-muted uppercase block">Hardware Origin:</span>
-              <span className="text-text-secondary font-medium text-[11px] block mt-0.5">{activeElement.primarySource}</span>
+            <div className="p-2.5 rounded-md bg-white/[0.03] border border-white/[0.04]">
+              <span className="text-xs text-text-muted block">Hardware Origin:</span>
+              <span className="text-text-secondary font-medium text-xs block mt-0.5">{activeElement.primarySource}</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.04]">
-              <span className="text-[10px] font-mono text-text-muted uppercase block">Aquifer Diffusion Risk:</span>
-              <span className="text-rose-400 font-medium text-[11px] block mt-0.5">{activeElement.groundwaterRisk}</span>
+            <div className="p-2.5 rounded-md bg-white/[0.03] border border-white/[0.04]">
+              <span className="text-xs text-text-muted block">Aquifer Diffusion Risk:</span>
+              <span className="text-rose-400 font-medium text-xs block mt-0.5">{activeElement.groundwaterRisk}</span>
             </div>
           </div>
 
-          <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-            <span className="text-[10px] font-mono text-text-muted uppercase block">Toxicological Impact:</span>
-            <p className="text-[11px] text-text-secondary leading-relaxed mt-0.5">
+          <div className="p-2.5 rounded-md bg-white/[0.02] border border-white/[0.04]">
+            <span className="text-xs text-text-muted block">Toxicological Impact:</span>
+            <p className="text-xs text-text-secondary leading-relaxed mt-0.5">
               {activeElement.biologicalImpact}
             </p>
           </div>

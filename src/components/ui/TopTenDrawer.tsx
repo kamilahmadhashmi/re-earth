@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trophy, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { Trophy, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
 import { SPONSOR_MAP } from '../../data/sponsors'
 
@@ -71,26 +71,26 @@ export const TopTenDrawer: React.FC = () => {
                         >
                           <button
                             onClick={() => selectCampus(campus.id)}
-                            className={`w-full text-left p-2.5 rounded-2xl transition-all duration-200 border flex items-center justify-between group liquid-glass-control ${
+                            className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group ${
                               isSelected
-                                ? 'bg-emerald/15 border-emerald/50 shadow-emerald-glow'
-                                : 'bg-white/[0.03] border-white/[0.06] hover:border-white/20 hover:bg-white/[0.06]'
+                                ? 'bg-surface-elevated border-copper shadow-sm'
+                                : 'bg-surface border-white/5 hover:border-white/15 hover:bg-surface-elevated'
                             }`}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
                               {/* Medal or Rank Badge */}
-                              <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 font-mono text-xs font-bold">
+                              <div className="w-6 h-6 rounded flex items-center justify-center shrink-0 font-mono text-xs font-bold">
                                 {campus.allTimeRank === 1 ? (
-                                  <span className="text-amber drop-shadow-sm font-extrabold text-xs bg-amber/15 border border-amber/30 px-1.5 py-0.5 rounded-md">
-                                    01
+                                  <span className="text-gold font-extrabold text-xs px-1.5 py-0.5 rounded bg-gold/10 border border-gold/30">
+                                    #1
                                   </span>
                                 ) : campus.allTimeRank === 2 ? (
-                                  <span className="text-cyan drop-shadow-sm font-extrabold text-xs bg-cyan/15 border border-cyan/30 px-1.5 py-0.5 rounded-md">
-                                    02
+                                  <span className="text-palladium-light font-extrabold text-xs px-1.5 py-0.5 rounded bg-palladium/10 border border-palladium/30">
+                                    #2
                                   </span>
                                 ) : campus.allTimeRank === 3 ? (
-                                  <span className="text-lavender drop-shadow-sm font-extrabold text-xs bg-lavender/15 border border-lavender/30 px-1.5 py-0.5 rounded-md">
-                                    03
+                                  <span className="text-copper font-extrabold text-xs px-1.5 py-0.5 rounded bg-copper/10 border border-copper/30">
+                                    #3
                                   </span>
                                 ) : (
                                   <span className="text-text-muted text-[11px]">

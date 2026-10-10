@@ -3,10 +3,8 @@ import { motion } from 'framer-motion'
 import {
   Globe2,
   Building2,
-  Sparkles,
+  Layers,
   Trophy,
-  Recycle,
-  FolderArchive,
   Volume2,
   VolumeX
 } from 'lucide-react'
@@ -38,41 +36,41 @@ export const TopNav: React.FC = () => {
     <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-8 py-5 pointer-events-none">
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
         
-        {/* BRAND PILL */}
+        {/* BRAND BUTTON */}
         <div className="flex items-center gap-3 pointer-events-auto">
           <button
             onClick={() => {
               returnToWorld()
               scrollToChapter(0)
             }}
-            className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full liquid-glass-pill liquid-glass-control specular-rim group"
+            className="flex items-center gap-2.5 px-3 py-1.5 rounded-md bg-surface/95 border border-white/10 hover:border-white/20 transition-all group"
           >
-            <div className="w-5 h-5 rounded-full bg-emerald/15 flex items-center justify-center text-emerald">
-              <Sparkles className="w-3 h-3" />
+            <div className="w-5 h-5 rounded bg-emerald/15 flex items-center justify-center text-emerald">
+              <Layers className="w-3 h-3 text-copper" />
             </div>
             <span className="font-bold tracking-tight text-xs text-text-primary">
-              RE<span className="text-emerald font-extrabold mx-0.5">—</span>EARTH
+              RE<span className="text-copper font-extrabold mx-0.5">—</span>EARTH
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse ml-1" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald ml-1" />
           </button>
         </div>
 
-        {/* MINIMAL EDITORIAL NAV LINKS WITH SLIDING PILL */}
-        <nav className="hidden md:flex items-center gap-1 p-1 rounded-full liquid-glass-pill specular-rim pointer-events-auto relative">
+        {/* RESTRAINED EDITORIAL NAV SEGMENTS */}
+        <nav className="hidden md:flex items-center gap-1 p-1 rounded-md bg-surface/95 border border-white/10 pointer-events-auto relative">
           {navChapters.map((ch) => {
             const isActive = activeChapter === ch.id
             return (
               <button
                 key={ch.id}
                 onClick={() => scrollToChapter(ch.id)}
-                className={`relative px-3.5 py-1 rounded-full text-xs font-medium transition-colors z-10 ${
+                className={`relative px-3 py-1 rounded text-xs font-medium transition-colors z-10 ${
                   isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="activeChapterPill"
-                    className="absolute inset-0 rounded-full bg-white/[0.12] border border-white/10 shadow-sm -z-10"
+                    className="absolute inset-0 rounded bg-white/10 border border-white/15 -z-10"
                     transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                   />
                 )}
@@ -85,13 +83,13 @@ export const TopNav: React.FC = () => {
 
           <button
             onClick={() => openModal('recycle')}
-            className="px-3 py-1 rounded-full text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all"
+            className="px-2.5 py-1 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all"
           >
             Recycle
           </button>
           <button
             onClick={() => openModal('vault')}
-            className="px-3 py-1 rounded-full text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all"
+            className="px-2.5 py-1 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all"
           >
             Vault
           </button>
@@ -102,10 +100,10 @@ export const TopNav: React.FC = () => {
           {/* Spatial Synthetic Audio Toggle */}
           <button
             onClick={toggleAudio}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono transition-all duration-200 liquid-glass-control ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-150 ${
               isAudioEnabled
-                ? 'bg-emerald/20 text-emerald border border-emerald/40 shadow-emerald-glow'
-                : 'liquid-glass-pill text-text-muted hover:text-text-primary'
+                ? 'bg-surface-elevated text-emerald border border-emerald/50'
+                : 'bg-surface/95 border border-white/10 text-text-muted hover:text-text-primary'
             }`}
             title="Toggle Spatial Synthetic Audio Drone & Clicks"
           >
@@ -118,7 +116,7 @@ export const TopNav: React.FC = () => {
             ) : (
               <VolumeX className="w-3.5 h-3.5" />
             )}
-            <span className="hidden md:inline text-[10px] font-mono tracking-wider font-semibold">
+            <span className="hidden md:inline text-xs font-mono font-medium">
               {isAudioEnabled ? 'AUDIO LIVE' : 'AUDIO OFF'}
             </span>
           </button>
@@ -127,49 +125,49 @@ export const TopNav: React.FC = () => {
           {viewMode === 'globe' && (
             <button
               onClick={toggleLeftDrawer}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium liquid-glass-control transition-all duration-200 ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
                 isLeftDrawerOpen
-                  ? 'bg-emerald/20 text-emerald border border-emerald/40 shadow-emerald-glow'
-                  : 'liquid-glass-pill text-text-secondary hover:text-text-primary'
+                  ? 'bg-surface-elevated text-copper border border-copper/50'
+                  : 'bg-surface/95 border border-white/10 text-text-secondary hover:text-text-primary'
               }`}
             >
-              <Trophy className="w-3.5 h-3.5 text-emerald" />
+              <Trophy className="w-3.5 h-3.5 text-copper" />
               <span className="hidden sm:inline">Rankings</span>
             </button>
           )}
 
-          {/* Mode Switcher with Sliding Active Pill */}
-          <div className="flex items-center p-1 rounded-full liquid-glass-pill specular-rim relative">
+          {/* Mode Switcher with Segmented Tab Selection */}
+          <div className="flex items-center p-0.5 rounded-md bg-surface/95 border border-white/10 relative">
             <button
               onClick={() => setViewMode('globe')}
-              className={`relative flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-colors z-10 ${
+              className={`relative flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold tracking-wide transition-colors z-10 ${
                 viewMode === 'globe' ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               {viewMode === 'globe' && (
                 <motion.div
                   layoutId="activeViewPill"
-                  className="absolute inset-0 rounded-full bg-white/[0.14] border border-white/10 shadow-sm -z-10"
+                  className="absolute inset-0 rounded bg-white/10 border border-white/15 -z-10"
                   transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                 />
               )}
-              <Globe2 className={`w-3.5 h-3.5 ${viewMode === 'globe' ? 'text-emerald' : 'text-text-muted'}`} />
+              <Globe2 className={`w-3.5 h-3.5 ${viewMode === 'globe' ? 'text-copper' : 'text-text-muted'}`} />
               <span className="hidden sm:inline">World</span>
             </button>
             <button
               onClick={() => setViewMode('skyline')}
-              className={`relative flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-colors z-10 ${
+              className={`relative flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold tracking-wide transition-colors z-10 ${
                 viewMode === 'skyline' ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               {viewMode === 'skyline' && (
                 <motion.div
                   layoutId="activeViewPill"
-                  className="absolute inset-0 rounded-full bg-white/[0.14] border border-white/10 shadow-sm -z-10"
+                  className="absolute inset-0 rounded bg-white/10 border border-white/15 -z-10"
                   transition={{ type: 'spring', stiffness: 450, damping: 35 }}
                 />
               )}
-              <Building2 className={`w-3.5 h-3.5 ${viewMode === 'skyline' ? 'text-cyan' : 'text-text-muted'}`} />
+              <Building2 className={`w-3.5 h-3.5 ${viewMode === 'skyline' ? 'text-gold' : 'text-text-muted'}`} />
               <span className="hidden sm:inline">Sponsors</span>
             </button>
           </div>
@@ -180,3 +178,4 @@ export const TopNav: React.FC = () => {
   )
 }
 
+export default TopNav

@@ -156,9 +156,9 @@ const SponsorTower: React.FC<SponsorTowerProps> = ({
           }`}
         >
           <div
-            className="px-3 py-1.5 rounded-xl border backdrop-blur-md shadow-xl flex items-center gap-2"
+            className="px-3 py-1.5 rounded-md border shadow-xl flex items-center gap-2"
             style={{
-              backgroundColor: 'rgba(16, 18, 26, 0.92)',
+              backgroundColor: '#131922',
               borderColor: sponsor.color
             }}
           >
@@ -254,9 +254,9 @@ const EmptySponsorPlot: React.FC<{ position: [number, number, number]; onClick: 
             hovered ? 'scale-110' : 'scale-100'
           }`}
         >
-          <div className="px-3 py-1.5 rounded-xl border border-amber-400 bg-amber-950/80 backdrop-blur-md shadow-amber-glow flex items-center gap-1.5 text-xs font-bold text-amber-300">
-            <span>✨</span>
-            <span>YOUR COMPANY HERE</span>
+          <div className="px-3 py-1.5 rounded-md border border-amber-400/80 bg-[#131922] shadow-sm flex items-center gap-1.5 text-xs font-bold text-amber-300">
+            <span className="w-1.5 h-1.5 rounded-[2px] bg-amber-400" />
+            <span>RESERVE SPONSOR POSITION</span>
           </div>
           <span className="text-[10px] text-amber-200/80 mt-1 font-mono">
             Click to Sponsor a Campus

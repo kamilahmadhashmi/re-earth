@@ -8,15 +8,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#05070D',
+        background: '#0B0F14',
         surface: {
-          DEFAULT: '#0B0D10',
-          elevated: '#14171B',
-          hover: '#191D24',
-          subtle: '#1F242C'
+          DEFAULT: '#131922',
+          elevated: '#1A222E',
+          hover: '#222B3A',
+          subtle: '#2A3547'
         },
-        border: 'rgba(255, 255, 255, 0.08)',
-        // Apple Palette Tokens
+        border: 'rgba(255, 255, 255, 0.09)',
+        // Physical Metallurgy Tokens (Reclaimed Electronic Elements)
+        copper: {
+          DEFAULT: '#C86432',
+          light: '#E07E4A',
+          dark: '#9A451A',
+          glow: 'rgba(200, 100, 50, 0.35)'
+        },
+        gold: {
+          DEFAULT: '#EAB308',
+          light: '#FDE047',
+          dark: '#A16207',
+          glow: 'rgba(234, 179, 8, 0.35)'
+        },
+        palladium: {
+          DEFAULT: '#94A3B8',
+          light: '#CBD5E1',
+          dark: '#64748B'
+        },
+        // Environmental & Status Tokens
         emerald: {
           DEFAULT: '#30D158',
           light: '#5EE082',

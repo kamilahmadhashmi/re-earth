@@ -1,0 +1,17 @@
+# RE-EARTH Anti-Slop UI/UX Engineering Rules
+
+You must strictly enforce the DESIGN.md contract and the 4 anti-AI design repositories:
+- https://github.com/funboy322/avoid-ai-design
+- https://github.com/rwcod/anti-ai-slop-ui
+- https://github.com/LeoStehlik/no-slop-ui
+- https://github.com/wwewtech/anti-slop-design
+
+## Prohibited Patterns:
+1. NEVER use `bg-clip-text text-transparent` gradient headlines (P0 C6). Use solid, high-contrast text.
+2. NEVER use purple/indigo gradients (P0 C1). The palette is Deep Silicon (`#0B0F14`), Refined Copper (`#C86432`), 24K Gold (`#EAB308`), and Palladium (`#94A3B8`).
+3. NEVER use `Sparkles` or `Zap` as generic decoration (P1 I3).
+4. NEVER use `rounded-3xl` or bulbous pill containers on technical cards (P1 over_rounded). Use 8px-12px (`rounded-lg` / `rounded-xl`).
+5. NEVER use `backdrop-blur` / glassmorphism on ordinary cards (P1 K3). Use solid matte chassis `#131922` with 1px hairline border.
+6. NEVER use screaming tracked ALL-CAPS eyebrow labels (P1 SD4).
+7. NEVER use single-word accenting in headlines (P1 SD5).
+8. Ensure all interactive elements have visible `:focus-visible` keyboard rings (P1 K7) and `@media (prefers-reduced-motion)` support (P1 M6).
