@@ -56,21 +56,37 @@ export function computeCyberneticTreeLayout(
     const posX = col * gridSpacing
     const posZ = row * gridSpacing
 
-    // Height scaled gracefully by rank and total kg:
-    // Tallest ~3.7 units (#1), down to ~2.5 units (#8)
-    const normalizedRank = Math.max(0, Math.min(1, (8 - sponsor.rank) / 7))
-    const treeHeight = 2.45 + normalizedRank * 1.25
+    // Dynamic kg-based height scaling:
+    // Extract min/max kg across the sponsor pool to ensure maximum dynamic range
+    const kgValues = sponsors
+      .map((s) => s.totalKg)
+      .filter((k): k is number => typeof k === 'number' && !isNaN(k) && k > 0)
+    const minKg = kgValues.length > 0 ? Math.min(...kgValues) : 4000
+    const maxKg = kgValues.length > 0 ? Math.max(...kgValues) : 27000
+    const rangeKg = maxKg - minKg
 
-    // Strict canopy radius constraints:
-    // Clamped strictly between 1.15 and 1.42 units
-    const canopyRadius = 1.18 + normalizedRank * 0.22
-    const canopyHeight = 1.35 + normalizedRank * 0.45
+    // Normalized weight factor strictly bounded between 0.0 (lowest kg) and 1.0 (highest kg)
+    const normalizedKg =
+      rangeKg > 0 && typeof sponsor.totalKg === 'number'
+        ? Math.max(0, Math.min(1, (sponsor.totalKg - minKg) / rangeKg))
+        : Math.max(0, Math.min(1, (8 - sponsor.rank) / 7))
 
-    // Base root and grass footprint:
-    // Strictly limited to 0.85 units, far smaller than the grid clearance
-    const baseMoundRadius = 0.82
-    const trunkBaseRadius = 0.16 + normalizedRank * 0.04
-    const trunkCrownRadius = 0.06 + normalizedRank * 0.02
+    // Height scaled dramatically by kg contributed:
+    // Minimum height ~1.35 units (Tesla ~4.6k kg), up to ~5.60 units (Google ~27k kg)
+    // Over a 4.1x visual height variance makes the kg contribution immediately, dramatically visible
+    const MIN_TREE_HEIGHT = 1.35
+    const MAX_TREE_HEIGHT = 5.60
+    const treeHeight = MIN_TREE_HEIGHT + normalizedKg * (MAX_TREE_HEIGHT - MIN_TREE_HEIGHT)
+
+    // Strict canopy radius constraints scaled proportionally with height:
+    // Clamped strictly between 0.95 and 1.45 units (guarantees >= 2.3 units clearance in 5.2m grid)
+    const canopyRadius = 0.95 + normalizedKg * 0.50
+    const canopyHeight = 0.90 + normalizedKg * 1.50
+
+    // Base root and grass footprint scaled gracefully with trunk thickness
+    const baseMoundRadius = 0.72 + normalizedKg * 0.16
+    const trunkBaseRadius = 0.10 + normalizedKg * 0.12
+    const trunkCrownRadius = 0.04 + normalizedKg * 0.045
 
     return {
       sponsorId: sponsor.id,

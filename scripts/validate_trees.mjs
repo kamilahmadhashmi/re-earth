@@ -1,17 +1,22 @@
-// We can validate using the pure formula
+// Sponsor dataset with real verified kg contributions
 const sponsors = [
-  { id: 'google', name: 'Google', rank: 1 },
-  { id: 'apple', name: 'Apple', rank: 2 },
-  { id: 'tata', name: 'Tata Sustainability', rank: 3 },
-  { id: 'intel', name: 'Intel', rank: 4 },
-  { id: 'tcs', name: 'TCS', rank: 5 },
-  { id: 'infosys', name: 'Infosys', rank: 6 },
-  { id: 'dell', name: 'Dell Technologies', rank: 7 },
-  { id: 'tesla', name: 'Tesla Energy', rank: 8 }
+  { id: 'google', name: 'Google', rank: 1, totalKg: 26991 },
+  { id: 'apple', name: 'Apple', rank: 2, totalKg: 20461.1 },
+  { id: 'tata', name: 'Tata Sustainability', rank: 3, totalKg: 16720.5 },
+  { id: 'intel', name: 'Intel', rank: 4, totalKg: 15540.5 },
+  { id: 'tcs', name: 'TCS', rank: 5, totalKg: 10031.2 },
+  { id: 'infosys', name: 'Infosys', rank: 6, totalKg: 8950.2 },
+  { id: 'dell', name: 'Dell Technologies', rank: 7, totalKg: 8621 },
+  { id: 'tesla', name: 'Tesla Energy', rank: 8, totalKg: 4620.8 }
 ]
 
 const gridSpacing = 5.2
 const requiredMargin = 1.0
+
+const kgValues = sponsors.map((s) => s.totalKg)
+const minKg = Math.min(...kgValues)
+const maxKg = Math.max(...kgValues)
+const rangeKg = maxKg - minKg
 
 const configs = sponsors.map((sponsor, index) => {
   const row = Math.floor(index / 3) - 1
@@ -19,14 +24,17 @@ const configs = sponsors.map((sponsor, index) => {
   const posX = col * gridSpacing
   const posZ = row * gridSpacing
 
-  const normalizedRank = (8 - sponsor.rank) / 7
-  const treeHeight = 2.45 + normalizedRank * 1.25
-  const canopyRadius = 1.18 + normalizedRank * 0.22
-  const baseMoundRadius = 0.82
+  const normalizedKg = (sponsor.totalKg - minKg) / rangeKg
+  const MIN_TREE_HEIGHT = 1.35
+  const MAX_TREE_HEIGHT = 5.60
+  const treeHeight = MIN_TREE_HEIGHT + normalizedKg * (MAX_TREE_HEIGHT - MIN_TREE_HEIGHT)
+  const canopyRadius = 0.95 + normalizedKg * 0.50
+  const baseMoundRadius = 0.72 + normalizedKg * 0.16
 
   return {
     name: sponsor.name,
     rank: sponsor.rank,
+    totalKg: sponsor.totalKg,
     pos: [posX, 0, posZ],
     treeHeight,
     canopyRadius,

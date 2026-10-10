@@ -103,10 +103,13 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
       shelfScale: [number, number, number]
     }[] = []
 
+    // Proportional height scaling factor to ensure graceful branching at all tree heights
+    const heightScaleFactor = Math.max(0.45, Math.min(2.0, H / 3.0))
+
     const tiers = [
-      { tStart: 0.42, count: 3, radiusRatio: 0.82, yLift: 0.25 },
-      { tStart: 0.65, count: 3, radiusRatio: 0.72, yLift: 0.35 },
-      { tStart: 0.86, count: 2, radiusRatio: 0.55, yLift: 0.28 }
+      { tStart: 0.42, count: 3, radiusRatio: 0.82, yLift: 0.25 * heightScaleFactor },
+      { tStart: 0.65, count: 3, radiusRatio: 0.72, yLift: 0.35 * heightScaleFactor },
+      { tStart: 0.86, count: 2, radiusRatio: 0.55, yLift: 0.28 * heightScaleFactor }
     ]
 
     tiers.forEach((tier, tierIdx) => {
@@ -119,10 +122,10 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
         // Strictly constrain reach within allowable canopy radius
         const reachDist = THREE.MathUtils.clamp(
           maxCanopyR * tier.radiusRatio * (0.85 + rng() * 0.2),
-          0.55,
+          0.40 * heightScaleFactor,
           maxCanopyR * 0.88
         )
-        const tipY = origin.y + tier.yLift + (rng() - 0.5) * 0.12
+        const tipY = origin.y + tier.yLift + (rng() - 0.5) * 0.10 * heightScaleFactor
         const tipX = origin.x + Math.cos(angle) * reachDist
         const tipZ = origin.z + Math.sin(angle) * reachDist
         const tip = new THREE.Vector3(tipX, tipY, tipZ)
@@ -130,14 +133,15 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
         // Mid control point for graceful organic arch
         const midX = origin.x + Math.cos(angle) * reachDist * 0.55
         const midZ = origin.z + Math.sin(angle) * reachDist * 0.55
-        const midY = origin.y + tier.yLift * 0.75 + 0.08
+        const midY = origin.y + tier.yLift * 0.75 + 0.08 * heightScaleFactor
 
         const branchCurve = new THREE.CatmullRomCurve3([
           origin,
           new THREE.Vector3(midX, midY, midZ),
           tip
         ])
-        const branchGeo = new THREE.TubeGeometry(branchCurve, 16, 0.034, 6, false)
+        const branchRadius = THREE.MathUtils.clamp(0.022 * heightScaleFactor, 0.018, 0.042)
+        const branchGeo = new THREE.TubeGeometry(branchCurve, 16, branchRadius, 6, false)
 
         branches.push({
           geo: branchGeo,
@@ -148,7 +152,7 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
             origin.y,
             origin.z + Math.sin(angle) * 0.035
           ),
-          shelfRadius: 0.48 + rng() * 0.16,
+          shelfRadius: (0.32 + 0.16 * heightScaleFactor) * (0.88 + rng() * 0.24),
           // Flattened vertically for elegant Japanese pine / cyber-cedar shelf silhouette
           shelfScale: [1.15 + rng() * 0.2, 0.38 + rng() * 0.08, 1.15 + rng() * 0.2]
         })
@@ -159,13 +163,13 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
     const crownTip = trunkCurve.getPoint(1.0)
     const crownShelves = [
       {
-        pos: new THREE.Vector3(crownTip.x, crownTip.y + 0.12, crownTip.z),
-        radius: 0.58 + rng() * 0.12,
+        pos: new THREE.Vector3(crownTip.x, crownTip.y + 0.10 * heightScaleFactor, crownTip.z),
+        radius: (0.36 + 0.16 * heightScaleFactor) + rng() * 0.10,
         scale: [1.2, 0.42, 1.2] as [number, number, number]
       },
       {
-        pos: new THREE.Vector3(crownTip.x, crownTip.y - 0.18, crownTip.z),
-        radius: 0.68 + rng() * 0.14,
+        pos: new THREE.Vector3(crownTip.x, crownTip.y - 0.14 * heightScaleFactor, crownTip.z),
+        radius: (0.42 + 0.20 * heightScaleFactor) + rng() * 0.12,
         scale: [1.35, 0.45, 1.35] as [number, number, number]
       }
     ]
@@ -174,21 +178,21 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
     // Delicate filaments descending gracefully from lower canopy shelves
     const hangingVines: { curve: THREE.CatmullRomCurve3; endPt: THREE.Vector3 }[] = []
     branches.slice(0, 4).forEach((b) => {
-      const vineLen = 0.28 + rng() * 0.22
+      const vineLen = (0.16 + 0.14 * heightScaleFactor) * (0.85 + rng() * 0.3)
       const startPt = new THREE.Vector3(
-        b.tip.x + (rng() - 0.5) * 0.2,
-        b.tip.y - 0.08,
-        b.tip.z + (rng() - 0.5) * 0.2
+        b.tip.x + (rng() - 0.5) * 0.15 * heightScaleFactor,
+        b.tip.y - 0.06 * heightScaleFactor,
+        b.tip.z + (rng() - 0.5) * 0.15 * heightScaleFactor
       )
       const midPt = new THREE.Vector3(
-        startPt.x + (rng() - 0.5) * 0.06,
+        startPt.x + (rng() - 0.5) * 0.05 * heightScaleFactor,
         startPt.y - vineLen * 0.5,
-        startPt.z + (rng() - 0.5) * 0.06
+        startPt.z + (rng() - 0.5) * 0.05 * heightScaleFactor
       )
       const endPt = new THREE.Vector3(
-        startPt.x + (rng() - 0.5) * 0.04,
+        startPt.x + (rng() - 0.5) * 0.03 * heightScaleFactor,
         startPt.y - vineLen,
-        startPt.z + (rng() - 0.5) * 0.04
+        startPt.z + (rng() - 0.5) * 0.03 * heightScaleFactor
       )
       hangingVines.push({
         curve: new THREE.CatmullRomCurve3([startPt, midPt, endPt]),
@@ -201,7 +205,7 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
     const rootCount = 5
     for (let r = 0; r < rootCount; r++) {
       const angle = (r / rootCount) * Math.PI * 2 + (rng() - 0.5) * 0.45
-      const rootLen = 0.55 + rng() * 0.18
+      const rootLen = (0.40 + 0.16 * heightScaleFactor) + rng() * 0.16
       const rootCurve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(0, 0.14, 0),
         new THREE.Vector3(
