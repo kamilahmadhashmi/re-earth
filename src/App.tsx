@@ -34,7 +34,16 @@ export const App: React.FC = () => {
       {/* 2. Direct 3D Orbit Immersive Controls (Exclusive to Immersive Mode) */}
       {isEarthImmersive && <ImmersiveOrbitHUD />}
 
-      {/* 3. Normal Narrative & Exploration Overlays (Completely hidden/unmounted in Immersive Orbit) */}
+      {/* 3. Campus Inspection Detail Card (Active in BOTH Normal and 3D World / Immersive Orbit Mode) */}
+      <CampusInspectionCard />
+
+      {/* 4. Cluster Selection Popover for dense regional campus groups (Active in BOTH modes) */}
+      <ClusterSelectionPopover />
+
+      {/* 5. Modals (Recycle, Sponsor Pitch, Vault, Learn) (Active in BOTH modes) */}
+      <Modals />
+
+      {/* 6. Normal Narrative & Exploration Overlays (Completely hidden/unmounted in Immersive Orbit) */}
       {!isEarthImmersive && (
         <>
           {/* Scroll Story Narrative Chapters (5 Cinematic Stages) */}
@@ -51,15 +60,6 @@ export const App: React.FC = () => {
 
           {/* Bottom Weekly Derby Ticker: DTU vs NSUT */}
           <WeeklyDerbyTicker />
-
-          {/* Right Campus Inspection Detail Card */}
-          <CampusInspectionCard />
-
-          {/* Cluster Selection Popover for dense regional campus groups */}
-          <ClusterSelectionPopover />
-
-          {/* Modals (Recycle, Sponsor Pitch, Vault, Learn) */}
-          <Modals />
         </>
       )}
     </div>

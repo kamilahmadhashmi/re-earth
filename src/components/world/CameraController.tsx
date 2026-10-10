@@ -263,7 +263,9 @@ export const CameraController: React.FC = () => {
     // Keyboard zoom controls (+ / -), reset (R), and exit (Esc)
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (isEarthImmersive) {
+        if (selectedCampusId) {
+          returnToWorld()
+        } else if (isEarthImmersive) {
           exitImmersiveOrbit()
         } else {
           returnToWorld()
@@ -293,7 +295,7 @@ export const CameraController: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown)
       document.body.style.cursor = 'default'
     }
-  }, [cancelTween, returnToWorld, isEarthImmersive, exitImmersiveOrbit, resetImmersiveCamera])
+  }, [cancelTween, returnToWorld, isEarthImmersive, exitImmersiveOrbit, resetImmersiveCamera, selectedCampusId])
 
   // 2. React to Immersive Mode Activation / Exit
   useEffect(() => {
@@ -406,9 +408,9 @@ export const CameraController: React.FC = () => {
           radius: targetRadius.current,
           phi: Math.max(0.2, Math.min(Math.PI - 0.2, phi)),
           theta: targetTheta,
-          targetX: isEarthImmersive ? 0 : pos.x * 0.3,
-          targetY: isEarthImmersive ? 0 : pos.y * 0.3,
-          targetZ: isEarthImmersive ? 0 : pos.z * 0.3,
+          targetX: pos.x * 0.3,
+          targetY: pos.y * 0.3,
+          targetZ: pos.z * 0.3,
           duration: 1.4,
           ease: 'power2.out',
           onComplete: () => {
@@ -439,6 +441,26 @@ export const CameraController: React.FC = () => {
           targetY: 0,
           targetZ: 0,
           duration: 1.4,
+          ease: 'power2.out',
+          onComplete: () => {
+            isTargetingCampus.current = false
+            tweenRef.current = null
+          }
+        })
+      }
+    } else if (isEarthImmersive) {
+      // Returned to world in immersive mode: smoothly restore camera target lookAt to planet center
+      if (
+        current.current.targetX !== 0 ||
+        current.current.targetY !== 0 ||
+        current.current.targetZ !== 0
+      ) {
+        isTargetingCampus.current = true
+        tweenRef.current = gsap.to(current.current, {
+          targetX: 0,
+          targetY: 0,
+          targetZ: 0,
+          duration: 1.0,
           ease: 'power2.out',
           onComplete: () => {
             isTargetingCampus.current = false

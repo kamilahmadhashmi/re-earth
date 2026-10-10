@@ -95,10 +95,10 @@ export const Earth: React.FC<EarthProps> = ({ autoRotate = false }) => {
           )
           if (dist > 6) return
 
-          if (!isEarthImmersive) {
-            enterImmersiveOrbit()
-          } else if (selectedCampusId) {
+          if (selectedCampusId) {
             returnToWorld()
+          } else if (!isEarthImmersive) {
+            enterImmersiveOrbit()
           }
         }}
         onPointerOver={() => {

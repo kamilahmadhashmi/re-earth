@@ -273,3 +273,7 @@ export const useWorldStore = create<WorldState>((set, get) => ({
     }))
   }
 }))
+
+if (typeof window !== 'undefined') {
+  ;(window as any).__WORLD_STORE__ = useWorldStore
+}

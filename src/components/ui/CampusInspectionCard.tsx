@@ -39,7 +39,8 @@ export const CampusInspectionCard: React.FC = () => {
         animate={{ opacity: 1, x: 0, scale: 1 }}
         exit={{ opacity: 0, x: 50, scale: 0.98 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed right-5 top-20 bottom-16 z-30 w-full max-w-[370px] pointer-events-auto"
+        data-prevent-drag="true"
+        className="fixed right-3 sm:right-5 top-16 sm:top-20 bottom-6 sm:bottom-16 z-50 w-[calc(100vw-24px)] sm:w-full max-w-[370px] pointer-events-auto"
       >
         <div className="h-full liquid-glass specular-rim flex flex-col overflow-hidden shadow-liquid-glass">
           
