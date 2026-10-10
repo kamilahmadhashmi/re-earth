@@ -128,7 +128,8 @@ export const CameraController: React.FC = () => {
     isEarthImmersive,
     exitImmersiveOrbit,
     resetImmersiveCamera,
-    immersiveResetTrigger
+    immersiveResetTrigger,
+    orbitalPreset
   } = useWorldStore()
 
   // Current camera spherical coordinates and target lookAt point
@@ -364,6 +365,36 @@ export const CameraController: React.FC = () => {
       })
     }
   }, [immersiveResetTrigger, isEarthImmersive, cancelTween])
+
+  // 3b. React to Orbital Preset Selection in Immersive Mode
+  useEffect(() => {
+    if (orbitalPreset && isEarthImmersive) {
+      cancelTween()
+      isTargetingCampus.current = true
+      targetRadius.current = orbitalPreset.radius
+
+      // Shortest angular path around theta
+      let diffTheta = (orbitalPreset.theta - current.current.theta) % (2 * Math.PI)
+      if (diffTheta > Math.PI) diffTheta -= 2 * Math.PI
+      if (diffTheta < -Math.PI) diffTheta += 2 * Math.PI
+      const targetTheta = current.current.theta + diffTheta
+
+      tweenRef.current = gsap.to(current.current, {
+        radius: orbitalPreset.radius,
+        phi: orbitalPreset.phi,
+        theta: targetTheta,
+        targetX: 0,
+        targetY: 0,
+        targetZ: 0,
+        duration: 1.4,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          isTargetingCampus.current = false
+          tweenRef.current = null
+        }
+      })
+    }
+  }, [orbitalPreset, isEarthImmersive, cancelTween])
 
   // 4. React to Campus or Region Selection
   useEffect(() => {

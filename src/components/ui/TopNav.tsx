@@ -6,9 +6,12 @@ import {
   Sparkles,
   Trophy,
   Recycle,
-  FolderArchive
+  FolderArchive,
+  Volume2,
+  VolumeX
 } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
+import { useSpatialAudio } from '../../hooks/useSpatialAudio'
 
 export const TopNav: React.FC = () => {
   const {
@@ -21,6 +24,8 @@ export const TopNav: React.FC = () => {
     toggleLeftDrawer,
     isLeftDrawerOpen
   } = useWorldStore()
+
+  const { isAudioEnabled, toggleAudio } = useSpatialAudio()
 
   const navChapters = [
     { id: 0, label: 'Story' },
@@ -94,6 +99,30 @@ export const TopNav: React.FC = () => {
 
         {/* ACTIONS & VIEW SWITCHER */}
         <div className="flex items-center gap-2 pointer-events-auto">
+          {/* Spatial Synthetic Audio Toggle */}
+          <button
+            onClick={toggleAudio}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono transition-all duration-200 liquid-glass-control ${
+              isAudioEnabled
+                ? 'bg-emerald/20 text-emerald border border-emerald/40 shadow-emerald-glow'
+                : 'liquid-glass-pill text-text-muted hover:text-text-primary'
+            }`}
+            title="Toggle Spatial Synthetic Audio Drone & Clicks"
+          >
+            {isAudioEnabled ? (
+              <span className="flex items-end gap-0.5 h-3 w-3">
+                <span className="w-0.5 bg-emerald h-full animate-[pulse_0.8s_ease-in-out_infinite]" />
+                <span className="w-0.5 bg-emerald h-2/3 animate-[pulse_1.2s_ease-in-out_infinite]" />
+                <span className="w-0.5 bg-emerald h-4/5 animate-[pulse_0.5s_ease-in-out_infinite]" />
+              </span>
+            ) : (
+              <VolumeX className="w-3.5 h-3.5" />
+            )}
+            <span className="hidden md:inline text-[10px] font-mono tracking-wider font-semibold">
+              {isAudioEnabled ? 'AUDIO LIVE' : 'AUDIO OFF'}
+            </span>
+          </button>
+
           {/* Rankings Drawer Toggle */}
           {viewMode === 'globe' && (
             <button

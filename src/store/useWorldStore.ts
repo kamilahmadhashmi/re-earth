@@ -34,6 +34,7 @@ interface WorldState {
   // Direct 3D Orbit Immersive Mode
   isEarthImmersive: boolean
   immersiveResetTrigger: number
+  orbitalPreset: { phi: number; theta: number; radius: number; label: string; id: number } | null
 
   // Actions
   loadData: () => Promise<void>
@@ -53,6 +54,7 @@ interface WorldState {
   enterImmersiveOrbit: () => void
   exitImmersiveOrbit: () => void
   resetImmersiveCamera: () => void
+  setOrbitalPreset: (preset: { phi: number; theta: number; radius?: number; label: string }) => void
 
   // Cluster Actions
   setCameraRadius: (r: number) => void
@@ -100,6 +102,7 @@ export const useWorldStore = create<WorldState>((set, get) => ({
   // Direct 3D Orbit Immersive Defaults
   isEarthImmersive: false,
   immersiveResetTrigger: 0,
+  orbitalPreset: null,
 
   // Gated Demo / Simulation Mode (Default: false for pure production view)
   isDemoMode:
@@ -280,6 +283,19 @@ export const useWorldStore = create<WorldState>((set, get) => ({
   resetImmersiveCamera: () => {
     set((state) => ({
       immersiveResetTrigger: state.immersiveResetTrigger + 1,
+      selectedCampusId: null
+    }))
+  },
+
+  setOrbitalPreset: (preset) => {
+    set((state) => ({
+      orbitalPreset: {
+        phi: preset.phi,
+        theta: preset.theta,
+        radius: preset.radius ?? 8.5,
+        label: preset.label,
+        id: (state.orbitalPreset?.id ?? 0) + 1
+      },
       selectedCampusId: null
     }))
   },

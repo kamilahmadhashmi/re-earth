@@ -10,6 +10,7 @@ import { ClusterSelectionPopover } from './components/ui/ClusterSelectionPopover
 import { ScrollStorySections } from './components/ui/ScrollStorySections'
 import { ScrollProgressHUD } from './components/ui/ScrollProgressHUD'
 import { ImmersiveOrbitHUD } from './components/ui/ImmersiveOrbitHUD'
+import { SpatialCyberneticCursor } from './components/ui/SpatialCyberneticCursor'
 import { useWorldStore } from './store/useWorldStore'
 import { useLenis } from './hooks/useLenis'
 
@@ -71,6 +72,9 @@ export const App: React.FC = () => {
           <WeeklyDerbyTicker />
         </>
       )}
+
+      {/* 7. Spatial Cybernetic Reticle Cursor & WGS-84 Telemetry HUD (Desktop) */}
+      <SpatialCyberneticCursor />
     </div>
   )
 }
