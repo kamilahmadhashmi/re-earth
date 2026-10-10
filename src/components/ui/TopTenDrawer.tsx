@@ -13,7 +13,9 @@ export const TopTenDrawer: React.FC = () => {
     toggleLeftDrawer,
     viewMode,
     isIntro,
-    activeChapter
+    activeChapter,
+    isDemoMode,
+    toggleDemoMode
   } = useWorldStore()
 
   if (viewMode !== 'globe') return null
@@ -145,11 +147,22 @@ export const TopTenDrawer: React.FC = () => {
                   </ul>
                 </div>
 
-                {/* Footer hint */}
-                <div className="px-4 py-2.5 border-t border-white/[0.08] text-center bg-white/[0.01]">
+                {/* Footer hint with Demo / Simulation Mode switch */}
+                <div className="px-4 py-2.5 border-t border-white/[0.08] flex items-center justify-between bg-white/[0.01]">
                   <p className="text-[10px] text-text-muted">
-                    Click campus to fly camera & inspect impact
+                    Click campus to inspect
                   </p>
+                  <button
+                    onClick={toggleDemoMode}
+                    className={`text-[9px] font-mono px-2 py-0.5 rounded-full border transition-all ${
+                      isDemoMode
+                        ? 'bg-emerald/20 border-emerald/40 text-emerald font-bold'
+                        : 'bg-white/5 border-white/10 text-text-muted hover:text-text-primary'
+                    }`}
+                    title="Toggle Demo / Simulation Mode (Shift+D)"
+                  >
+                    {isDemoMode ? 'SIMULATION ON' : 'SIMULATION OFF'}
+                  </button>
                 </div>
               </motion.div>
             )}

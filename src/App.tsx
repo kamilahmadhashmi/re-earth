@@ -14,14 +14,23 @@ import { useWorldStore } from './store/useWorldStore'
 import { useLenis } from './hooks/useLenis'
 
 export const App: React.FC = () => {
-  const { loadData, isEarthImmersive } = useWorldStore()
+  const { loadData, isEarthImmersive, toggleDemoMode } = useWorldStore()
 
   // Initialize Lenis smooth scroll engine
   useLenis()
 
   useEffect(() => {
     loadData()
-  }, [loadData])
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.shiftKey && e.key.toLowerCase() === 'd') {
+        toggleDemoMode()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [loadData, toggleDemoMode])
 
   return (
     <div className="relative min-h-screen bg-background select-none overflow-x-hidden">

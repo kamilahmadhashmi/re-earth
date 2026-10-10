@@ -65,6 +65,11 @@ interface WorldState {
   setFreeOrbit: (free: boolean) => void
   scrollToChapter: (chapter: number) => void
   registerLenisScrollTo: (fn: ((target: string | number) => void) | null) => void
+
+  // Gated Demo / Simulation Mode
+  isDemoMode: boolean
+  toggleDemoMode: () => void
+  setDemoMode: (enabled: boolean) => void
 }
 
 export const useWorldStore = create<WorldState>((set, get) => ({
@@ -95,6 +100,12 @@ export const useWorldStore = create<WorldState>((set, get) => ({
   // Direct 3D Orbit Immersive Defaults
   isEarthImmersive: false,
   immersiveResetTrigger: 0,
+
+  // Gated Demo / Simulation Mode (Default: false for pure production view)
+  isDemoMode:
+    typeof window !== 'undefined' &&
+    (new URLSearchParams(window.location.search).has('demo') ||
+      localStorage.getItem('re_earth_demo_mode') === 'true'),
 
   loadData: async () => {
     const campuses = await mockApi.getLeaderboard()
@@ -271,6 +282,23 @@ export const useWorldStore = create<WorldState>((set, get) => ({
       immersiveResetTrigger: state.immersiveResetTrigger + 1,
       selectedCampusId: null
     }))
+  },
+
+  toggleDemoMode: () => {
+    set((state) => {
+      const next = !state.isDemoMode
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('re_earth_demo_mode', String(next))
+      }
+      return { isDemoMode: next }
+    })
+  },
+
+  setDemoMode: (enabled) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('re_earth_demo_mode', String(enabled))
+    }
+    set({ isDemoMode: enabled })
   }
 }))
 

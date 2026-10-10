@@ -12,7 +12,9 @@ export const CampusInspectionCard: React.FC = () => {
     selectedCampusId,
     returnToWorld,
     boostSelectedCampus,
-    isBoosting
+    isBoosting,
+    isDemoMode,
+    toggleDemoMode
   } = useWorldStore()
 
   const campus = campuses.find((c) => c.id === selectedCampusId)
@@ -184,20 +186,58 @@ export const CampusInspectionCard: React.FC = () => {
 
           </div>
 
-          {/* ACTION BUTTON: BOOST CAMPUS */}
-          <div className="p-4 border-t border-white/[0.08] bg-white/[0.02] space-y-2">
-            <button
-              onClick={handleBoost}
-              disabled={isBoosting}
-              className="w-full py-3.5 px-4 rounded-full font-bold text-sm text-background bg-emerald hover:brightness-105 active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-2 shadow-emerald-glow disabled:opacity-50 liquid-glass-control"
-            >
-              <Zap className="w-4 h-4 fill-background" />
-              <span>{isBoosting ? 'Recording Telemetry...' : 'Boost Campus (+250 kg)'}</span>
-            </button>
-            <p className="text-[10px] text-center text-text-muted">
-              Simulates a 250 kg verified kiosk drop-off. Live re-sorts all global rankings.
-            </p>
-          </div>
+          {/* FOOTER: VERIFIED TELEMETRY (DEFAULT) OR GATED SIMULATION (DEMO MODE) */}
+          {!isDemoMode ? (
+            <div className="p-4 border-t border-white/[0.08] bg-white/[0.02] space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald" />
+                  </span>
+                  <span className="text-[11px] font-mono text-text-secondary font-medium">
+                    Automated Ingestion Feed Active
+                  </span>
+                </div>
+                <button
+                  onClick={toggleDemoMode}
+                  className="text-[9px] font-mono text-text-muted hover:text-emerald transition-colors px-2 py-0.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10"
+                  title="Toggle Simulation / Demo Mode (Shift+D)"
+                >
+                  Demo Mode: Off
+                </button>
+              </div>
+              <p className="text-[10px] text-text-muted text-center leading-relaxed">
+                Telemetry streams automatically from verified campus drop-off kiosks and IoT scales.
+              </p>
+            </div>
+          ) : (
+            <div className="p-4 border-t border-emerald/20 bg-emerald/[0.03] space-y-2.5">
+              <div className="flex items-center justify-between text-xs pb-0.5">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-emerald uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
+                  Simulation Mode Active
+                </span>
+                <button
+                  onClick={toggleDemoMode}
+                  className="text-[9px] font-mono text-text-muted hover:text-text-primary transition-colors px-2 py-0.5 rounded-full bg-white/5 border border-white/10"
+                >
+                  Turn Off
+                </button>
+              </div>
+              <button
+                onClick={handleBoost}
+                disabled={isBoosting}
+                className="w-full py-3 px-4 rounded-full font-bold text-xs text-background bg-emerald hover:brightness-105 active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-2 shadow-emerald-glow disabled:opacity-50 liquid-glass-control"
+              >
+                <Zap className="w-3.5 h-3.5 fill-background" />
+                <span>{isBoosting ? 'Recording Telemetry...' : 'Simulate IoT Drop-Off (+250 kg)'}</span>
+              </button>
+              <p className="text-[10px] text-center text-text-muted">
+                Simulates a 250 kg verified kiosk drop-off. Live re-sorts all global rankings.
+              </p>
+            </div>
+          )}
 
         </div>
       </motion.aside>
