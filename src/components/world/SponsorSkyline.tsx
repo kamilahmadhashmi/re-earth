@@ -1,7 +1,6 @@
 import React, { useRef, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
 import type { RankedSponsor } from '../../shared/ranking'
 import windowGridVert from '../../shaders/windowGrid.vert.glsl'
 import windowGridFrag from '../../shaders/windowGrid.frag.glsl'
@@ -16,8 +15,7 @@ interface SponsorSkylineProps {
 export const SponsorSkyline: React.FC<SponsorSkylineProps> = ({
   sponsors,
   selectedSponsorId,
-  onSelectSponsor,
-  onOpenPitch
+  onSelectSponsor
 }) => {
   return (
     <group position={[0, -1.0, 0]}>
@@ -28,9 +26,9 @@ export const SponsorSkyline: React.FC<SponsorSkylineProps> = ({
         <meshStandardMaterial color="#050608" roughness={0.8} metalness={0.2} />
       </mesh>
 
-      {/* 2. Sponsor Towers */}
+      {/* 2. Arranged Sponsor Towers (No text overlays or distractions) */}
       {sponsors.map((sponsor, index) => {
-        // Position in a staggered 3x3 layout
+        // Position in a symmetrical architectural layout
         const row = Math.floor(index / 3) - 1
         const col = (index % 3) - 1
         const posX = col * 3.6
@@ -46,9 +44,6 @@ export const SponsorSkyline: React.FC<SponsorSkylineProps> = ({
           />
         )
       })}
-
-      {/* 3. Golden "Your Company Here" Empty Plot */}
-      <EmptySponsorPlot position={[3.6, 0, 3.6]} onClick={onOpenPitch} />
     </group>
   )
 }
@@ -143,126 +138,15 @@ const SponsorTower: React.FC<SponsorTowerProps> = ({
         <boxGeometry args={[w3, h3, w3]} />
       </mesh>
 
-      {/* ROOF SPONSOR LOGO CROWN BILLBOARD */}
-      <Html
-        position={[0, height + 0.35, 0]}
-        center
-        distanceFactor={11}
-        className="pointer-events-none select-none transition-transform duration-200"
-      >
-        <div
-          className={`flex flex-col items-center whitespace-nowrap ${
-            hovered || isSelected ? 'scale-110 z-20' : 'scale-100'
-          }`}
-        >
-          <div
-            className="px-3 py-1.5 rounded-md border shadow-xl flex items-center gap-2"
-            style={{
-              backgroundColor: '#131922',
-              borderColor: sponsor.color
-            }}
-          >
-            <span
-              className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded"
-              style={{ backgroundColor: `${sponsor.color}25`, color: sponsor.color }}
-            >
-              #{sponsor.rank}
-            </span>
-            <span className="font-bold text-sm text-white">{sponsor.name}</span>
-            <span className="font-mono text-xs font-semibold text-emerald-300">
-              {Math.round(sponsor.totalKg).toLocaleString()}kg
-            </span>
-          </div>
-          <span className="text-[10px] text-text-muted mt-0.5">
-            {sponsor.campusCount} {sponsor.campusCount === 1 ? 'Campus' : 'Campuses'} Backed
-          </span>
-        </div>
-      </Html>
-    </group>
-  )
-}
-
-// Glowing gold plot for potential sponsors
-const EmptySponsorPlot: React.FC<{ position: [number, number, number]; onClick: () => void }> = ({
-  position,
-  onClick
-}) => {
-  const [hovered, setHovered] = useState(false)
-  const beamRef = useRef<THREE.Mesh>(null)
-
-  useFrame((state) => {
-    if (beamRef.current) {
-      beamRef.current.rotation.y = state.clock.getElapsedTime() * 0.4
-    }
-  })
-
-  const pointerDownPos = useRef({ x: 0, y: 0 })
-
-  return (
-    <group
-      position={position}
-      onPointerDown={(e) => {
-        pointerDownPos.current = { x: e.clientX, y: e.clientY }
-      }}
-      onClick={(e) => {
-        e.stopPropagation()
-        const dist = Math.hypot(
-          e.clientX - pointerDownPos.current.x,
-          e.clientY - pointerDownPos.current.y
-        )
-        if (dist > 6) return
-        onClick()
-      }}
-      onPointerOver={(e) => {
-        e.stopPropagation()
-        setHovered(true)
-        document.body.style.cursor = 'pointer'
-      }}
-      onPointerOut={() => {
-        setHovered(false)
-        document.body.style.cursor = 'default'
-      }}
-    >
-      {/* Golden Base Plot */}
-      <mesh position={[0, 0.1, 0]}>
-        <boxGeometry args={[1.6, 0.2, 1.6]} />
-        <meshStandardMaterial
-          color="#F59E0B"
-          emissive="#D97706"
-          emissiveIntensity={0.6}
-          roughness={0.2}
-          metalness={0.9}
-        />
-      </mesh>
-
-      {/* Holographic upward beacon cylinder */}
-      <mesh ref={beamRef} position={[0, 2.0, 0]}>
-        <cylinderGeometry args={[0.7, 0.9, 3.8, 16, 1, true]} />
+      {/* ROOFTOP ARCHITECTURAL LIGHT CROWN SPIRE */}
+      <mesh position={[0, height + 0.12, 0]}>
+        <coneGeometry args={[0.08, 0.28, 4]} />
         <meshBasicMaterial
-          color="#F59E0B"
+          color={sponsor.color}
           transparent
-          opacity={hovered ? 0.45 : 0.25}
-          side={THREE.DoubleSide}
-          depthWrite={false}
+          opacity={hovered || isSelected ? 0.95 : 0.65}
         />
       </mesh>
-
-      {/* Billboard prompt */}
-      <Html position={[0, 2.2, 0]} center distanceFactor={11} className="pointer-events-none select-none">
-        <div
-          className={`flex flex-col items-center transition-transform duration-200 ${
-            hovered ? 'scale-110' : 'scale-100'
-          }`}
-        >
-          <div className="px-3 py-1.5 rounded-md border border-amber-400/80 bg-[#131922] shadow-sm flex items-center gap-1.5 text-xs font-bold text-amber-300">
-            <span className="w-1.5 h-1.5 rounded-[2px] bg-amber-400" />
-            <span>RESERVE SPONSOR POSITION</span>
-          </div>
-          <span className="text-[10px] text-amber-200/80 mt-1 font-mono">
-            Click to Sponsor a Campus
-          </span>
-        </div>
-      </Html>
     </group>
   )
 }

@@ -10,12 +10,13 @@ import { ClusterSelectionPopover } from './components/ui/ClusterSelectionPopover
 import { ScrollStorySections } from './components/ui/ScrollStorySections'
 import { ScrollProgressHUD } from './components/ui/ScrollProgressHUD'
 import { ImmersiveOrbitHUD } from './components/ui/ImmersiveOrbitHUD'
+import { SponsorSkylineHUD } from './components/ui/SponsorSkylineHUD'
 import { SpatialCyberneticCursor } from './components/ui/SpatialCyberneticCursor'
 import { useWorldStore } from './store/useWorldStore'
 import { useLenis } from './hooks/useLenis'
 
 export const App: React.FC = () => {
-  const { loadData, isEarthImmersive, toggleDemoMode } = useWorldStore()
+  const { loadData, isEarthImmersive, toggleDemoMode, viewMode } = useWorldStore()
 
   // Initialize Lenis smooth scroll engine
   useLenis()
@@ -44,17 +45,20 @@ export const App: React.FC = () => {
       {/* 2. Direct 3D Orbit Immersive Controls (Exclusive to Immersive Mode) */}
       {isEarthImmersive && <ImmersiveOrbitHUD />}
 
-      {/* 3. Campus Inspection Detail Card (Active in BOTH Normal and 3D World / Immersive Orbit Mode) */}
-      <CampusInspectionCard />
+      {/* 2b. Sponsor Skyline Direct Orbit HUD (Minimal Back Control, no text overlays on towers) */}
+      {viewMode === 'skyline' && <SponsorSkylineHUD />}
 
-      {/* 4. Cluster Selection Popover for dense regional campus groups (Active in BOTH modes) */}
-      <ClusterSelectionPopover />
+      {/* 3. Campus Inspection Detail Card (Active in Globe Mode) */}
+      {viewMode === 'globe' && <CampusInspectionCard />}
 
-      {/* 5. Modals (Recycle, Sponsor Pitch, Vault, Learn) (Active in BOTH modes) */}
+      {/* 4. Cluster Selection Popover for dense regional campus groups (Active in Globe Mode) */}
+      {viewMode === 'globe' && <ClusterSelectionPopover />}
+
+      {/* 5. Modals (Recycle, Sponsor Pitch, Vault, Learn) */}
       <Modals />
 
-      {/* 6. Normal Narrative & Exploration Overlays (Completely hidden/unmounted in Immersive Orbit) */}
-      {!isEarthImmersive && (
+      {/* 6. Normal Narrative & Exploration Overlays (Completely unmounted in Immersive Orbit and Skyline modes) */}
+      {!isEarthImmersive && viewMode === 'globe' && (
         <>
           {/* Scroll Story Narrative Chapters (5 Cinematic Stages) */}
           <ScrollStorySections />
@@ -73,7 +77,7 @@ export const App: React.FC = () => {
         </>
       )}
 
-      {/* 7. Spatial Cybernetic Reticle Cursor & WGS-84 Telemetry HUD (Desktop) */}
+      {/* 7. Spatial Cybernetic Reticle Cursor (Desktop) */}
       <SpatialCyberneticCursor />
     </div>
   )

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useWorldStore } from '../../store/useWorldStore'
 
 export const SiliconSchematicBackground: React.FC = () => {
-  const { activeChapter, isEarthImmersive } = useWorldStore()
+  const { activeChapter, isEarthImmersive, viewMode } = useWorldStore()
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Track cursor for subtle spatial specular lens over circuitry
@@ -70,7 +70,7 @@ export const SiliconSchematicBackground: React.FC = () => {
       {/* 2. LAYER B: Living Chapter-Reactive Atmospheric Halo Behind Earth */}
       <div
         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130vw] h-[130vh] max-w-[1700px] max-h-[1700px] rounded-full pointer-events-none animate-atmosphere-breathe transition-opacity duration-700 ${
-          isEarthImmersive ? 'opacity-35' : 'opacity-100'
+          isEarthImmersive || viewMode === 'skyline' ? 'opacity-35' : 'opacity-100'
         }`}
         style={{
           background: getAtmosphericGlow(),
@@ -82,7 +82,7 @@ export const SiliconSchematicBackground: React.FC = () => {
       {/* 3. Interactive Spatial Specular Lens (follows cursor gently over circuits in normal mode) */}
       <div
         className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
-          isEarthImmersive ? 'opacity-0' : 'opacity-60'
+          isEarthImmersive || viewMode === 'skyline' ? 'opacity-0' : 'opacity-60'
         }`}
         style={{
           background: 'radial-gradient(circle 420px at var(--mouse-x) var(--mouse-y), rgba(45, 212, 191, 0.08) 0%, rgba(14, 165, 233, 0.03) 45%, transparent 100%)'
@@ -100,7 +100,7 @@ export const SiliconSchematicBackground: React.FC = () => {
       {/* 5. LAYERS C, D, E, G: High-Precision Sub-Silicon Vector Schematics & Live Electronic Pulses */}
       <svg
         className={`absolute inset-0 w-full h-full transition-all duration-700 ${
-          isEarthImmersive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          isEarthImmersive || viewMode === 'skyline' ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1920 1080"

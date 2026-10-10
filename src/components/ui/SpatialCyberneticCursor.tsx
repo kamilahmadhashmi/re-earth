@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { motion, useSpring, useMotionValue } from 'framer-motion'
+import { useWorldStore } from '../../store/useWorldStore'
 
 export const SpatialCyberneticCursor: React.FC = () => {
+  const { viewMode } = useWorldStore()
   const [isVisible, setIsVisible] = useState(false)
   const [cursorText, setCursorText] = useState<string | null>(null)
   const [cursorVariant, setCursorVariant] = useState<'default' | 'interactive' | 'orbit' | 'inspect'>('default')
@@ -100,7 +102,7 @@ export const SpatialCyberneticCursor: React.FC = () => {
         </motion.div>
 
         {/* Hover Label Badge */}
-        {cursorText && (
+        {cursorText && viewMode !== 'skyline' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -123,16 +125,18 @@ export const SpatialCyberneticCursor: React.FC = () => {
         className="absolute pointer-events-none w-1.5 h-1.5 rounded-full bg-emerald shadow-[0_0_8px_#30D158]"
       />
 
-      {/* 3. Subtle Screen Bottom-Left Telemetry Coordinates Ticker */}
-      <div className="fixed bottom-3 left-4 pointer-events-none hidden lg:flex items-center gap-3 text-[9px] font-mono text-text-muted/60 tracking-wider">
-        <span className="flex items-center gap-1.5">
-          <span className="w-1 h-1 rounded-full bg-emerald animate-pulse" />
-          OPTICAL RETICLE
-        </span>
-        <span>LAT: {coordinates.lat}°</span>
-        <span>LNG: {coordinates.lng}°</span>
-        <span>PROJ: WGS-84</span>
-      </div>
+      {/* 3. Subtle Screen Bottom-Left Telemetry Coordinates Ticker (Hidden in Skyline) */}
+      {viewMode !== 'skyline' && (
+        <div className="fixed bottom-3 left-4 pointer-events-none hidden lg:flex items-center gap-3 text-[9px] font-mono text-text-muted/60 tracking-wider">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-emerald animate-pulse" />
+            OPTICAL RETICLE
+          </span>
+          <span>LAT: {coordinates.lat}°</span>
+          <span>LNG: {coordinates.lng}°</span>
+          <span>PROJ: WGS-84</span>
+        </div>
+      )}
     </div>
   )
 }

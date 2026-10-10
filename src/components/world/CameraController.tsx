@@ -129,7 +129,8 @@ export const CameraController: React.FC = () => {
     exitImmersiveOrbit,
     resetImmersiveCamera,
     immersiveResetTrigger,
-    orbitalPreset
+    orbitalPreset,
+    setViewMode
   } = useWorldStore()
 
   // Current camera spherical coordinates and target lookAt point
@@ -232,6 +233,14 @@ export const CameraController: React.FC = () => {
           0.08,
           Math.PI - 0.08
         )
+      } else if (viewMode === 'skyline') {
+        // Free orbit around the towers above ground
+        current.current.theta += velocity.current.theta
+        current.current.phi = THREE.MathUtils.clamp(
+          current.current.phi + velocity.current.phi,
+          0.15,
+          Math.PI / 2 - 0.05
+        )
       } else {
         dragOffset.current.theta += velocity.current.theta
         dragOffset.current.phi = THREE.MathUtils.clamp(
@@ -249,15 +258,15 @@ export const CameraController: React.FC = () => {
       }
     }
 
-    // Wheel zoom handling in immersive mode without interfering with page
+    // Wheel zoom handling in immersive and skyline modes without interfering with page
     const handleWheel = (e: WheelEvent) => {
-      if (!isEarthImmersive) return
+      if (!isEarthImmersive && viewMode !== 'skyline') return
       e.preventDefault()
       const zoomDelta = e.deltaY * 0.006
       targetRadius.current = THREE.MathUtils.clamp(
         targetRadius.current + zoomDelta,
-        4.8,
-        14.5
+        viewMode === 'skyline' ? 6.0 : 4.8,
+        viewMode === 'skyline' ? 24.0 : 14.5
       )
     }
 
@@ -268,6 +277,8 @@ export const CameraController: React.FC = () => {
           returnToWorld()
         } else if (isEarthImmersive) {
           exitImmersiveOrbit()
+        } else if (viewMode === 'skyline') {
+          setViewMode('globe')
         } else {
           returnToWorld()
         }
@@ -402,23 +413,25 @@ export const CameraController: React.FC = () => {
 
     if (viewMode === 'skyline') {
       const target = {
-        radius: 12.0,
-        phi: 45 * DEG2RAD,
-        theta: 25 * DEG2RAD,
+        radius: 14.0,
+        phi: 52 * DEG2RAD,
+        theta: 35 * DEG2RAD,
         targetX: 0,
-        targetY: 0,
+        targetY: 1.0,
         targetZ: 0
       }
+      targetRadius.current = 14.0
       isTargetingCampus.current = true
       tweenRef.current = gsap.to(current.current, {
         ...target,
-        duration: 1.4,
+        duration: 1.2,
         ease: 'power2.out',
         onComplete: () => {
           isTargetingCampus.current = false
           tweenRef.current = null
         }
       })
+      return
     } else if (selectedCampusId) {
       const campus = campuses.find((c) => c.id === selectedCampusId)
       if (campus) {
@@ -532,6 +545,28 @@ export const CameraController: React.FC = () => {
         current.current.radius += (targetRadius.current - current.current.radius) * lerpSpeed
         current.current.targetX += (0 - current.current.targetX) * lerpSpeed
         current.current.targetY += (0 - current.current.targetY) * lerpSpeed
+        current.current.targetZ += (0 - current.current.targetZ) * lerpSpeed
+
+        setCameraRadius(current.current.radius)
+      }
+    } else if (viewMode === 'skyline') {
+      // Free Orbit around the skyline towers
+      if (Math.abs(velocity.current.theta) > 0.00005 || Math.abs(velocity.current.phi) > 0.00005) {
+        current.current.theta += velocity.current.theta
+        current.current.phi = THREE.MathUtils.clamp(
+          current.current.phi + velocity.current.phi,
+          minPhi,
+          maxPhi
+        )
+        velocity.current.theta *= 0.92
+        velocity.current.phi *= 0.92
+      }
+
+      if (!isTargetingCampus.current) {
+        const lerpSpeed = Math.min(1, delta * 7.0)
+        current.current.radius += (targetRadius.current - current.current.radius) * lerpSpeed
+        current.current.targetX += (0 - current.current.targetX) * lerpSpeed
+        current.current.targetY += (1.0 - current.current.targetY) * lerpSpeed
         current.current.targetZ += (0 - current.current.targetZ) * lerpSpeed
 
         setCameraRadius(current.current.radius)
