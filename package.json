@@ -17,7 +17,7 @@
     "lint:deps": "depcruise src --config .dependency-cruiser.cjs --output-type err",
     "lint:unused": "knip",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist --dotfiles"
   },
   "dependencies": {
     "@react-three/drei": "^9.105.6",
