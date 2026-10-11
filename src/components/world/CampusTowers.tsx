@@ -5,6 +5,7 @@ import { Html } from '@react-three/drei'
 import type { RankedCampus } from '../../shared/ranking'
 import { geoToVector3, geoOrientation, GLOBE_RADIUS } from '../../utils/geo'
 import { SPONSOR_MAP } from '../../data/sponsors'
+import { SponsorLogo } from '../ui/SponsorLogo'
 import { createSponsorTowerBannerTexture } from '../../utils/sponsorTowerBannerTexture'
 import {
   clusterCampusesByProximity,
@@ -95,6 +96,7 @@ interface CampusClusterNodeProps {
 const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick }) => {
   const [hovered, setHovered] = useState(false)
   const groupRef = useRef<THREE.Group>(null)
+  const clusterCrestRef = useRef<HTMLDivElement>(null)
 
   const sponsor = useMemo(() => {
     return SPONSOR_MAP.get(cluster.dominantSponsorId) || SPONSOR_MAP.get('google')!
@@ -104,6 +106,10 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
     return geoOrientation(cluster.centerLat, cluster.centerLng)
   }, [cluster.centerLat, cluster.centerLng])
 
+  const normal = useMemo(() => {
+    return cluster.centerPosition.clone().normalize()
+  }, [cluster.centerPosition])
+
   const pointerDownPos = useRef({ x: 0, y: 0 })
 
   useFrame((state, delta) => {
@@ -111,6 +117,18 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
       // Subtle hovering breathing pulse
       const pulse = 1.0 + Math.sin(state.clock.getElapsedTime() * 3.0) * 0.05
       groupRef.current.scale.setScalar(hovered ? 1.25 : pulse)
+    }
+
+    // Horizon occlusion culling against spherical Earth
+    if (clusterCrestRef.current) {
+      const camDist = state.camera.position.length()
+      const cosAngle = normal.dot(state.camera.position) / camDist
+      const safeD = Math.max(GLOBE_RADIUS + 0.1, camDist)
+      const maxAngle = Math.acos(GLOBE_RADIUS / safeD) + Math.acos(GLOBE_RADIUS / (GLOBE_RADIUS + 0.2))
+      const cosCutoff = Math.cos(maxAngle) + 0.04
+      const isVisible = cosAngle > cosCutoff
+      clusterCrestRef.current.style.opacity = isVisible ? '1' : '0'
+      clusterCrestRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
     }
   })
 
@@ -143,7 +161,7 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
     >
       {/* Invisible broad hit-sphere */}
       <mesh>
-        <sphereGeometry args={[0.18, 16, 16]} />
+        <sphereGeometry args={[0.22, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
@@ -170,35 +188,88 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
         />
       </mesh>
 
-      {/* Floating Apple Spatial Hub Badge (Shown on hover for clean globe clarity) */}
-      {hovered && (
-        <Html
-          position={[0, 0.22, 0]}
-          center
-          distanceFactor={9.5}
-          className="pointer-events-none select-none transition-all duration-200"
+      {/* Architectural Pylon Mounting Spire */}
+      <mesh position={[0, 0.19, 0]}>
+        <cylinderGeometry args={[0.007, 0.01, 0.06, 8]} />
+        <meshStandardMaterial color="#1E293B" metalness={0.92} roughness={0.15} />
+      </mesh>
+
+      {/* Prominent Dominant Corporate Partner Signage at Cluster Tip */}
+      <Html
+        position={[0, 0.28, 0]}
+        center
+        distanceFactor={7.5}
+        zIndexRange={[10, 35]}
+        className="pointer-events-auto select-none"
+      >
+        <div
+          ref={clusterCrestRef}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={(e) => {
+            e.stopPropagation()
+            onClick()
+          }}
+          className={`flex flex-col items-center cursor-pointer transition-all duration-200 group ${
+            hovered ? 'scale-110 z-40' : 'scale-100 z-10'
+          }`}
         >
+          {/* Main Architectural Logo Backing Plate */}
           <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-md border shadow-spatial scale-105"
+            className="relative flex flex-col items-center rounded-xl p-2 border shadow-2xl transition-all duration-200"
             style={{
-              backgroundColor: 'rgba(11, 15, 20, 0.94)',
-              borderColor: `${sponsor.color}88`,
-              boxShadow: `0 4px 16px ${sponsor.color}33`
+              backgroundColor: '#0A0E15',
+              borderColor: hovered ? sponsor.color : `${sponsor.color}80`,
+              boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}45`
             }}
           >
-            {/* Hub Count Circle */}
-            <span
-              className="w-4 h-4 rounded-full flex items-center justify-center font-mono font-bold text-[9px] text-white"
-              style={{ backgroundColor: sponsor.color }}
+            {/* Recessed High-Contrast Logo Well */}
+            <div
+              className="w-12 h-12 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-2 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-200"
+              style={{
+                boxShadow: `inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 10px ${sponsor.color}25`
+              }}
             >
-              {cluster.campuses.length}
-            </span>
-            <span className="text-[11px] font-bold text-white tracking-tight">
-              {cluster.campuses[0].city} Cluster
-            </span>
+              <SponsorLogo
+                sponsorId={sponsor.id}
+                className="w-full h-full object-contain filter drop-shadow"
+              />
+            </div>
+
+            {/* Hub Count & Sponsor Identity Pill */}
+            <div className="flex items-center gap-1.5 mt-1.5 px-2 py-0.5 rounded border border-white/10 bg-black/60">
+              <span
+                className="w-2 h-2 rounded-full animate-pulse"
+                style={{ backgroundColor: sponsor.color }}
+              />
+              <span className="text-[9px] font-mono font-bold text-white tracking-wider">
+                {cluster.campuses.length} Campuses
+              </span>
+            </div>
+
+            {/* Expanded Cluster Tooltip on Hover */}
+            {hovered && (
+              <div className="flex flex-col items-center text-center mt-1.5 pt-1.5 border-t border-white/10 whitespace-nowrap animate-in fade-in zoom-in-95 duration-150">
+                <span className="text-[11px] font-bold text-white tracking-tight">
+                  {cluster.campuses[0].city} Cluster
+                </span>
+                <span className="font-mono text-[9px] text-emerald font-semibold">
+                  Click to Expand
+                </span>
+              </div>
+            )}
           </div>
-        </Html>
-      )}
+
+          {/* Downward Architectural Mounting Anchor Pip */}
+          <div
+            className="w-2.5 h-2.5 -mt-1.5 rotate-45 border-r border-b"
+            style={{
+              backgroundColor: '#0A0E15',
+              borderColor: hovered ? sponsor.color : `${sponsor.color}80`
+            }}
+          />
+        </div>
+      </Html>
     </group>
   )
 }
@@ -224,6 +295,7 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
   explodedOffset
 }) => {
   const groupRef = useRef<THREE.Group>(null)
+  const crestContainerRef = useRef<HTMLDivElement>(null)
   const [hovered, setHovered] = useState(false)
   const growthProgress = useRef(0)
 
@@ -244,6 +316,10 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
     const quat = geoOrientation(campus.lat, campus.lng)
     return { position: pos, quaternion: quat }
   }, [campus.lat, campus.lng, explodedOffset])
+
+  const normal = useMemo(() => {
+    return position.clone().normalize()
+  }, [position])
 
   const height = campus.towerHeight
   const towerWidth = Math.max(0.08, 0.05 + height * 0.038)
@@ -318,6 +394,18 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
       groupRef.current.scale.x += (targetScale - groupRef.current.scale.x) * Math.min(1, delta * 8)
       groupRef.current.scale.z += (targetScale - groupRef.current.scale.z) * Math.min(1, delta * 8)
     }
+
+    // Horizon occlusion culling against spherical Earth
+    if (crestContainerRef.current) {
+      const camDist = state.camera.position.length()
+      const cosAngle = normal.dot(state.camera.position) / camDist
+      const safeD = Math.max(GLOBE_RADIUS + 0.1, camDist)
+      const maxAngle = Math.acos(GLOBE_RADIUS / safeD) + Math.acos(GLOBE_RADIUS / (GLOBE_RADIUS + height))
+      const cosCutoff = Math.cos(maxAngle) + 0.04
+      const isVisible = cosAngle > cosCutoff
+      crestContainerRef.current.style.opacity = isVisible ? '1' : '0'
+      crestContainerRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
+    }
   })
 
   const pointerDownPos = useRef({ x: 0, y: 0 })
@@ -383,9 +471,34 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
         <meshBasicMaterial color={sponsor.color} transparent opacity={0.8} />
       </mesh>
 
-      {/* 3. ROOFTOP BEACON WITH REACTIVE BOOST FLARE */}
-      <mesh ref={beaconMeshRef} position={[0, height + 0.02, 0]}>
-        <sphereGeometry args={[0.022, 16, 16]} />
+      {/* 3. ARCHITECTURAL ROOF CROWN & SIGNAGE MAST */}
+      {/* Bevelled obsidian roof plate */}
+      <mesh position={[0, height + 0.008, 0]}>
+        <boxGeometry args={[towerWidth * 0.94, 0.016, towerDepth * 0.94]} />
+        <meshStandardMaterial
+          color="#0B0E15"
+          metalness={0.9}
+          roughness={0.2}
+          emissive={sponsor.color}
+          emissiveIntensity={hovered || isSelected ? 0.4 : 0.15}
+        />
+      </mesh>
+
+      {/* Neon halo energy ring encircling roof mast */}
+      <mesh position={[0, height + 0.018, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[Math.min(towerWidth, towerDepth) * 0.38, 0.0035, 8, 24]} />
+        <meshBasicMaterial color={sponsor.color} transparent opacity={0.85} />
+      </mesh>
+
+      {/* Sleek vertical architectural sign pylon */}
+      <mesh position={[0, height + 0.045, 0]}>
+        <cylinderGeometry args={[0.006, 0.009, 0.07, 8]} />
+        <meshStandardMaterial color="#1E293B" metalness={0.92} roughness={0.15} />
+      </mesh>
+
+      {/* Optical beacon node with boost flare */}
+      <mesh ref={beaconMeshRef} position={[0, height + 0.082, 0]}>
+        <sphereGeometry args={[0.013, 12, 12]} />
         <meshBasicMaterial
           color={boostSurge.current > 0 ? '#FFFFFF' : hovered || isSelected ? '#FFFFFF' : sponsor.color}
           transparent
@@ -404,41 +517,89 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
         />
       </mesh>
 
-      {/* 5. DISTANCE-FADING CAMPUS & SPONSOR BADGE LABEL (Shown on hover or selection for pristine visual clarity) */}
-      {(hovered || isSelected) && (
-        <Html
-          position={[0, height + 0.14, 0]}
-          center
-          distanceFactor={9.5}
-          className="pointer-events-none select-none transition-all duration-300"
+      {/* 5. LARGE PROMINENT COMPANY LOGO SIGNAGE CREST AT TOWER TIP */}
+      <Html
+        position={[0, height + 0.14, 0]}
+        center
+        distanceFactor={7.5}
+        zIndexRange={[10, 35]}
+        className="pointer-events-auto select-none"
+      >
+        <div
+          ref={crestContainerRef}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={(e) => {
+            e.stopPropagation()
+            onSelect()
+          }}
+          className={`flex flex-col items-center cursor-pointer transition-all duration-200 group ${
+            hovered || isSelected ? 'scale-110 z-40' : 'scale-100 z-10'
+          }`}
         >
+          {/* Main Architectural Logo Backing Plate */}
           <div
-            className={`flex flex-col items-center whitespace-nowrap transition-transform duration-200 ${
-              isSelected ? 'scale-110 z-30' : 'scale-100'
-            }`}
+            className="relative flex flex-col items-center rounded-xl p-2 border shadow-2xl transition-all duration-200"
+            style={{
+              backgroundColor: '#0A0E15',
+              borderColor: hovered || isSelected ? sponsor.color : `${sponsor.color}80`,
+              boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}45`
+            }}
           >
+            {/* Subtle Brand Ambient Backlight */}
             <div
-              className="px-2.5 py-0.5 rounded-md flex items-center gap-1.5 border text-[11px] font-semibold shadow-spatial"
+              className="absolute inset-0 rounded-xl opacity-30 pointer-events-none"
               style={{
-                backgroundColor: '#131922',
-                borderColor: `${sponsor.color}88`,
-                color: '#FFFFFF'
+                background: `radial-gradient(circle at 50% 50%, ${sponsor.color}35 0%, transparent 80%)`
+              }}
+            />
+
+            {/* Recessed High-Contrast Logo Well */}
+            <div
+              className="w-12 h-12 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-2 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-200"
+              style={{
+                boxShadow: `inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 10px ${sponsor.color}25`
               }}
             >
-              <span
-                className="font-mono text-[9px] px-1.5 py-0.2 rounded font-bold uppercase"
-                style={{
-                  backgroundColor: `${sponsor.color}25`,
-                  color: sponsor.color
-                }}
-              >
-                {sponsor.logoText}
-              </span>
-              <span>{campus.shortName}</span>
+              <SponsorLogo
+                sponsorId={sponsor.id}
+                className="w-full h-full object-contain filter drop-shadow"
+              />
             </div>
+
+            {/* Architectural Brand Ticker & Identity Pill */}
+            <div className="flex items-center gap-1 mt-1.5 px-1.5 py-0.5 rounded border border-white/10 bg-black/60">
+              <span
+                className="text-[9px] font-mono font-bold tracking-wider"
+                style={{ color: sponsor.color }}
+              >
+                {sponsor.ticker}
+              </span>
+            </div>
+
+            {/* Expanded Telemetry & Campus Partnership Tag on Hover / Selection */}
+            {(hovered || isSelected) && (
+              <div className="flex flex-col items-center text-center mt-1.5 pt-1.5 border-t border-white/10 whitespace-nowrap animate-in fade-in zoom-in-95 duration-150">
+                <span className="text-[11px] font-bold text-white tracking-tight">
+                  {campus.shortName}
+                </span>
+                <span className="font-mono text-[9.5px] font-bold text-emerald">
+                  {Math.round(campus.allTimeKg).toLocaleString()} kg
+                </span>
+              </div>
+            )}
           </div>
-        </Html>
-      )}
+
+          {/* Downward Architectural Mounting Anchor Pip */}
+          <div
+            className="w-2.5 h-2.5 -mt-1.5 rotate-45 border-r border-b"
+            style={{
+              backgroundColor: '#0A0E15',
+              borderColor: hovered || isSelected ? sponsor.color : `${sponsor.color}80`
+            }}
+          />
+        </div>
+      </Html>
     </group>
   )
 }

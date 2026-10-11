@@ -558,6 +558,7 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
         position={[0, config.treeHeight + 0.74, 0]}
         center
         distanceFactor={11.0}
+        zIndexRange={[10, 35]}
         className="pointer-events-auto select-none transition-all duration-200"
       >
         <div
@@ -624,24 +625,46 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
               </div>
             </div>
           ) : (
-            /* Minimal Badge by Default (Only Company Name and kg) */
+            /* Prominent Architectural Logo Signage Crest at Tree Tip */
             <div
-              className="px-2.5 py-1 rounded-md border shadow-lg flex items-center gap-2 transition-all duration-150 whitespace-nowrap"
+              className="relative flex flex-col items-center rounded-xl p-2 border shadow-2xl transition-all duration-200 group-hover:scale-105"
               style={{
-                backgroundColor: '#131922',
-                borderColor: `${sponsor.color}60`,
-                boxShadow: '0 4px 14px -2px rgba(0, 0, 0, 0.7)'
+                backgroundColor: '#0A0E15',
+                borderColor: `${sponsor.color}80`,
+                boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}45`
               }}
             >
-              <div className="w-4 h-4 rounded bg-black/40 border border-white/10 flex items-center justify-center p-0.5 shrink-0">
-                <SponsorLogo sponsorId={sponsor.id} className="w-3 h-3" />
+              {/* Recessed High-Contrast Logo Well */}
+              <div
+                className="w-12 h-12 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-2 shrink-0 shadow-inner"
+                style={{
+                  boxShadow: `inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 10px ${sponsor.color}25`
+                }}
+              >
+                <SponsorLogo
+                  sponsorId={sponsor.id}
+                  className="w-full h-full object-contain filter drop-shadow"
+                />
               </div>
-              <span className="font-bold text-[11px] text-white tracking-tight">
-                {sponsor.name}
-              </span>
-              <span className="font-mono text-[10px] font-bold text-emerald">
-                {Math.round(sponsor.totalKg).toLocaleString()} kg
-              </span>
+
+              {/* Company Name & Metric Tag */}
+              <div className="flex items-center gap-1.5 mt-1.5 px-2 py-0.5 rounded border border-white/10 bg-black/60 whitespace-nowrap">
+                <span className="font-bold text-[10.5px] text-white tracking-tight">
+                  {sponsor.name}
+                </span>
+                <span className="font-mono text-[9.5px] font-bold text-emerald">
+                  {Math.round(sponsor.totalKg).toLocaleString()} kg
+                </span>
+              </div>
+
+              {/* Downward Architectural Mounting Anchor Pip */}
+              <div
+                className="w-2.5 h-2.5 -mt-1.5 rotate-45 border-r border-b"
+                style={{
+                  backgroundColor: '#0A0E15',
+                  borderColor: `${sponsor.color}80`
+                }}
+              />
             </div>
           )}
         </div>
