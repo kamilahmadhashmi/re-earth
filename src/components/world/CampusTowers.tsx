@@ -196,9 +196,8 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
 
       {/* Prominent Dominant Corporate Partner Signage at Cluster Tip */}
       <Html
-        position={[0, 0.28, 0]}
+        position={[0, hovered ? 0.28 : 0.22, 0]}
         center
-        distanceFactor={7.5}
         zIndexRange={[10, 35]}
         className="pointer-events-auto select-none"
       >
@@ -210,62 +209,73 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
             e.stopPropagation()
             onClick()
           }}
-          className={`flex flex-col items-center cursor-pointer transition-all duration-200 group ${
-            hovered ? 'scale-110 z-40' : 'scale-100 z-10'
+          className={`flex flex-col items-center cursor-pointer transition-all duration-200 ${
+            hovered ? 'scale-105 z-40' : 'scale-100 z-10'
           }`}
         >
-          {/* Main Architectural Logo Backing Plate */}
-          <div
-            className="relative flex flex-col items-center rounded-xl p-2 border shadow-2xl transition-all duration-200"
-            style={{
-              backgroundColor: '#0A0E15',
-              borderColor: hovered ? sponsor.color : `${sponsor.color}80`,
-              boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}45`
-            }}
-          >
-            {/* Recessed High-Contrast Logo Well */}
+          {hovered ? (
+            /* ENLARGED ON HOVER WITH CLUSTER NAME & CAMPUS COUNT */
             <div
-              className="w-12 h-12 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-2 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-200"
+              className="px-3 py-2 rounded-xl border shadow-2xl flex items-center gap-2.5 transition-all duration-200 animate-in fade-in zoom-in-95"
               style={{
-                boxShadow: `inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 10px ${sponsor.color}25`
+                backgroundColor: 'rgba(10, 14, 21, 0.96)',
+                borderColor: sponsor.color,
+                boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}55`
+              }}
+            >
+              <div
+                className="w-8 h-8 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-1.5 shrink-0 shadow-inner"
+                style={{
+                  boxShadow: `inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px ${sponsor.color}30`
+                }}
+              >
+                <SponsorLogo
+                  sponsorId={sponsor.id}
+                  className="w-full h-full object-contain filter drop-shadow"
+                />
+              </div>
+
+              <div className="flex flex-col text-left whitespace-nowrap min-w-0 pr-0.5">
+                <span className="font-bold text-xs text-white tracking-tight">
+                  {cluster.campuses[0].city} Cluster
+                </span>
+                <div className="flex items-center gap-1.5 text-[9.5px] font-mono mt-0.5">
+                  <span className="text-emerald font-semibold">
+                    {cluster.campuses.length} Campuses
+                  </span>
+                  <span className="text-text-muted">• Click to Expand</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* SMALL LOGO AT CLUSTER TIP (BY DEFAULT) */
+            <div
+              className="relative w-7 h-7 rounded-lg border shadow-lg flex items-center justify-center p-1 transition-all duration-150 hover:scale-110"
+              style={{
+                backgroundColor: 'rgba(10, 14, 21, 0.94)',
+                borderColor: `${sponsor.color}90`,
+                boxShadow: `0 4px 12px rgba(0, 0, 0, 0.75), 0 0 8px ${sponsor.color}40`
               }}
             >
               <SponsorLogo
                 sponsorId={sponsor.id}
-                className="w-full h-full object-contain filter drop-shadow"
+                className="w-4 h-4 object-contain filter drop-shadow"
               />
-            </div>
-
-            {/* Hub Count & Sponsor Identity Pill */}
-            <div className="flex items-center gap-1.5 mt-1.5 px-2 py-0.5 rounded border border-white/10 bg-black/60">
               <span
-                className="w-2 h-2 rounded-full animate-pulse"
+                className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full text-[8px] font-mono font-bold flex items-center justify-center text-white"
                 style={{ backgroundColor: sponsor.color }}
-              />
-              <span className="text-[9px] font-mono font-bold text-white tracking-wider">
-                {cluster.campuses.length} Campuses
+              >
+                {cluster.campuses.length}
               </span>
             </div>
-
-            {/* Expanded Cluster Tooltip on Hover */}
-            {hovered && (
-              <div className="flex flex-col items-center text-center mt-1.5 pt-1.5 border-t border-white/10 whitespace-nowrap animate-in fade-in zoom-in-95 duration-150">
-                <span className="text-[11px] font-bold text-white tracking-tight">
-                  {cluster.campuses[0].city} Cluster
-                </span>
-                <span className="font-mono text-[9px] text-emerald font-semibold">
-                  Click to Expand
-                </span>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Downward Architectural Mounting Anchor Pip */}
           <div
-            className="w-2.5 h-2.5 -mt-1.5 rotate-45 border-r border-b"
+            className="w-2 h-2 -mt-1 rotate-45 border-r border-b"
             style={{
               backgroundColor: '#0A0E15',
-              borderColor: hovered ? sponsor.color : `${sponsor.color}80`
+              borderColor: hovered ? sponsor.color : `${sponsor.color}90`
             }}
           />
         </div>
@@ -517,11 +527,10 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
         />
       </mesh>
 
-      {/* 5. LARGE PROMINENT COMPANY LOGO SIGNAGE CREST AT TOWER TIP */}
+      {/* 5. TOWER TIP SIGNAGE: SMALL LOGO BY DEFAULT, ENLARGED + COLLEGE NAME ON HOVER */}
       <Html
-        position={[0, height + 0.14, 0]}
+        position={[0, height + (hovered || isSelected ? 0.12 : 0.06), 0]}
         center
-        distanceFactor={7.5}
         zIndexRange={[10, 35]}
         className="pointer-events-auto select-none"
       >
@@ -533,69 +542,82 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
             e.stopPropagation()
             onSelect()
           }}
-          className={`flex flex-col items-center cursor-pointer transition-all duration-200 group ${
-            hovered || isSelected ? 'scale-110 z-40' : 'scale-100 z-10'
+          className={`flex flex-col items-center cursor-pointer transition-all duration-200 ${
+            hovered || isSelected ? 'scale-105 z-40' : 'scale-100 z-10'
           }`}
         >
-          {/* Main Architectural Logo Backing Plate */}
-          <div
-            className="relative flex flex-col items-center rounded-xl p-2 border shadow-2xl transition-all duration-200"
-            style={{
-              backgroundColor: '#0A0E15',
-              borderColor: hovered || isSelected ? sponsor.color : `${sponsor.color}80`,
-              boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}45`
-            }}
-          >
-            {/* Subtle Brand Ambient Backlight */}
+          {hovered || isSelected ? (
+            /* ENLARGED LOGO + VISIBLE COLLEGE NAME (ON HOVER / SELECTION) */
             <div
-              className="absolute inset-0 rounded-xl opacity-30 pointer-events-none"
+              className="px-3 py-2 rounded-xl border shadow-2xl flex items-center gap-2.5 transition-all duration-200 animate-in fade-in zoom-in-95"
               style={{
-                background: `radial-gradient(circle at 50% 50%, ${sponsor.color}35 0%, transparent 80%)`
+                backgroundColor: 'rgba(10, 14, 21, 0.96)',
+                borderColor: sponsor.color,
+                boxShadow: `0 8px 24px -2px rgba(0, 0, 0, 0.85), 0 0 16px -2px ${sponsor.color}55`
               }}
-            />
+            >
+              {/* Enlarged Company Logo Well */}
+              <div
+                className="w-8 h-8 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-1.5 shrink-0 shadow-inner"
+                style={{
+                  boxShadow: `inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px ${sponsor.color}30`
+                }}
+              >
+                <SponsorLogo
+                  sponsorId={sponsor.id}
+                  className="w-full h-full object-contain filter drop-shadow"
+                />
+              </div>
 
-            {/* Recessed High-Contrast Logo Well */}
+              {/* College Name & Telemetry */}
+              <div className="flex flex-col text-left whitespace-nowrap min-w-0 pr-0.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-xs text-white tracking-tight">
+                    {campus.shortName}
+                  </span>
+                  <span
+                    className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border"
+                    style={{
+                      backgroundColor: `${sponsor.color}20`,
+                      color: sponsor.color,
+                      borderColor: `${sponsor.color}40`
+                    }}
+                  >
+                    {sponsor.ticker}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[9.5px] text-text-muted font-mono mt-0.5">
+                  <span className="font-bold text-emerald">
+                    {Math.round(campus.allTimeKg).toLocaleString()} kg
+                  </span>
+                  <span>•</span>
+                  <span>{campus.city}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* SMALL COMPANY LOGO AT TOWER TIP (BY DEFAULT) */
             <div
-              className="w-12 h-12 rounded-lg bg-[#05070A] border border-white/10 flex items-center justify-center p-2 shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-200"
+              className="w-7 h-7 rounded-lg border shadow-lg flex items-center justify-center p-1 transition-all duration-150 hover:scale-110"
               style={{
-                boxShadow: `inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 10px ${sponsor.color}25`
+                backgroundColor: 'rgba(10, 14, 21, 0.94)',
+                borderColor: `${sponsor.color}90`,
+                boxShadow: `0 4px 12px rgba(0, 0, 0, 0.75), 0 0 8px ${sponsor.color}40`
               }}
             >
               <SponsorLogo
                 sponsorId={sponsor.id}
-                className="w-full h-full object-contain filter drop-shadow"
+                className="w-4 h-4 object-contain filter drop-shadow"
               />
             </div>
-
-            {/* Architectural Brand Ticker & Identity Pill */}
-            <div className="flex items-center gap-1 mt-1.5 px-1.5 py-0.5 rounded border border-white/10 bg-black/60">
-              <span
-                className="text-[9px] font-mono font-bold tracking-wider"
-                style={{ color: sponsor.color }}
-              >
-                {sponsor.ticker}
-              </span>
-            </div>
-
-            {/* Expanded Telemetry & Campus Partnership Tag on Hover / Selection */}
-            {(hovered || isSelected) && (
-              <div className="flex flex-col items-center text-center mt-1.5 pt-1.5 border-t border-white/10 whitespace-nowrap animate-in fade-in zoom-in-95 duration-150">
-                <span className="text-[11px] font-bold text-white tracking-tight">
-                  {campus.shortName}
-                </span>
-                <span className="font-mono text-[9.5px] font-bold text-emerald">
-                  {Math.round(campus.allTimeKg).toLocaleString()} kg
-                </span>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Downward Architectural Mounting Anchor Pip */}
           <div
-            className="w-2.5 h-2.5 -mt-1.5 rotate-45 border-r border-b"
+            className="w-2 h-2 -mt-1 rotate-45 border-r border-b"
             style={{
               backgroundColor: '#0A0E15',
-              borderColor: hovered || isSelected ? sponsor.color : `${sponsor.color}80`
+              borderColor: hovered || isSelected ? sponsor.color : `${sponsor.color}90`
             }}
           />
         </div>
