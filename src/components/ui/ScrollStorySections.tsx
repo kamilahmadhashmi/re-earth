@@ -13,6 +13,8 @@ import { KineticScrambleText } from './KineticScrambleText'
 import { ToxicityMatrix } from './ToxicityMatrix'
 import { ElementalHarvest } from './ElementalHarvest'
 import { SponsorPartnerMarquee } from './SponsorPartnerMarquee'
+import { NumberTicker } from './NumberTicker'
+import { SpecularShimmerCta } from './SpecularShimmerCta'
 
 export const ScrollStorySections: React.FC = () => {
   const {
@@ -98,13 +100,12 @@ export const ScrollStorySections: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3"
           >
-            <button
+            <SpecularShimmerCta
               onClick={() => scrollToChapter(1)}
               data-cursor="explore"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-md bg-emerald text-background font-semibold text-xs hover:brightness-105 active:scale-[0.98] transition-all"
             >
               Explore Planetary Narrative
-            </button>
+            </SpecularShimmerCta>
 
             <button
               onClick={() => enterImmersiveOrbit()}
@@ -192,14 +193,18 @@ export const ScrollStorySections: React.FC = () => {
               className="flex items-baseline gap-10 pt-2"
             >
               <div>
-                <div className="text-4xl sm:text-5xl font-mono font-bold text-copper">62M T</div>
+                <div className="text-4xl sm:text-5xl font-mono font-bold text-copper">
+                  <NumberTicker value={62} suffix="M T" delay={0.2} />
+                </div>
                 <div className="text-xs text-text-muted mt-1">
                   Annual E-Waste
                 </div>
               </div>
               <div className="w-[1px] h-10 bg-white/10" />
               <div>
-                <div className="text-4xl sm:text-5xl font-mono font-bold text-amber">&lt; 22%</div>
+                <div className="text-4xl sm:text-5xl font-mono font-bold text-amber">
+                  &lt; <NumberTicker value={22} suffix="%" delay={0.3} />
+                </div>
                 <div className="text-xs text-text-muted mt-1">
                   Formally Recycled
                 </div>

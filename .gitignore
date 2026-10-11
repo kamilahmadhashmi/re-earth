@@ -29,6 +29,9 @@ lerna-debug.log*
 # Temporary test screenshots and scripts
 *.tmp
 screenshots/
+test-results/
+tests/visual/current/
+tests/visual/diff/
 debug_*.cjs
 inspect_*.cjs
 test_*.cjs

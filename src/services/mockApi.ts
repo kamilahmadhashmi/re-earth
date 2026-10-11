@@ -1,4 +1,4 @@
-import type { RecEarthApi } from './api'
+import type { RecEarthApi } from './apiTypes'
 import { INITIAL_CAMPUSES, type Campus } from '../data/campuses'
 import { SPONSORS } from '../data/sponsors'
 import {

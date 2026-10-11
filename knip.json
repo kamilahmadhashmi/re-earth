@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@5/overview/schema.json",
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "scripts/**/*.mjs",
+    "tests/**/*.{ts,tsx}"
+  ],
+  "ignore": [
+    "src/services/api.ts",
+    "src/services/awsServiceConfig.ts"
+  ],
+  "ignoreDependencies": [
+    "@testing-library/user-event",
+    "axe-core"
+  ]
+}

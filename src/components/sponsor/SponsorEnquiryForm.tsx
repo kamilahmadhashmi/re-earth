@@ -36,12 +36,14 @@ import { trackSponsorEvent } from '../../utils/sponsorAnalytics'
 
 interface SponsorEnquiryFormProps {
   initialPathway?: SponsorshipPathwayId | null
-  onReturnToOrbit: () => void
+  onReturnToOrbit?: () => void
+  onPathwayChange?: (pathway: SponsorshipPathwayId) => void
 }
 
 export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
   initialPathway = 'corporate_sustainability',
-  onReturnToOrbit
+  onReturnToOrbit = () => {},
+  onPathwayChange
 }) => {
   // Form State
   const [formData, setFormData] = useState<SponsorEnquiryFormData>({
@@ -157,6 +159,25 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
       preferredScope: true,
       consentAgreed: true
     })
+
+    const newErrors: Record<string, string> = {}
+    if (!formData.companyName.trim()) {
+      newErrors.companyName = 'Organization name is required'
+    }
+    if (!formData.contactPerson.trim()) {
+      newErrors.contactPerson = 'Contact name is required'
+    }
+    if (!formData.workEmail.trim() || !formData.workEmail.includes('@')) {
+      newErrors.workEmail = 'Valid work email is required'
+    }
+    if (!formData.consentAgreed) {
+      newErrors.consentAgreed = 'You must agree to the partnership consent declaration'
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
 
     setIsSubmitting(true)
     trackSponsorEvent('sponsor_form_submitted', {
@@ -658,7 +679,10 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                       <button
                         key={path.id}
                         type="button"
-                        onClick={() => handleChange('sponsorshipPathway', path.id)}
+                        onClick={() => {
+                          handleChange('sponsorshipPathway', path.id)
+                          onPathwayChange?.(path.id)
+                        }}
                         className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-amber/10 border-amber text-text-primary shadow-amber-glow/20'
