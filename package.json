@@ -16,6 +16,7 @@
     "test:visual": "node scripts/visual_regression.mjs",
     "lint:deps": "depcruise src --config .dependency-cruiser.cjs --output-type err",
     "lint:unused": "knip",
+    "monitor:aws": "python scripts/cloudwatch_probe.py",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles"
   },
