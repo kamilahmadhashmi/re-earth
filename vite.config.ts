@@ -4,7 +4,8 @@ import glsl from 'vite-plugin-glsl'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: process.env.BASE_PATH || (mode === 'production' ? '/re-earth/' : '/'),
   plugins: [
     react(),
     glsl({
@@ -24,4 +25,4 @@ export default defineConfig({
     port: 5174,
     host: true
   }
-})
+}))

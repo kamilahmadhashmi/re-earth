@@ -13,14 +13,17 @@ interface EarthProps {
 export const Earth: React.FC<EarthProps> = ({ autoRotate = false }) => {
   const earthGroupRef = useRef<THREE.Group>(null)
 
-  // Load public domain textures from /textures (strictly local)
+  // Load public domain textures from textures (compatible with local dev and GitHub Pages base)
+  const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`
   const [dayMap, normalMap, specMap, nightMap] = useLoader(
     THREE.TextureLoader,
     [
-      '/textures/earth_atmos_2048.jpg',
-      '/textures/earth_normal_2048.jpg',
-      '/textures/earth_specular_2048.jpg',
-      '/textures/earth_lights_2048.png'
+      `${baseUrl}textures/earth_atmos_2048.jpg`,
+      `${baseUrl}textures/earth_normal_2048.jpg`,
+      `${baseUrl}textures/earth_specular_2048.jpg`,
+      `${baseUrl}textures/earth_lights_2048.png`
     ]
   )
 

@@ -145,7 +145,7 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
         <div className="lg:col-span-7 relative rounded-2xl overflow-hidden border border-white/[0.08] bg-surface p-2 shadow-spatial flex flex-col justify-between group">
           <div className="relative rounded-xl overflow-hidden aspect-[16/10] sm:aspect-[16/9] w-full bg-surface-elevated">
             <img
-              src="/images/campus_recycling_hero.jpg"
+              src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/campus_recycling_hero.jpg`}
               alt="Collegiate e-waste sorting workshop and student sustainability drive"
               className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-700"
               loading="eager"
