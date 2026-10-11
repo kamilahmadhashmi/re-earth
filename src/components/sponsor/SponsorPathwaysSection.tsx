@@ -130,6 +130,7 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
               {/* Bottom CTA Button */}
               <div className="pt-8 mt-6 border-t border-white/[0.06]">
                 <button
+                  type="button"
                   onClick={() => {
                     trackSponsorEvent('sponsor_package_selected', {
                       packageId: pathway.id,
@@ -137,10 +138,10 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
                     })
                     onSelectPathway(pathway.id)
                   }}
-                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 ${
                     isFeatured
-                      ? 'bg-emerald hover:bg-emerald-light active:scale-[0.98] text-black shadow-spatial'
-                      : 'bg-white/[0.05] hover:bg-white/[0.1] active:scale-[0.98] text-text-primary border border-white/[0.08]'
+                      ? 'bg-emerald hover:bg-emerald-light text-black shadow-spatial'
+                      : 'bg-white/[0.05] hover:bg-white/[0.1] text-text-primary border border-white/[0.08]'
                   }`}
                 >
                   <span>{pathway.ctaText}</span>
@@ -172,8 +173,9 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
         </div>
 
         <button
+          type="button"
           onClick={() => onSelectPathway('corporate_sustainability')}
-          className="shrink-0 px-4 py-2 rounded-xl text-xs font-semibold text-text-primary bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] transition-all cursor-pointer uppercase font-mono tracking-wider"
+          className="shrink-0 px-4 py-2 rounded-xl text-xs font-semibold text-text-primary bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] active:scale-95 transition-all cursor-pointer uppercase font-mono tracking-wider"
         >
           Discuss Custom Pilot
         </button>

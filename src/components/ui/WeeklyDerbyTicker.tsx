@@ -41,8 +41,9 @@ export const WeeklyDerbyTicker: React.FC = () => {
 
             {/* NSUT Badge */}
             <button
+              type="button"
               onClick={() => nsut && selectCampus(nsut.id)}
-              className={`px-2.5 py-1 rounded-full border text-xs transition-all duration-200 ${
+              className={`px-2.5 py-1 rounded-full border text-xs transition-all duration-200 cursor-pointer active:scale-95 ${
                 !dtuIsLeading
                   ? 'bg-amber/20 border-amber/50 text-amber font-semibold shadow-amber-glow'
                   : 'bg-white/[0.03] border-white/[0.08] text-text-secondary hover:text-text-primary hover:border-white/20'
@@ -55,8 +56,9 @@ export const WeeklyDerbyTicker: React.FC = () => {
 
             {/* DTU Badge */}
             <button
+              type="button"
               onClick={() => dtu && selectCampus(dtu.id)}
-              className={`px-2.5 py-1 rounded-full border text-xs transition-all duration-200 ${
+              className={`px-2.5 py-1 rounded-full border text-xs transition-all duration-200 cursor-pointer active:scale-95 ${
                 dtuIsLeading
                   ? 'bg-emerald/20 border-emerald/50 text-emerald font-semibold shadow-emerald-glow'
                   : 'bg-white/[0.03] border-white/[0.08] text-text-secondary hover:text-text-primary hover:border-white/20'
@@ -84,8 +86,9 @@ export const WeeklyDerbyTicker: React.FC = () => {
           {topWeekly.map((c, i) => (
             <button
               key={c.id}
+              type="button"
               onClick={() => selectCampus(c.id)}
-              className="hover:text-emerald transition-colors flex items-center gap-1"
+              className="hover:text-emerald transition-colors flex items-center gap-1 cursor-pointer active:scale-95"
             >
               <span className="text-emerald font-semibold">#{i + 1}</span>
               <span className="text-text-secondary">{c.shortName}</span>

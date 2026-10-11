@@ -121,8 +121,9 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
           {/* Left: Brand Pill & Return to Orbit button */}
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={onReturnToOrbit}
-              className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#0E1015]/90 backdrop-blur-xl border border-white/[0.08] shadow-spatial group cursor-pointer hover:border-white/20 transition-all"
+              className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#0E1015]/90 backdrop-blur-xl border border-white/[0.08] shadow-spatial group cursor-pointer hover:border-white/20 active:scale-95 transition-all"
             >
               <div className="w-5 h-5 rounded-full bg-emerald/15 flex items-center justify-center text-emerald">
                 <Globe2 className="w-3.5 h-3.5" />
@@ -141,15 +142,17 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
             {navLinks.slice(0, 7).map((item) => (
               <button
                 key={item.id}
+                type="button"
                 onClick={() => scrollTo(item.id)}
-                className="px-3 py-1 rounded-full text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors cursor-pointer"
+                className="px-3 py-1 rounded-full text-text-secondary hover:text-text-primary hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
               >
                 {item.label}
               </button>
             ))}
             <button
+              type="button"
               onClick={() => scrollTo('faq')}
-              className="px-3 py-1 rounded-full text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors cursor-pointer"
+              className="px-3 py-1 rounded-full text-text-secondary hover:text-text-primary hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
             >
               FAQ
             </button>
@@ -159,8 +162,9 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
           <div className="flex items-center gap-2">
             {/* Primary Action to Jump to Form */}
             <button
+              type="button"
               onClick={() => scrollTo('enquiry-form')}
-              className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white hover:bg-neutral-200 active:scale-[0.97] text-black font-bold text-xs uppercase tracking-wider transition-all shadow-sm cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white hover:bg-neutral-200 active:scale-95 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-sm cursor-pointer"
             >
               <Send className="w-3 h-3" />
               <span>Apply to Sponsor</span>
@@ -168,9 +172,10 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
 
             {/* Return to 3D Orbit Button */}
             <button
+              type="button"
               onClick={onReturnToOrbit}
               title="Return to 3D Orbit (Esc)"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#0E1015]/90 backdrop-blur-xl border border-white/[0.08] text-xs font-mono text-text-secondary hover:text-text-primary cursor-pointer hover:border-white/20 transition-all shadow-spatial"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#0E1015]/90 backdrop-blur-xl border border-white/[0.08] text-xs font-mono text-text-secondary hover:text-text-primary cursor-pointer hover:border-white/20 active:scale-95 transition-all shadow-spatial"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-emerald" />
               <span className="hidden md:inline">Back to Orbit</span>
@@ -181,8 +186,9 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
 
             {/* Mobile Hamburger Toggle */}
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="xl:hidden w-8 h-8 rounded-full bg-[#0E1015]/90 backdrop-blur-xl flex items-center justify-center text-text-muted hover:text-text-primary border border-white/[0.08] cursor-pointer"
+              className="xl:hidden w-8 h-8 rounded-full bg-[#0E1015]/90 backdrop-blur-xl flex items-center justify-center text-text-muted hover:text-text-primary active:scale-95 border border-white/[0.08] cursor-pointer transition-all"
             >
               {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -205,8 +211,9 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
                 {navLinks.map((item) => (
                   <button
                     key={item.id}
+                    type="button"
                     onClick={() => scrollTo(item.id)}
-                    className="p-2 rounded-lg text-left text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors"
+                    className="p-2 rounded-lg text-left text-text-secondary hover:text-text-primary hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
                   >
                     {item.label}
                   </button>
@@ -214,14 +221,16 @@ export const SponsorshipPage: React.FC<SponsorshipPageProps> = ({
               </div>
               <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between gap-2">
                 <button
+                  type="button"
                   onClick={() => scrollTo('enquiry-form')}
-                  className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs uppercase tracking-wider text-center"
+                  className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs uppercase tracking-wider text-center cursor-pointer active:scale-95 transition-all"
                 >
                   Apply to Sponsor
                 </button>
                 <button
+                  type="button"
                   onClick={onReturnToOrbit}
-                  className="w-full py-2.5 rounded-xl bg-surface-elevated border border-white/10 text-text-primary text-xs font-mono text-center"
+                  className="w-full py-2.5 rounded-xl bg-surface-elevated border border-white/10 text-text-primary text-xs font-mono text-center cursor-pointer active:scale-95 transition-all"
                 >
                   Return to Orbit
                 </button>

@@ -104,9 +104,10 @@ export const ScrollStorySections: React.FC = () => {
             </SpecularShimmerCta>
 
             <button
+              type="button"
               onClick={() => enterImmersiveOrbit()}
               data-cursor="orbit"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 hover:border-white/20 text-white text-xs font-semibold tracking-wide transition-all hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 hover:border-white/20 text-white text-xs font-semibold tracking-wide transition-all hover:bg-white/[0.08] active:scale-95 cursor-pointer"
             >
               <Orbit className="w-3.5 h-3.5 text-copper" />
               <span>Direct 3D Orbit [Esc]</span>
@@ -204,8 +205,9 @@ export const ScrollStorySections: React.FC = () => {
             {/* Modal Expansion Link */}
             <div className="pt-2">
               <button
+                type="button"
                 onClick={() => openModal('vault')}
-                className="inline-flex items-center text-xs font-semibold text-emerald hover:text-emerald-light transition-colors cursor-pointer"
+                className="inline-flex items-center text-xs font-semibold text-emerald hover:text-emerald-light active:scale-95 transition-all cursor-pointer"
               >
                 Inspect Chemical Impact Ledger →
               </button>
@@ -288,8 +290,9 @@ export const ScrollStorySections: React.FC = () => {
             {/* Action Link */}
             <div className="pt-2">
               <button
+                type="button"
                 onClick={() => scrollToChapter(3)}
-                className="inline-flex items-center text-xs font-semibold text-amber hover:text-amber-light transition-colors cursor-pointer"
+                className="inline-flex items-center text-xs font-semibold text-amber hover:text-amber-light active:scale-95 transition-all cursor-pointer"
               >
                 Explore the competitive campus war →
               </button>
@@ -371,7 +374,7 @@ export const ScrollStorySections: React.FC = () => {
               {nsut && (
                 <div
                   onClick={() => selectCampus('nsut')}
-                  className="p-4 rounded-xl bg-white/[0.03] border border-copper/30 hover:border-copper/70 hover:bg-white/[0.06] cursor-pointer transition-all space-y-2 group shadow-sm"
+                  className="p-4 rounded-xl bg-white/[0.03] border border-copper/30 hover:border-copper/70 hover:bg-white/[0.06] active:scale-[0.98] cursor-pointer transition-all space-y-2 group shadow-sm"
                 >
                   <div className="flex items-center justify-between text-xs font-mono">
                     <span className="font-bold text-copper">Rank #{nsut.allTimeRank}</span>
@@ -395,7 +398,7 @@ export const ScrollStorySections: React.FC = () => {
               {dtu && (
                 <div
                   onClick={() => selectCampus('dtu')}
-                  className="p-4 rounded-xl bg-white/[0.03] border border-emerald/30 hover:border-emerald/70 hover:bg-white/[0.06] cursor-pointer transition-all space-y-2 group shadow-sm"
+                  className="p-4 rounded-xl bg-white/[0.03] border border-emerald/30 hover:border-emerald/70 hover:bg-white/[0.06] active:scale-[0.98] cursor-pointer transition-all space-y-2 group shadow-sm"
                 >
                   <div className="flex items-center justify-between text-xs font-mono">
                     <span className="font-bold text-emerald">Rank #{dtu.allTimeRank}</span>
@@ -432,8 +435,9 @@ export const ScrollStorySections: React.FC = () => {
             {/* Drawer Opener Button */}
             <div className="pt-2 flex justify-center">
               <button
+                type="button"
                 onClick={toggleLeftDrawer}
-                className="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:border-copper/40 hover:bg-white/[0.08] text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:border-copper/40 hover:bg-white/[0.08] active:scale-95 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Trophy className="w-3.5 h-3.5 text-copper" />
                 <span>Open Global Collegiate Leaderboard</span>
@@ -500,15 +504,17 @@ export const ScrollStorySections: React.FC = () => {
             className="flex flex-wrap items-center justify-center gap-3 pt-4"
           >
             <button
+              type="button"
               onClick={() => openModal('recycle')}
-              className="px-6 py-3 rounded-xl bg-emerald hover:bg-emerald-light text-zinc-950 font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] cursor-pointer"
+              className="px-6 py-3 rounded-xl bg-emerald hover:bg-emerald-light text-zinc-950 font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               Deploy Campus Kiosk
             </button>
 
             <button
+              type="button"
               onClick={() => openModal('vault')}
-              className="px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:bg-white/[0.08] hover:border-white/20 text-xs font-semibold tracking-wide transition-all active:scale-[0.98] cursor-pointer"
+              className="px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:bg-white/[0.08] hover:border-white/20 text-xs font-semibold tracking-wide transition-all active:scale-95 cursor-pointer"
             >
               Open Data Vault
             </button>
@@ -517,8 +523,9 @@ export const ScrollStorySections: React.FC = () => {
           {/* Return to Top */}
           <div className="pt-4">
             <button
+              type="button"
               onClick={() => scrollToChapter(0)}
-              className="inline-flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-white active:scale-95 transition-all cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5 text-copper" />
               <span>Return to Top Orbit</span>

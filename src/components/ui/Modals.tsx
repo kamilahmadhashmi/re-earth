@@ -161,8 +161,9 @@ export const Modals: React.FC = () => {
         >
           {/* Close button */}
           <button
+            type="button"
             onClick={handleClose}
-            className="absolute top-4 right-4 w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors border border-white/10"
+            className="absolute top-4 right-4 w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 active:scale-95 flex items-center justify-center text-text-muted hover:text-text-primary transition-all border border-white/10 cursor-pointer"
             title="Close"
             aria-label="Close"
           >
@@ -207,7 +208,7 @@ export const Modals: React.FC = () => {
                           key={count}
                           type="button"
                           onClick={() => setTier(count)}
-                          className={`p-2.5 rounded-lg border text-left transition-all ${
+                          className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer active:scale-95 ${
                             tier === count
                               ? 'bg-copper/15 border-copper text-text-primary shadow-sm'
                               : 'bg-surface-elevated border-white/5 text-text-muted hover:text-text-primary hover:border-white/15'
@@ -281,7 +282,7 @@ export const Modals: React.FC = () => {
 
                     <button
                       type="submit"
-                      className="w-full py-3 px-4 rounded-lg bg-[#C86432] hover:bg-[#D4703D] active:scale-[0.98] font-bold text-xs text-white shadow-md transition-all cursor-pointer"
+                      className="w-full py-3 px-4 rounded-lg bg-[#C86432] hover:bg-[#D4703D] active:scale-95 font-bold text-xs text-white shadow-md transition-all cursor-pointer"
                     >
                       Request Campus Underwriting Prospectus
                     </button>
@@ -301,8 +302,9 @@ export const Modals: React.FC = () => {
                   </p>
                   <div className="pt-2 flex justify-center">
                     <button
+                      type="button"
                       onClick={handleClose}
-                      className="px-5 py-2 rounded-lg bg-emerald text-background font-semibold text-xs hover:brightness-105 transition-all"
+                      className="px-5 py-2 rounded-lg bg-emerald text-background font-semibold text-xs hover:brightness-105 active:scale-95 transition-all cursor-pointer"
                     >
                       Return to Interactive Globe
                     </button>
@@ -340,8 +342,9 @@ export const Modals: React.FC = () => {
 
               <div className="pt-2">
                 <button
+                  type="button"
                   onClick={handleClose}
-                  className="w-full py-2.5 px-4 rounded-md bg-surface-elevated hover:bg-surface-hover text-text-primary font-semibold text-xs transition-colors border border-white/10"
+                  className="w-full py-2.5 px-4 rounded-md bg-surface-elevated hover:bg-surface-hover active:scale-95 text-text-primary font-semibold text-xs transition-all border border-white/10 cursor-pointer"
                 >
                   Return to Global Impact Console
                 </button>

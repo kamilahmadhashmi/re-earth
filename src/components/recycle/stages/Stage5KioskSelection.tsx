@@ -213,9 +213,10 @@ export const Stage5KioskSelection: React.FC = () => {
 
             {/* Refresh Action */}
             <button
+              type="button"
               onClick={handleRefresh}
               title="Refresh Telemetry Stream"
-              className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-all active:scale-95"
+              className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-all active:scale-95 cursor-pointer"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-cyan' : ''}`} />
             </button>
@@ -290,8 +291,9 @@ export const Stage5KioskSelection: React.FC = () => {
                 />
                 {searchQuery && (
                   <button
+                    type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary text-xs"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary text-xs cursor-pointer p-1 active:scale-95 transition-all"
                   >
                     ✕
                   </button>
@@ -302,7 +304,7 @@ export const Stage5KioskSelection: React.FC = () => {
                 type="button"
                 onClick={() => setFilterHazmatOnly(!filterHazmatOnly)}
                 title="Toggle Hazmat Certified Only filter"
-                className={`px-2.5 py-2 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5 border transition-all shrink-0 cursor-pointer ${
+                className={`px-2.5 py-2 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5 border transition-all shrink-0 cursor-pointer active:scale-95 ${
                   filterHazmatOnly
                     ? 'bg-amber/20 text-amber border-amber/50 shadow-amber-glow'
                     : 'bg-white/[0.04] text-text-muted border-white/10 hover:text-text-primary hover:border-white/20'
@@ -316,8 +318,9 @@ export const Stage5KioskSelection: React.FC = () => {
             {/* TAB SELECTOR: PODS / SHUTTLES / ZONES / EVENTS */}
             <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-black/40 border border-white/10 text-[10px] font-mono">
               <button
+                type="button"
                 onClick={() => setActiveTab('kiosks')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${
+                className={`py-1.5 rounded-lg font-bold transition-all cursor-pointer active:scale-95 ${
                   activeTab === 'kiosks'
                     ? 'bg-emerald text-black shadow-emerald-glow'
                     : 'text-text-muted hover:text-text-primary'
@@ -327,8 +330,9 @@ export const Stage5KioskSelection: React.FC = () => {
               </button>
 
               <button
+                type="button"
                 onClick={() => setActiveTab('vehicles')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${
+                className={`py-1.5 rounded-lg font-bold transition-all cursor-pointer active:scale-95 ${
                   activeTab === 'vehicles'
                     ? 'bg-cyan text-black shadow-cyan-glow'
                     : 'text-text-muted hover:text-text-primary'
@@ -338,8 +342,9 @@ export const Stage5KioskSelection: React.FC = () => {
               </button>
 
               <button
+                type="button"
                 onClick={() => setActiveTab('zones')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${
+                className={`py-1.5 rounded-lg font-bold transition-all cursor-pointer active:scale-95 ${
                   activeTab === 'zones'
                     ? 'bg-lavender text-black shadow-lavender-glow'
                     : 'text-text-muted hover:text-text-primary'
@@ -349,8 +354,9 @@ export const Stage5KioskSelection: React.FC = () => {
               </button>
 
               <button
+                type="button"
                 onClick={() => setActiveTab('events')}
-                className={`py-1.5 rounded-lg font-bold transition-all ${
+                className={`py-1.5 rounded-lg font-bold transition-all cursor-pointer active:scale-95 ${
                   activeTab === 'events'
                     ? 'bg-white/20 text-white'
                     : 'text-text-muted hover:text-text-primary'
@@ -378,11 +384,12 @@ export const Stage5KioskSelection: React.FC = () => {
                     <MapPin className="w-6 h-6 mx-auto opacity-40" />
                     <p>No drop-off pods found matching "{searchQuery}"</p>
                     <button
+                      type="button"
                       onClick={() => {
                         setSearchQuery('')
                         setFilterHazmatOnly(false)
                       }}
-                      className="text-cyan underline text-[11px]"
+                      className="text-cyan underline text-[11px] cursor-pointer hover:text-cyan-bright transition-colors"
                     >
                       Clear search filters
                     </button>
@@ -657,14 +664,16 @@ export const Stage5KioskSelection: React.FC = () => {
       {/* ===================================================================== */}
       <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
         <button
+          type="button"
           onClick={() => setCurrentStep(4)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors border border-white/10"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Data-Wipe Protocol</span>
         </button>
 
         <button
+          type="button"
           disabled={!canProceed}
           onClick={() => {
             const store = useRecycleStore.getState()
@@ -672,7 +681,7 @@ export const Stage5KioskSelection: React.FC = () => {
           }}
           className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
             canProceed
-              ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98]'
+              ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
               : 'bg-white/10 text-text-muted cursor-not-allowed opacity-50'
           }`}
         >

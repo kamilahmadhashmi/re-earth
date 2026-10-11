@@ -71,8 +71,9 @@ export const TechVaultDrawer: React.FC = () => {
           Kiosk operators are authorized exclusively for the hardware verification terminal. Access to student personal submission histories and administrative ledgers is restricted.
         </p>
         <button
+          type="button"
           onClick={() => setActiveTab('kiosk_terminal')}
-          className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
+          className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright text-black font-bold text-xs shadow-cyan-glow active:scale-[0.98] transition-all cursor-pointer"
         >
           Return to Operator Terminal
         </button>
@@ -219,8 +220,9 @@ export const TechVaultDrawer: React.FC = () => {
                   <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                     {isAccepted && p.receipt && (
                       <button
+                        type="button"
                         onClick={() => setSelectedReceiptPass(p)}
-                        className="px-3 py-1.5 rounded-full text-xs font-semibold text-emerald hover:bg-emerald/10 border border-emerald/30 transition-colors flex items-center gap-1 cursor-pointer"
+                        className="px-3 py-1.5 rounded-full text-xs font-semibold text-emerald hover:bg-emerald/10 border border-emerald/30 transition-all flex items-center gap-1 cursor-pointer active:scale-95"
                       >
                         <Award className="w-3.5 h-3.5" />
                         <span>View Certificate</span>
@@ -230,11 +232,12 @@ export const TechVaultDrawer: React.FC = () => {
                     {/* KIOSK OPERATOR TERMINAL INSPECTION: RESTRICTED STRICTLY TO COLLEGE ADMIN */}
                     {isCollegeAdmin && (
                       <button
+                        type="button"
                         onClick={() => {
                           lookupPass(p.passId)
                           setActiveTab('kiosk_terminal')
                         }}
-                        className="px-3 py-1.5 rounded-full text-xs font-mono text-text-muted hover:text-cyan border border-white/10 hover:bg-white/5 transition-colors cursor-pointer"
+                        className="px-3 py-1.5 rounded-full text-xs font-mono text-text-muted hover:text-cyan border border-white/10 hover:bg-white/5 transition-all cursor-pointer active:scale-95"
                       >
                         Inspect in Terminal
                       </button>
@@ -302,8 +305,9 @@ export const TechVaultDrawer: React.FC = () => {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setSelectedReceiptPass(null)}
-                  className="px-3 py-1 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10"
+                  className="px-3 py-1 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10 cursor-pointer active:scale-95 transition-all"
                 >
                   Close
                 </button>
@@ -349,8 +353,9 @@ export const TechVaultDrawer: React.FC = () => {
 
               <div className="pt-2 flex items-center justify-end gap-2">
                 <button
+                  type="button"
                   onClick={() => window.print()}
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-xs text-text-primary flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-xs text-text-primary flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Print Certificate</span>

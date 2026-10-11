@@ -74,8 +74,9 @@ export const TopTenDrawer: React.FC = () => {
                 <div className="p-2 border-b border-white/[0.06] bg-white/[0.01]">
                   <div className="grid grid-cols-2 p-0.5 rounded-lg bg-surface-elevated/70 border border-white/5">
                     <button
+                      type="button"
                       onClick={() => setActiveTab('campuses')}
-                      className={`py-1 text-[11px] font-medium rounded-md transition-all ${
+                      className={`py-1 text-[11px] font-medium rounded-md transition-all cursor-pointer active:scale-95 ${
                         activeTab === 'campuses'
                           ? 'bg-surface text-text-primary shadow-sm font-semibold'
                           : 'text-text-muted hover:text-text-secondary'
@@ -84,8 +85,9 @@ export const TopTenDrawer: React.FC = () => {
                       Campuses (10)
                     </button>
                     <button
+                      type="button"
                       onClick={() => setActiveTab('sponsors')}
-                      className={`py-1 text-[11px] font-medium rounded-md transition-all ${
+                      className={`py-1 text-[11px] font-medium rounded-md transition-all cursor-pointer active:scale-95 ${
                         activeTab === 'sponsors'
                           ? 'bg-surface text-text-primary shadow-sm font-semibold'
                           : 'text-text-muted hover:text-text-secondary'
@@ -112,8 +114,9 @@ export const TopTenDrawer: React.FC = () => {
                             transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                           >
                             <button
+                              type="button"
                               onClick={() => selectCampus(campus.id)}
-                              className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group ${
+                              className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group cursor-pointer active:scale-[0.99] ${
                                 isSelected
                                   ? 'bg-surface-elevated border-copper shadow-sm'
                                   : 'bg-surface border-white/5 hover:border-white/15 hover:bg-surface-elevated'
@@ -198,8 +201,9 @@ export const TopTenDrawer: React.FC = () => {
                             transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                           >
                             <button
+                              type="button"
                               onClick={() => selectSponsor(sponsor.id)}
-                              className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group ${
+                              className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group cursor-pointer active:scale-[0.99] ${
                                 isSelected
                                   ? 'bg-surface-elevated border-emerald shadow-sm'
                                   : 'bg-surface border-white/5 hover:border-white/15 hover:bg-surface-elevated'
@@ -260,8 +264,9 @@ export const TopTenDrawer: React.FC = () => {
                     {activeTab === 'campuses' ? 'Click campus to inspect' : 'Click sponsor to inspect'}
                   </p>
                   <button
+                    type="button"
                     onClick={toggleDemoMode}
-                    className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border transition-all ${
+                    className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border transition-all cursor-pointer active:scale-95 ${
                       isDemoMode
                         ? 'bg-emerald/20 border-emerald/40 text-emerald font-semibold'
                         : 'bg-white/5 border-white/10 text-text-muted hover:text-text-primary'
@@ -277,9 +282,10 @@ export const TopTenDrawer: React.FC = () => {
 
           {/* Drawer Toggle Tab */}
           <button
+            type="button"
             onClick={toggleLeftDrawer}
             title={isLeftDrawerOpen ? 'Collapse Leaderboard' : 'Expand Leaderboard'}
-            className="p-2 rounded-r-2xl liquid-glass border border-l-0 border-white/[0.08] hover:border-emerald/40 text-text-muted hover:text-text-primary transition-all shadow-liquid-glass ml-0 liquid-glass-control"
+            className="p-2 rounded-r-2xl liquid-glass border border-l-0 border-white/[0.08] hover:border-emerald/40 text-text-muted hover:text-text-primary transition-all shadow-liquid-glass ml-0 liquid-glass-control cursor-pointer active:scale-95"
           >
             {isLeftDrawerOpen ? (
               <ChevronLeft className="w-4 h-4" />
@@ -304,8 +310,9 @@ export const TopTenDrawer: React.FC = () => {
             {topTen.slice(0, 5).map((c) => (
               <button
                 key={c.id}
+                type="button"
                 onClick={() => selectCampus(c.id)}
-                className={`p-2.5 rounded-2xl border shrink-0 text-left w-32 transition-colors liquid-glass-control ${
+                className={`p-2.5 rounded-2xl border shrink-0 text-left w-32 transition-all liquid-glass-control cursor-pointer active:scale-95 ${
                   selectedCampusId === c.id
                     ? 'bg-emerald/15 border-emerald/50'
                     : 'bg-white/[0.03] border-white/[0.06]'

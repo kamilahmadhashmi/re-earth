@@ -35,8 +35,9 @@ export const ScrollProgressHUD: React.FC = () => {
               onMouseLeave={() => setHoveredPip(null)}
             >
               <button
+                type="button"
                 onClick={() => scrollToChapter(ch.id)}
-                className={`transition-all duration-300 rounded-full flex items-center justify-center liquid-glass-control ${
+                className={`transition-all duration-300 rounded-full flex items-center justify-center liquid-glass-control cursor-pointer active:scale-95 ${
                   isActive
                     ? 'w-2 h-5 bg-emerald shadow-emerald-glow'
                     : 'w-2 h-2 bg-white/20 hover:bg-white/60 hover:scale-125'

@@ -127,8 +127,9 @@ export const Stage1ProductVault: React.FC = () => {
           />
           {searchQuery && (
             <button
+              type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary text-xs"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary text-xs cursor-pointer p-1 active:scale-95 transition-all"
             >
               <X className="w-4 h-4" />
             </button>
@@ -143,11 +144,12 @@ export const Stage1ProductVault: React.FC = () => {
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setCategoryFilter(cat.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 border ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer active:scale-95 ${
                   isSelected
                     ? 'bg-emerald/15 border-emerald/40 text-emerald shadow-emerald-glow'
-                    : 'bg-white/[0.03] border-white/[0.06] text-text-secondary hover:text-text-primary hover:border-white/15'
+                    : 'bg-white/[0.03] border-white/[0.06] text-text-secondary hover:text-text-primary hover:border-white/15 hover:bg-white/[0.05]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -192,17 +194,19 @@ export const Stage1ProductVault: React.FC = () => {
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
+              type="button"
               onClick={() => {
                 selectProduct(null)
                 setCustomProduct(null)
               }}
-              className="px-3 py-1.5 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10 hover:bg-white/5 transition-colors"
+              className="px-3 py-1.5 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10 hover:bg-white/5 transition-all cursor-pointer active:scale-95"
             >
               Change
             </button>
             <button
+              type="button"
               onClick={() => setCurrentStep(2)}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
             >
               <span>Confirm & Triage</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -285,8 +289,9 @@ export const Stage1ProductVault: React.FC = () => {
               </p>
             </div>
             <button
+              type="button"
               onClick={() => setManualEntryOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-text-primary text-xs font-semibold border border-white/15 transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-text-primary text-xs font-semibold border border-white/15 transition-all cursor-pointer active:scale-95"
             >
               <PlusCircle className="w-3.5 h-3.5 text-emerald" />
               <span>Enter Custom Device Details</span>
@@ -299,8 +304,9 @@ export const Stage1ProductVault: React.FC = () => {
       <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-xs">
         <span className="text-text-muted">Device not listed in official catalog?</span>
         <button
+          type="button"
           onClick={() => setManualEntryOpen(true)}
-          className="inline-flex items-center gap-1.5 text-emerald hover:underline font-semibold"
+          className="inline-flex items-center gap-1.5 text-emerald hover:underline font-semibold cursor-pointer active:scale-95 transition-all"
         >
           <PlusCircle className="w-3.5 h-3.5" />
           <span>Manual Device Specification</span>
@@ -440,13 +446,13 @@ export const Stage1ProductVault: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setManualEntryOpen(false)}
-                    className="px-4 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5"
+                    className="px-4 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5 cursor-pointer active:scale-95 transition-all"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105"
+                    className="px-5 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 cursor-pointer active:scale-[0.98] transition-all"
                   >
                     Save & Select Device
                   </button>

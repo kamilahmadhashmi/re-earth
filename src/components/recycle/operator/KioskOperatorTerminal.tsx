@@ -4,6 +4,7 @@ import confetti from 'canvas-confetti'
 import {
   Scan,
   CheckCircle2,
+  Check,
   XCircle,
   AlertTriangle,
   Scale,
@@ -147,7 +148,7 @@ export const KioskOperatorTerminal: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="px-6 py-3 rounded-2xl bg-cyan text-background font-bold text-xs uppercase tracking-wider shadow-cyan-glow hover:brightness-105 transition-all"
+          className="px-6 py-3 rounded-2xl bg-cyan text-background font-bold text-xs uppercase tracking-wider shadow-cyan-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
         >
           Lookup Pass
         </button>
@@ -168,7 +169,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                   setOperatorInputToken(p.passId)
                   lookupPass(p.passId)
                 }}
-                className="px-3 py-1.5 rounded-xl liquid-glass-subtle border border-white/10 text-xs font-mono text-text-secondary hover:text-cyan hover:border-cyan/40 transition-all flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl liquid-glass-subtle border border-white/10 text-xs font-mono text-text-secondary hover:text-cyan hover:border-cyan/40 active:scale-[0.98] transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <span>{p.passId}</span>
                 <span className="text-text-muted">({p.productName})</span>
@@ -312,76 +313,152 @@ export const KioskOperatorTerminal: React.FC = () => {
 
               <div className="space-y-2 text-xs">
                 {/* 1. Model match */}
-                <label className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3 cursor-pointer hover:bg-white/[0.06] transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={operatorChecklist.modelMatches}
-                    disabled={isAlreadyAccepted}
-                    onChange={() => toggleOperatorChecklist('modelMatches')}
-                    className="mt-0.5 w-4 h-4 rounded text-emerald focus:ring-emerald bg-white/5"
-                  />
+                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
+                  isAlreadyAccepted
+                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                    : operatorChecklist.modelMatches
+                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                }`}>
+                  <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+                    <input
+                      type="checkbox"
+                      checked={operatorChecklist.modelMatches}
+                      disabled={isAlreadyAccepted}
+                      onChange={() => toggleOperatorChecklist('modelMatches')}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                        operatorChecklist.modelMatches
+                          ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                          : 'border-white/20 bg-white/5'
+                      }`}
+                    >
+                      {operatorChecklist.modelMatches && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  </div>
                   <div>
-                    <span className="font-bold text-text-primary block">
+                    <span className={`font-bold block transition-colors ${
+                      operatorChecklist.modelMatches ? 'text-emerald' : 'text-text-primary'
+                    }`}>
                       1. Hardware Model Verification
                     </span>
-                    <span className="text-text-secondary text-[11px] block">
+                    <span className="text-text-secondary text-[11px] block mt-0.5">
                       Physical chassis branding matches {pass.manufacturer} {pass.productName}.
                     </span>
                   </div>
                 </label>
 
                 {/* 2. Condition match */}
-                <label className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3 cursor-pointer hover:bg-white/[0.06] transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={operatorChecklist.conditionMatches}
-                    disabled={isAlreadyAccepted}
-                    onChange={() => toggleOperatorChecklist('conditionMatches')}
-                    className="mt-0.5 w-4 h-4 rounded text-emerald focus:ring-emerald bg-white/5"
-                  />
+                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
+                  isAlreadyAccepted
+                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                    : operatorChecklist.conditionMatches
+                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                }`}>
+                  <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+                    <input
+                      type="checkbox"
+                      checked={operatorChecklist.conditionMatches}
+                      disabled={isAlreadyAccepted}
+                      onChange={() => toggleOperatorChecklist('conditionMatches')}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                        operatorChecklist.conditionMatches
+                          ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                          : 'border-white/20 bg-white/5'
+                      }`}
+                    >
+                      {operatorChecklist.conditionMatches && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  </div>
                   <div>
-                    <span className="font-bold text-text-primary block">
+                    <span className={`font-bold block transition-colors ${
+                      operatorChecklist.conditionMatches ? 'text-emerald' : 'text-text-primary'
+                    }`}>
                       2. Declared Condition Integrity
                     </span>
-                    <span className="text-text-secondary text-[11px] block">
+                    <span className="text-text-secondary text-[11px] block mt-0.5">
                       Enclosure state corresponds with declared condition ({pass.condition}).
                     </span>
                   </div>
                 </label>
 
                 {/* 3. Scale weight */}
-                <label className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3 cursor-pointer hover:bg-white/[0.06] transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={operatorChecklist.scaleWeightVerified}
-                    disabled={isAlreadyAccepted}
-                    onChange={() => toggleOperatorChecklist('scaleWeightVerified')}
-                    className="mt-0.5 w-4 h-4 rounded text-emerald focus:ring-emerald bg-white/5"
-                  />
+                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
+                  isAlreadyAccepted
+                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                    : operatorChecklist.scaleWeightVerified
+                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                }`}>
+                  <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+                    <input
+                      type="checkbox"
+                      checked={operatorChecklist.scaleWeightVerified}
+                      disabled={isAlreadyAccepted}
+                      onChange={() => toggleOperatorChecklist('scaleWeightVerified')}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                        operatorChecklist.scaleWeightVerified
+                          ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                          : 'border-white/20 bg-white/5'
+                      }`}
+                    >
+                      {operatorChecklist.scaleWeightVerified && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  </div>
                   <div>
-                    <span className="font-bold text-text-primary block">
+                    <span className={`font-bold block transition-colors ${
+                      operatorChecklist.scaleWeightVerified ? 'text-emerald' : 'text-text-primary'
+                    }`}>
                       3. Scale Mass Consistency
                     </span>
-                    <span className="text-text-secondary text-[11px] block">
+                    <span className="text-text-secondary text-[11px] block mt-0.5">
                       Physical weight ({simulatedScaleGrams}g) matches expected nominal ({nominalMass}g ±5%).
                     </span>
                   </div>
                 </label>
 
                 {/* 4. Battery safety */}
-                <label className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3 cursor-pointer hover:bg-white/[0.06] transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={operatorChecklist.batterySafetyVerified}
-                    disabled={isAlreadyAccepted}
-                    onChange={() => toggleOperatorChecklist('batterySafetyVerified')}
-                    className="mt-0.5 w-4 h-4 rounded text-emerald focus:ring-emerald bg-white/5"
-                  />
+                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
+                  isAlreadyAccepted
+                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                    : operatorChecklist.batterySafetyVerified
+                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                }`}>
+                  <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+                    <input
+                      type="checkbox"
+                      checked={operatorChecklist.batterySafetyVerified}
+                      disabled={isAlreadyAccepted}
+                      onChange={() => toggleOperatorChecklist('batterySafetyVerified')}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                        operatorChecklist.batterySafetyVerified
+                          ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                          : 'border-white/20 bg-white/5'
+                      }`}
+                    >
+                      {operatorChecklist.batterySafetyVerified && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  </div>
                   <div>
-                    <span className="font-bold text-text-primary block">
+                    <span className={`font-bold block transition-colors ${
+                      operatorChecklist.batterySafetyVerified ? 'text-emerald' : 'text-text-primary'
+                    }`}>
                       4. Thermal & Battery Safe Containment
                     </span>
-                    <span className="text-text-secondary text-[11px] block">
+                    <span className="text-text-secondary text-[11px] block mt-0.5">
                       {pass.isHazmat
                         ? 'Device placed inside fire-resistant sand isolation containment.'
                         : 'No active thermal runaway, punctures, or chemical leakage observed.'}
@@ -390,19 +467,38 @@ export const KioskOperatorTerminal: React.FC = () => {
                 </label>
 
                 {/* 5. Wipe sanitized */}
-                <label className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-3 cursor-pointer hover:bg-white/[0.06] transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={operatorChecklist.wipeVerified}
-                    disabled={isAlreadyAccepted}
-                    onChange={() => toggleOperatorChecklist('wipeVerified')}
-                    className="mt-0.5 w-4 h-4 rounded text-emerald focus:ring-emerald bg-white/5"
-                  />
+                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
+                  isAlreadyAccepted
+                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                    : operatorChecklist.wipeVerified
+                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                }`}>
+                  <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+                    <input
+                      type="checkbox"
+                      checked={operatorChecklist.wipeVerified}
+                      disabled={isAlreadyAccepted}
+                      onChange={() => toggleOperatorChecklist('wipeVerified')}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                        operatorChecklist.wipeVerified
+                          ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                          : 'border-white/20 bg-white/5'
+                      }`}
+                    >
+                      {operatorChecklist.wipeVerified && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  </div>
                   <div>
-                    <span className="font-bold text-text-primary block">
+                    <span className={`font-bold block transition-colors ${
+                      operatorChecklist.wipeVerified ? 'text-emerald' : 'text-text-primary'
+                    }`}>
                       5. Data Sanitization / Destruction Tagged
                     </span>
-                    <span className="text-text-secondary text-[11px] block">
+                    <span className="text-text-secondary text-[11px] block mt-0.5">
                       {pass.dataWipeException
                         ? 'Hardware tagged for audited physical disk drill/shredder chamber.'
                         : 'Verified device displays factory setup screen with accounts decoupled.'}
@@ -417,7 +513,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                   type="button"
                   disabled={isAlreadyAccepted}
                   onClick={() => setIsRejectModalOpen(true)}
-                  className="px-4 py-2 rounded-full text-xs font-semibold text-red-400 hover:bg-red-500/10 border border-red-500/30 transition-colors disabled:opacity-40"
+                  className="px-4 py-2 rounded-full text-xs font-semibold text-red-400 hover:bg-red-500/10 border border-red-500/30 transition-all cursor-pointer active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Reject / Flag Mismatch
                 </button>
@@ -428,7 +524,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                   onClick={handleAccept}
                   className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
                     !isAlreadyAccepted && allChecksSatisfied
-                      ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98]'
+                      ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
                       : 'bg-white/10 text-text-muted cursor-not-allowed opacity-50'
                   }`}
                 >
@@ -500,14 +596,14 @@ export const KioskOperatorTerminal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsRejectModalOpen(false)}
-                  className="px-4 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5"
+                  className="px-4 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5 cursor-pointer active:scale-95 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleReject}
-                  className="px-5 py-2 rounded-full bg-red-500 text-white font-bold text-xs uppercase tracking-wider hover:bg-red-600 transition-colors"
+                  className="px-5 py-2 rounded-full bg-red-500 text-white font-bold text-xs uppercase tracking-wider hover:bg-red-600 transition-all cursor-pointer active:scale-95 shadow-md"
                 >
                   Confirm Rejection
                 </button>

@@ -75,8 +75,9 @@ export const Stage6EphemeralQRPass: React.FC = () => {
       <div className="p-8 text-center space-y-3">
         <p className="text-sm text-text-muted">No active pass. Return to Stage 1 to discover a product.</p>
         <button
+          type="button"
           onClick={resetWizard}
-          className="px-4 py-2 rounded-full bg-emerald text-background text-xs font-bold"
+          className="px-4 py-2 rounded-full bg-emerald text-background text-xs font-bold cursor-pointer active:scale-95 transition-all shadow-emerald-glow"
         >
           Start New Drop-Off
         </button>
@@ -142,8 +143,9 @@ export const Stage6EphemeralQRPass: React.FC = () => {
               {activePass.passId}
             </span>
             <button
+              type="button"
               onClick={copyRef}
-              className="text-text-muted hover:text-emerald transition-colors"
+              className="text-text-muted hover:text-emerald transition-colors cursor-pointer active:scale-95 p-0.5"
               title="Copy Reference"
             >
               <Copy className="w-3.5 h-3.5" />
@@ -232,8 +234,9 @@ export const Stage6EphemeralQRPass: React.FC = () => {
         {/* FOOTER ACTIONS */}
         <div className="px-5 py-4 border-t border-white/10 bg-white/[0.02] flex items-center justify-between gap-2">
           <button
+            type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5 transition-colors border border-white/10"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-95"
           >
             <Printer className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Print / Save Pass</span>
@@ -242,11 +245,12 @@ export const Stage6EphemeralQRPass: React.FC = () => {
           {/* FOR STUDENTS: VIEW IN MY TECH VAULT. FOR ADMIN/OPERATOR: SIMULATE TERMINAL */}
           {currentUser?.role === 'college_admin' || currentUser?.role === 'kiosk_operator' ? (
             <button
+              type="button"
               onClick={() => {
                 lookupPass(activePass.passId)
                 setActiveTab('kiosk_terminal')
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
             >
               <MonitorCheck className="w-3.5 h-3.5" />
               <span>Launch Kiosk Terminal Scan</span>
@@ -254,10 +258,11 @@ export const Stage6EphemeralQRPass: React.FC = () => {
             </button>
           ) : (
             <button
+              type="button"
               onClick={() => {
                 setActiveTab('tech_vault')
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
             >
               <FolderArchive className="w-3.5 h-3.5" />
               <span>View in My Tech Vault</span>
@@ -270,8 +275,9 @@ export const Stage6EphemeralQRPass: React.FC = () => {
       {/* START ANOTHER DROP-OFF BUTTON */}
       <div className="text-center pt-2">
         <button
+          type="button"
           onClick={resetWizard}
-          className="inline-flex items-center gap-2 text-xs text-text-muted hover:text-emerald transition-colors font-mono"
+          className="inline-flex items-center gap-2 text-xs text-text-muted hover:text-emerald transition-all font-mono cursor-pointer active:scale-95"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Prepare another device submission</span>

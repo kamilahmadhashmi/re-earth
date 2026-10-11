@@ -122,8 +122,9 @@ export const RecycleModuleModal: React.FC = () => {
               {/* 1. STUDENT DROP-OFF: VISIBLE ONLY TO STUDENTS */}
               {isStudent && (
                 <button
+                  type="button"
                   onClick={() => setActiveTab('student_flow')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer active:scale-95 ${
                     activeTab === 'student_flow'
                       ? 'bg-emerald text-background font-bold shadow-emerald-glow'
                       : 'text-text-secondary hover:text-text-primary'
@@ -137,8 +138,9 @@ export const RecycleModuleModal: React.FC = () => {
               {/* 2. KIOSK OPERATOR TERMINAL: VISIBLE TO OPERATORS AND COLLEGE ADMINS (HIDDEN FROM STUDENTS) */}
               {(isKioskOperator || isCollegeAdmin) && (
                 <button
+                  type="button"
                   onClick={() => setActiveTab('kiosk_terminal')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer active:scale-95 ${
                     activeTab === 'kiosk_terminal'
                       ? 'bg-cyan text-background font-bold shadow-cyan-glow'
                       : 'text-text-secondary hover:text-text-primary'
@@ -152,8 +154,9 @@ export const RecycleModuleModal: React.FC = () => {
               {/* 3. TECH VAULT: VISIBLE TO STUDENTS (PERSONAL VAULT) & COLLEGE ADMINS (ADMIN VAULT), HIDDEN FROM OPERATORS */}
               {(isStudent || isCollegeAdmin) && (
                 <button
+                  type="button"
                   onClick={() => setActiveTab('tech_vault')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer active:scale-95 ${
                     activeTab === 'tech_vault'
                       ? 'bg-lavender text-background font-bold shadow-lavender-glow'
                       : 'text-text-secondary hover:text-text-primary'
@@ -167,9 +170,10 @@ export const RecycleModuleModal: React.FC = () => {
               {/* 4. SPONSORSHIPS: VISIBLE ONLY TO COLLEGE ADMINS AND CENTRAL ADMINS */}
               {isCollegeAdmin && (
                 <button
+                  type="button"
                   id="tab-btn-sponsorships"
                   onClick={() => setActiveTab('sponsorships')}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-all cursor-pointer active:scale-95 ${
                     activeTab === 'sponsorships'
                       ? 'bg-amber text-background font-bold shadow-amber-glow'
                       : 'text-text-secondary hover:text-text-primary'
@@ -205,13 +209,14 @@ export const RecycleModuleModal: React.FC = () => {
 
               {/* Prominent Logout Button */}
               <button
+                type="button"
                 id="btn-kiosk-modal-logout"
                 onClick={async () => {
                   openModal(null)
                   await logout()
                 }}
                 title="Log Out of Current Session"
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 hover:bg-amber/20 hover:text-amber text-text-muted transition-all border border-white/10 hover:border-amber/30 text-xs font-mono font-bold cursor-pointer"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 hover:bg-amber/20 hover:text-amber text-text-muted transition-all border border-white/10 hover:border-amber/30 text-xs font-mono font-bold cursor-pointer active:scale-95"
               >
                 <LogOut className="w-3 h-3" />
                 <span className="hidden sm:inline">Log Out</span>
@@ -222,9 +227,10 @@ export const RecycleModuleModal: React.FC = () => {
               </kbd>
 
               <button
+                type="button"
                 id="btn-close-recycle-modal"
                 onClick={() => openModal(null)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary border border-white/10 transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 flex items-center justify-center text-text-muted hover:text-text-primary border border-white/10 transition-all cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -252,7 +258,7 @@ export const RecycleModuleModal: React.FC = () => {
                           isCurrent
                             ? 'bg-white/10 text-emerald font-bold border border-emerald/40 shadow-emerald-glow'
                             : isCompleted
-                            ? 'text-text-secondary hover:text-text-primary hover:bg-white/5 cursor-pointer'
+                            ? 'text-text-secondary hover:text-text-primary hover:bg-white/5 cursor-pointer active:scale-95'
                             : 'text-text-muted opacity-40 cursor-not-allowed'
                         }`}
                       >
@@ -335,8 +341,9 @@ export const RecycleModuleModal: React.FC = () => {
                         Student Drop-Off is strictly reserved for students submitting hardware. College administrators and kiosk operators must use their dedicated modules.
                       </p>
                       <button
+                        type="button"
                         onClick={() => setActiveTab(isCollegeAdmin ? 'tech_vault' : 'kiosk_terminal')}
-                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright active:scale-95 text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
                       >
                         {isCollegeAdmin ? 'Go to Admin Tech Vault' : 'Go to Kiosk Terminal'}
                       </button>
@@ -367,8 +374,9 @@ export const RecycleModuleModal: React.FC = () => {
                         You are authenticated as <strong>{currentUser?.name} (Student)</strong>. The Kiosk Operator Terminal and Hardware Verification console are restricted to authorized university facility managers and laboratory custodians.
                       </p>
                       <button
+                        type="button"
                         onClick={() => setActiveTab('student_flow')}
-                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright active:scale-95 text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
                       >
                         Return to Student Drop-Off
                       </button>
@@ -399,8 +407,9 @@ export const RecycleModuleModal: React.FC = () => {
                         Kiosk operators are authorized exclusively for hardware intake at the physical pod and do not have access to institutional submission records.
                       </p>
                       <button
+                        type="button"
                         onClick={() => setActiveTab('kiosk_terminal')}
-                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright active:scale-95 text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
                       >
                         Return to Operator Terminal
                       </button>
@@ -431,8 +440,9 @@ export const RecycleModuleModal: React.FC = () => {
                         Corporate sponsorship applications and partnership approvals are restricted strictly to authorized university administrators and platform secretariat officials.
                       </p>
                       <button
+                        type="button"
                         onClick={() => setActiveTab(isStudent ? 'student_flow' : 'kiosk_terminal')}
-                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
+                        className="px-5 py-2.5 rounded-xl bg-cyan hover:bg-cyan-bright active:scale-95 text-black font-bold text-xs shadow-cyan-glow transition-all cursor-pointer"
                       >
                         Return to Authorized Portal
                       </button>

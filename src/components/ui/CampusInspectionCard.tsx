@@ -50,8 +50,9 @@ export const CampusInspectionCard: React.FC = () => {
           {/* HEADER BAR */}
           <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
             <button
+              type="button"
               onClick={returnToWorld}
-              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5"
+              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-all px-2.5 py-1.5 rounded-lg hover:bg-white/5 cursor-pointer active:scale-95"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to World</span>
@@ -60,8 +61,9 @@ export const CampusInspectionCard: React.FC = () => {
               </kbd>
             </button>
             <button
+              type="button"
               onClick={returnToWorld}
-              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-all cursor-pointer active:scale-95"
             >
               <X className="w-4 h-4" />
             </button>
@@ -166,8 +168,9 @@ export const CampusInspectionCard: React.FC = () => {
                 </span>
                 {sponsor && (
                   <button
+                    type="button"
                     onClick={() => selectSponsor(sponsor.id)}
-                    className="text-[10px] font-semibold text-emerald hover:underline flex items-center gap-1 group"
+                    className="text-[10px] font-semibold text-emerald hover:underline flex items-center gap-1 group cursor-pointer active:scale-95 transition-all"
                     title={`Inspect ${sponsor.name} Scope 3 Metrics`}
                   >
                     <span>{sponsor.name} Partner</span>
@@ -208,8 +211,9 @@ export const CampusInspectionCard: React.FC = () => {
                   </span>
                 </div>
                 <button
+                  type="button"
                   onClick={toggleDemoMode}
-                  className="text-[9px] font-mono text-text-muted hover:text-emerald transition-colors px-2 py-0.5 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-white/10"
+                  className="text-[9px] font-mono text-text-muted hover:text-emerald transition-all px-2 py-0.5 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 cursor-pointer active:scale-95"
                   title="Toggle Simulation / Demo Mode (Shift+D)"
                 >
                   Demo Mode: Off
@@ -227,16 +231,18 @@ export const CampusInspectionCard: React.FC = () => {
                   Simulation Mode Active
                 </span>
                 <button
+                  type="button"
                   onClick={toggleDemoMode}
-                  className="text-[9px] font-mono text-text-muted hover:text-text-primary transition-colors px-2 py-0.5 rounded-md bg-white/5 border border-white/10"
+                  className="text-[9px] font-mono text-text-muted hover:text-text-primary transition-all px-2 py-0.5 rounded-md bg-white/5 border border-white/10 cursor-pointer active:scale-95"
                 >
                   Turn Off
                 </button>
               </div>
               <button
+                type="button"
                 onClick={handleBoost}
                 disabled={isBoosting}
-                className="w-full py-2.5 px-4 rounded-md font-bold text-xs text-background bg-emerald hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-2.5 px-4 rounded-md font-bold text-xs text-background bg-emerald hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
               >
                 <Radio className="w-3.5 h-3.5" />
                 <span>{isBoosting ? 'Recording Telemetry...' : 'Simulate IoT Drop-Off (+250 kg)'}</span>

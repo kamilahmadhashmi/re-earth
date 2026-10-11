@@ -53,8 +53,9 @@ export const ClusterSelectionPopover: React.FC = () => {
             </div>
 
             <button
+              type="button"
               onClick={() => setActiveCluster(null)}
-              className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+              className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 active:scale-95 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-all cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -73,11 +74,12 @@ export const ClusterSelectionPopover: React.FC = () => {
               return (
                 <button
                   key={campus.id}
+                  type="button"
                   onClick={() => {
                     selectCampus(campus.id)
                     setActiveCluster(null)
                   }}
-                  className="w-full text-left p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/15 transition-all duration-150 flex items-center justify-between group"
+                  className="w-full text-left p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.06] active:scale-[0.98] border border-white/[0.06] hover:border-white/15 transition-all duration-150 flex items-center justify-between group cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span className="font-mono text-xs font-bold text-emerald w-6 shrink-0">

@@ -75,22 +75,24 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
           className="flex flex-wrap items-center justify-center gap-4 pt-4"
         >
           <button
+            type="button"
             onClick={() => {
               trackSponsorEvent('sponsor_package_selected', { source: 'hero_primary_cta' })
               onBecomeSponsor()
             }}
-            className="px-8 py-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.98] text-black font-bold text-xs tracking-wider uppercase transition-all shadow-spatial flex items-center gap-2.5 group cursor-pointer"
+            className="px-8 py-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-95 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-spatial flex items-center gap-2.5 group cursor-pointer"
           >
             <span>Initiate Corporate Underwriting</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
 
           <button
+            type="button"
             onClick={() => {
               trackSponsorEvent('sponsor_page_view', { source: 'hero_secondary_cta' })
               onExploreHowItWorks()
             }}
-            className="px-7 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-text-primary text-xs font-semibold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer"
+            className="px-7 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-95 border border-white/[0.08] text-text-primary text-xs font-semibold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer"
           >
             <span>Explore 4-Node Ecosystem</span>
             <ChevronDown className="w-4 h-4 text-emerald" />

@@ -93,8 +93,9 @@ export const ToxicityMatrix: React.FC = () => {
           return (
             <button
               key={el.id}
+              type="button"
               onClick={() => setActiveElement(el)}
-              className={`p-3 rounded-xl border transition-all text-left flex flex-col justify-between h-20 cursor-pointer ${
+              className={`p-3 rounded-xl border transition-all text-left flex flex-col justify-between h-20 cursor-pointer active:scale-95 ${
                 isSelected
                   ? 'bg-white/[0.08] border-white/25 shadow-sm scale-[1.02]'
                   : 'bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.05] hover:border-white/10'

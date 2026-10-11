@@ -45,11 +45,12 @@ export const TopNav: React.FC = () => {
         {/* BRAND BUTTON */}
         <div className="flex items-center gap-2.5 shrink-0">
           <button
+            type="button"
             onClick={() => {
               returnToWorld()
               scrollToChapter(0)
             }}
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-white/[0.04] transition-all group cursor-pointer"
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-white/[0.04] transition-all group cursor-pointer active:scale-95"
           >
             <div className="w-6 h-6 rounded-lg bg-emerald/15 border border-emerald/30 flex items-center justify-center text-emerald shadow-sm">
               <Layers className="w-3.5 h-3.5 text-copper" />
@@ -68,8 +69,9 @@ export const TopNav: React.FC = () => {
             return (
               <button
                 key={ch.id}
+                type="button"
                 onClick={() => scrollToChapter(ch.id)}
-                className={`relative px-3 py-1 rounded-lg text-xs font-medium transition-colors z-10 cursor-pointer ${
+                className={`relative px-3 py-1 rounded-lg text-xs font-medium transition-colors z-10 cursor-pointer active:scale-95 ${
                   isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
@@ -88,20 +90,23 @@ export const TopNav: React.FC = () => {
           <div className="w-[1px] h-3.5 bg-white/10 mx-1" />
 
           <button
+            type="button"
             onClick={() => openModal('recycle')}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium text-emerald hover:text-emerald-light hover:bg-emerald/10 transition-all cursor-pointer"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium text-emerald hover:text-emerald-light hover:bg-emerald/10 transition-all cursor-pointer active:scale-95"
           >
             Recycle
           </button>
           <button
+            type="button"
             onClick={() => openModal('vault')}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer active:scale-95"
           >
             Vault
           </button>
           <button
+            type="button"
             onClick={() => navigateToSponsor('corporate_sustainability')}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer font-semibold"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer font-semibold active:scale-95"
           >
             Sponsor
           </button>
@@ -129,8 +134,9 @@ export const TopNav: React.FC = () => {
             </div>
           ) : (
             <button
+              type="button"
               onClick={() => openLoginModal()}
-              className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 transition-all cursor-pointer active:scale-95"
             >
               Sign In
             </button>
@@ -138,8 +144,9 @@ export const TopNav: React.FC = () => {
 
           {/* Spatial Audio Toggle */}
           <button
+            type="button"
             onClick={toggleAudio}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer active:scale-95 ${
               isAudioEnabled
                 ? 'bg-emerald/10 text-emerald border border-emerald/30'
                 : 'bg-white/[0.04] border border-white/10 text-text-muted hover:text-text-primary'
@@ -163,8 +170,9 @@ export const TopNav: React.FC = () => {
           {/* Rankings Drawer Toggle */}
           {viewMode === 'globe' && (
             <button
+              type="button"
               onClick={toggleLeftDrawer}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer active:scale-95 ${
                 isLeftDrawerOpen
                   ? 'bg-copper/15 text-copper border border-copper/40'
                   : 'bg-white/[0.04] border border-white/10 text-text-secondary hover:text-text-primary'
@@ -178,8 +186,9 @@ export const TopNav: React.FC = () => {
           {/* Mode Switcher with Segmented Tab Selection */}
           <div className="flex items-center p-0.5 rounded-xl bg-white/[0.03] border border-white/10 relative">
             <button
+              type="button"
               onClick={() => setViewMode('globe')}
-              className={`relative flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold tracking-wide transition-colors z-10 cursor-pointer ${
+              className={`relative flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold tracking-wide transition-colors z-10 cursor-pointer active:scale-95 ${
                 viewMode === 'globe' ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
@@ -194,9 +203,10 @@ export const TopNav: React.FC = () => {
               <span className="hidden sm:inline">World</span>
             </button>
             <button
+              type="button"
               onClick={() => setViewMode('skyline')}
               title="3D Sponsor Skyline Forest"
-              className={`relative flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold tracking-wide transition-colors z-10 cursor-pointer ${
+              className={`relative flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold tracking-wide transition-colors z-10 cursor-pointer active:scale-95 ${
                 viewMode === 'skyline' ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
               }`}
             >

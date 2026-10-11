@@ -37,19 +37,21 @@ export const SponsorshipCTASection: React.FC<SponsorshipCTASectionProps> = ({
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
             <button
+              type="button"
               onClick={() => {
                 trackSponsorEvent('sponsor_package_selected', { source: 'final_cta_primary' })
                 onScrollToForm()
               }}
-              className="px-8 py-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.98] text-black font-bold text-xs uppercase tracking-wider transition-all shadow-spatial flex items-center gap-2 cursor-pointer"
+              className="px-8 py-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-95 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-spatial flex items-center gap-2 cursor-pointer"
             >
               <span>Initiate Sponsorship Application</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
+              type="button"
               onClick={onScrollToForm}
-              className="px-7 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-text-primary border border-white/[0.08] text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
+              className="px-7 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-95 text-text-primary border border-white/[0.08] text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
             >
               <Mail className="w-3.5 h-3.5 text-cyan" />
               <span>Contact Partnership Team</span>
@@ -61,8 +63,9 @@ export const SponsorshipCTASection: React.FC<SponsorshipCTASectionProps> = ({
       {/* Return to Orbit Button */}
       <div className="mt-12 text-center">
         <button
+          type="button"
           onClick={onReturnToOrbit}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface border border-white/[0.08] text-xs font-mono text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-sm hover:border-white/20"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface border border-white/[0.08] text-xs font-mono text-text-secondary hover:text-text-primary active:scale-95 transition-all cursor-pointer shadow-sm hover:border-white/20"
         >
           <RotateCcw className="w-3.5 h-3.5 text-emerald" />
           <span>Return to 3D Planetary Orbit & Collegiate Skyline</span>

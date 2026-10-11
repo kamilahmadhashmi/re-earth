@@ -285,9 +285,10 @@ export const CollegeAdminSponsorships: React.FC = () => {
 
         <div className="flex items-center gap-2 shrink-0">
           <button
+            type="button"
             onClick={refreshData}
             title="Refresh database records"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-text-secondary hover:text-text-primary text-xs font-mono font-semibold border border-white/10 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-text-secondary hover:text-text-primary text-xs font-mono font-semibold border border-white/10 transition-all cursor-pointer active:scale-95"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Sync</span>
@@ -387,8 +388,9 @@ export const CollegeAdminSponsorships: React.FC = () => {
             return (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setStatusFilter(tab.id as any)}
-                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer whitespace-nowrap active:scale-95 ${
                   isActive
                     ? 'bg-emerald text-black shadow-emerald-glow'
                     : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
@@ -812,9 +814,10 @@ export const CollegeAdminSponsorships: React.FC = () => {
                       className="flex-1 bg-black/50 text-xs text-text-primary px-3 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-cyan font-mono"
                     />
                     <button
+                      type="button"
                       onClick={handleAddInternalNote}
                       disabled={!newInternalNote.trim()}
-                      className="px-3.5 py-2 rounded-xl bg-cyan text-black font-bold text-xs shadow-cyan-glow hover:brightness-105 disabled:opacity-40 transition-all cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-cyan text-black font-bold text-xs shadow-cyan-glow hover:brightness-105 disabled:opacity-40 transition-all cursor-pointer active:scale-95"
                     >
                       Save Note
                     </button>
@@ -831,8 +834,9 @@ export const CollegeAdminSponsorships: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-2">
                   {selectedApp.status !== 'under_review' && selectedApp.status !== 'approved' && (
                     <button
+                      type="button"
                       onClick={() => setConfirmModal({ type: 'under_review', app: selectedApp })}
-                      className="px-3.5 py-2 rounded-xl bg-cyan/15 hover:bg-cyan/25 text-cyan border border-cyan/30 text-xs font-mono font-bold transition-all cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-cyan/15 hover:bg-cyan/25 text-cyan border border-cyan/30 text-xs font-mono font-bold transition-all cursor-pointer active:scale-95"
                     >
                       Mark Under Review
                     </button>
@@ -840,8 +844,9 @@ export const CollegeAdminSponsorships: React.FC = () => {
 
                   {selectedApp.status !== 'info_requested' && (
                     <button
+                      type="button"
                       onClick={() => setConfirmModal({ type: 'request_info', app: selectedApp })}
-                      className="px-3.5 py-2 rounded-xl bg-lavender/15 hover:bg-lavender/25 text-lavender border border-lavender/30 text-xs font-mono font-bold transition-all cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-lavender/15 hover:bg-lavender/25 text-lavender border border-lavender/30 text-xs font-mono font-bold transition-all cursor-pointer active:scale-95"
                     >
                       Request Info
                     </button>
@@ -849,8 +854,9 @@ export const CollegeAdminSponsorships: React.FC = () => {
 
                   {selectedApp.status !== 'rejected' && (
                     <button
+                      type="button"
                       onClick={() => setConfirmModal({ type: 'reject', app: selectedApp })}
-                      className="px-3.5 py-2 rounded-xl bg-pink/15 hover:bg-pink/25 text-pink border border-pink/30 text-xs font-mono font-bold transition-all cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-pink/15 hover:bg-pink/25 text-pink border border-pink/30 text-xs font-mono font-bold transition-all cursor-pointer active:scale-95"
                     >
                       Reject Proposal
                     </button>
@@ -858,8 +864,9 @@ export const CollegeAdminSponsorships: React.FC = () => {
 
                   {selectedApp.status !== 'approved' && (
                     <button
+                      type="button"
                       onClick={() => setConfirmModal({ type: 'approve', app: selectedApp })}
-                      className="px-4 py-2 rounded-xl bg-emerald hover:bg-emerald-bright text-black font-bold text-xs font-mono shadow-emerald-glow transition-all cursor-pointer"
+                      className="px-4 py-2 rounded-xl bg-emerald hover:bg-emerald-bright text-black font-bold text-xs font-mono shadow-emerald-glow transition-all cursor-pointer active:scale-95"
                     >
                       Approve & Register Partner
                     </button>

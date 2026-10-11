@@ -513,9 +513,10 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
                   ⚠ Swollen battery hazard detected. Pod not certified for volatile lithium.
                  </div>`
               : `<button
+                  type="button"
                   id="btn-kiosk-select-${kiosk.id}"
                   onclick="window.__selectCampusKiosk('${kiosk.id}')"
-                  class="w-full mt-2 py-1.5 px-3 rounded-lg bg-emerald hover:bg-emerald-bright text-black font-bold text-[11px] transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-emerald-glow"
+                  class="w-full mt-2 py-1.5 px-3 rounded-lg bg-emerald hover:bg-emerald-bright active:scale-95 text-black font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-emerald-glow"
                 >
                   ${isSelected ? '✓ Currently Selected Pod' : 'Lock In 15-Min Reservation'}
                 </button>`
@@ -605,9 +606,10 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
         <div className="pointer-events-auto flex items-center gap-1.5 p-1 rounded-full liquid-glass border border-white/15 shadow-xl backdrop-blur-md">
           {/* Layer toggles dropdown/buttons */}
           <button
+            type="button"
             onClick={() => setShowGates(!showGates)}
             title="Toggle Campus Entrance/Exit Gates"
-            className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
               showGates
                 ? 'bg-emerald/20 text-emerald border border-emerald/40'
                 : 'text-text-muted hover:text-text-primary'
@@ -618,9 +620,10 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={() => setShowZones(!showZones)}
             title="Toggle Student Drop-off Zones"
-            className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
               showZones
                 ? 'bg-cyan/20 text-cyan border border-cyan/40'
                 : 'text-text-muted hover:text-text-primary'
@@ -631,9 +634,10 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={() => setShowVehicles(!showVehicles)}
             title="Toggle Shuttles & Logistics Vehicles"
-            className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
               showVehicles
                 ? 'bg-lavender/20 text-lavender border border-lavender/40'
                 : 'text-text-muted hover:text-text-primary'
@@ -644,19 +648,21 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={() =>
               setTileMode(tileMode === 'carto_dark' ? 'osm_standard' : 'carto_dark')
             }
             title="Toggle Tile Style (Dark Telemetry / OSM Standard)"
-            className="px-2.5 py-1 rounded-full text-[10px] font-mono text-text-secondary hover:text-text-primary border border-white/10 hover:border-white/20 transition-colors"
+            className="px-2.5 py-1 rounded-full text-[10px] font-mono text-text-secondary hover:text-text-primary border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95"
           >
             {tileMode === 'carto_dark' ? 'OSM Classic' : 'Dark Telemetry'}
           </button>
 
           <button
+            type="button"
             onClick={() => setShowLegend(!showLegend)}
             title="Toggle Map Legend"
-            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-colors ${
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all cursor-pointer active:scale-95 ${
               showLegend
                 ? 'bg-white/20 text-text-primary'
                 : 'text-text-muted hover:text-text-primary'
@@ -672,26 +678,29 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       {/* --------------------------------------------------------------------- */}
       <div className="absolute bottom-4 right-3 z-10 flex flex-col items-center gap-1.5">
         <button
+          type="button"
           onClick={handleResetView}
           title="Reset to Campus Overview"
-          className="w-8 h-8 rounded-full liquid-glass border border-white/15 text-text-primary hover:text-emerald hover:border-emerald/40 transition-all flex items-center justify-center shadow-lg"
+          className="w-8 h-8 rounded-full liquid-glass border border-white/15 text-text-primary hover:text-emerald hover:border-emerald/40 transition-all flex items-center justify-center shadow-lg cursor-pointer active:scale-95"
         >
           <Compass className="w-4 h-4" />
         </button>
 
         <div className="flex flex-col rounded-xl liquid-glass border border-white/15 overflow-hidden shadow-lg">
           <button
+            type="button"
             onClick={handleZoomIn}
             title="Zoom In"
-            className="w-8 h-8 flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors text-sm font-bold font-mono"
+            className="w-8 h-8 flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors text-sm font-bold font-mono cursor-pointer active:scale-95"
           >
             +
           </button>
           <div className="w-full h-[1px] bg-white/10" />
           <button
+            type="button"
             onClick={handleZoomOut}
             title="Zoom Out"
-            className="w-8 h-8 flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors text-sm font-bold font-mono"
+            className="w-8 h-8 flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors text-sm font-bold font-mono cursor-pointer active:scale-95"
           >
             −
           </button>
@@ -706,8 +715,9 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           <div className="flex items-center justify-between text-[10px] font-mono font-bold text-text-muted">
             <span>OPERATIONAL MAP LEGEND</span>
             <button
+              type="button"
               onClick={() => setShowLegend(false)}
-              className="text-text-muted hover:text-text-primary"
+              className="text-text-muted hover:text-text-primary cursor-pointer active:scale-95 p-1"
             >
               ✕
             </button>

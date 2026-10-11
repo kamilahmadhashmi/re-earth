@@ -43,7 +43,7 @@ export const SponsorshipFAQSection: React.FC = () => {
                 type="button"
                 onClick={() => toggleAccordion(index)}
                 aria-expanded={isOpen}
-                className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none active:scale-[0.99] transition-all"
               >
                 <span className="text-sm sm:text-base font-bold text-text-primary">
                   {faq.question}

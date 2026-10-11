@@ -107,8 +107,9 @@ export const LoginModal: React.FC = () => {
         >
         {/* Close Button */}
         <button
+          type="button"
           onClick={handleClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors border border-white/10 z-10 cursor-pointer"
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 flex items-center justify-center text-text-muted hover:text-text-primary transition-all border border-white/10 z-10 cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
@@ -133,7 +134,7 @@ export const LoginModal: React.FC = () => {
             <button
               type="button"
               onClick={() => handleTabChange('student')}
-              className={`flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold cursor-pointer transition-all active:scale-95 ${
                 activeTab === 'student'
                   ? 'bg-cyan text-black shadow-cyan-glow'
                   : 'text-text-muted hover:text-text-primary'
@@ -146,7 +147,7 @@ export const LoginModal: React.FC = () => {
             <button
               type="button"
               onClick={() => handleTabChange('admin')}
-              className={`flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold cursor-pointer transition-all active:scale-95 ${
                 activeTab === 'admin'
                   ? 'bg-emerald text-black shadow-emerald-glow'
                   : 'text-text-muted hover:text-text-primary'
@@ -159,7 +160,7 @@ export const LoginModal: React.FC = () => {
             <button
               type="button"
               onClick={() => handleTabChange('operator')}
-              className={`flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold cursor-pointer transition-all active:scale-95 ${
                 activeTab === 'operator'
                   ? 'bg-amber text-black shadow-amber-glow'
                   : 'text-text-muted hover:text-text-primary'
@@ -226,7 +227,7 @@ export const LoginModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-3 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 mt-2 ${
+              className={`w-full py-3 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-200 mt-2 cursor-pointer active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 ${
                 activeTab === 'student'
                   ? 'bg-cyan hover:bg-cyan-bright text-black shadow-cyan-glow'
                   : activeTab === 'admin'
@@ -254,7 +255,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('aarav.sharma@dtu.ac.in')
                       setPassword('pass123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group"
                   >
                     <UserCheck className="w-3.5 h-3.5 text-cyan shrink-0" />
                     <div className="truncate">
@@ -269,7 +270,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('priya.verma@nsut.ac.in')
                       setPassword('pass123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group"
                   >
                     <UserCheck className="w-3.5 h-3.5 text-cyan shrink-0" />
                     <div className="truncate">
@@ -288,7 +289,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('kavita.sharma@dtu.ac.in')
                       setPassword('admin123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group"
                   >
                     <Shield className="w-3.5 h-3.5 text-emerald shrink-0" />
                     <div className="truncate">
@@ -303,7 +304,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('dean.sustainability@nsut.ac.in')
                       setPassword('admin123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group"
                   >
                     <Shield className="w-3.5 h-3.5 text-emerald shrink-0" />
                     <div className="truncate">
@@ -318,7 +319,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('central.admin@re-earth.eco')
                       setPassword('admin123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group sm:col-span-2"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group sm:col-span-2"
                   >
                     <Shield className="w-3.5 h-3.5 text-cyan shrink-0" />
                     <div className="truncate">
@@ -337,7 +338,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('arun.verma@dtu.ac.in')
                       setPassword('operator123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group"
                   >
                     <Scan className="w-3.5 h-3.5 text-amber shrink-0" />
                     <div className="truncate">
@@ -352,7 +353,7 @@ export const LoginModal: React.FC = () => {
                       setEmail('deepak.joshi@nsut.ac.in')
                       setPassword('operator123')
                     }}
-                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-left transition-colors flex items-center gap-2 group"
+                    className="p-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer border border-white/10 text-left transition-all flex items-center gap-2 group"
                   >
                     <Scan className="w-3.5 h-3.5 text-amber shrink-0" />
                     <div className="truncate">

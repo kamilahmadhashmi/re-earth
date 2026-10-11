@@ -438,6 +438,7 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
                 <button
+                  type="button"
                   onClick={onReturnToOrbit}
                   className="px-6 py-3 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
                 >
@@ -445,8 +446,9 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                 </button>
 
                 <button
+                  type="button"
                   onClick={handleResetForm}
-                  className="px-5 py-3 rounded-full liquid-glass-pill liquid-glass-control text-text-secondary hover:text-text-primary text-xs font-semibold tracking-wide transition-all border border-white/10 cursor-pointer"
+                  className="px-5 py-3 rounded-full liquid-glass-pill liquid-glass-control text-text-secondary hover:text-text-primary text-xs font-semibold tracking-wide transition-all border border-white/10 active:scale-[0.98] cursor-pointer"
                 >
                   Submit Another Enquiry
                 </button>
@@ -683,10 +685,10 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                           handleChange('sponsorshipPathway', path.id)
                           onPathwayChange?.(path.id)
                         }}
-                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer active:scale-[0.98] select-none ${
                           isSelected
                             ? 'bg-amber/10 border-amber text-text-primary shadow-amber-glow/20'
-                            : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20'
+                            : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20 hover:bg-white/[0.04]'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -701,7 +703,7 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                   })}
                 </div>
                 {errors.sponsorshipPathway && (
-                  <span className="text-[11px] text-pink block">{errors.sponsorshipPathway}</span>
+                  <span className="text-[11px] text-pink block font-mono">{errors.sponsorshipPathway}</span>
                 )}
               </div>
 
@@ -752,17 +754,19 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                       <button
                         key={item.id}
                         type="button"
+                        role="checkbox"
+                        aria-checked={isChecked}
                         onClick={() => toggleContribution(item.id)}
-                        className={`flex items-center gap-2.5 p-3 rounded-xl border text-left text-xs transition-colors cursor-pointer ${
+                        className={`flex items-center gap-2.5 p-3 rounded-xl border text-left text-xs transition-all cursor-pointer active:scale-[0.98] select-none ${
                           isChecked
-                            ? 'bg-emerald/10 border-emerald/50 text-text-primary'
-                            : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20'
+                            ? 'bg-emerald/10 border-emerald/50 text-text-primary shadow-emerald-glow'
+                            : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20 hover:bg-white/[0.04]'
                         }`}
                       >
                         <div
-                          className={`w-4 h-4 rounded-md flex items-center justify-center border shrink-0 ${
+                          className={`w-4 h-4 rounded-md flex items-center justify-center border shrink-0 transition-colors ${
                             isChecked
-                              ? 'bg-emerald border-emerald text-background'
+                              ? 'bg-emerald border-emerald text-background shadow-sm'
                               : 'border-white/20 bg-white/5'
                           }`}
                         >
@@ -774,7 +778,7 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                   })}
                 </div>
                 {errors.contributions && (
-                  <span className="text-[11px] text-pink block">{errors.contributions}</span>
+                  <span className="text-[11px] text-pink block font-mono">{errors.contributions}</span>
                 )}
               </div>
 
@@ -812,10 +816,10 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                         key={mode.id}
                         type="button"
                         onClick={() => setTargetCollegeMode(mode.id)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer active:scale-[0.98] select-none ${
                           isSelected
                             ? 'bg-cyan/10 border-cyan text-text-primary shadow-cyan-glow/20'
-                            : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20'
+                            : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20 hover:bg-white/[0.04]'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -843,7 +847,7 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                       id="collegeSelect"
                       value={selectedCollegeId}
                       onChange={(e) => setSelectedCollegeId(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-surface-elevated border border-white/10 text-xs text-text-primary focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors font-medium"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-surface-elevated border border-white/10 text-xs text-text-primary focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan transition-colors font-medium cursor-pointer"
                     >
                       {INITIAL_CAMPUSES.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -874,19 +878,21 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                           <button
                             key={c.id}
                             type="button"
+                            role="checkbox"
+                            aria-checked={isChecked}
                             onClick={() => {
                               setSelectedCollegeIds((prev) =>
                                 isChecked ? prev.filter((id) => id !== c.id) : [...prev, c.id]
                               )
                             }}
-                            className={`flex items-center gap-2 p-2 rounded-lg border text-left text-xs transition-colors cursor-pointer ${
+                            className={`flex items-center gap-2 p-2 rounded-lg border text-left text-xs transition-all cursor-pointer active:scale-[0.98] select-none ${
                               isChecked
-                                ? 'bg-cyan/10 border-cyan text-text-primary'
-                                : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20'
+                                ? 'bg-cyan/10 border-cyan text-text-primary shadow-cyan-glow/20'
+                                : 'bg-white/[0.02] border-white/10 text-text-secondary hover:border-white/20 hover:bg-white/[0.04]'
                             }`}
                           >
                             <div
-                              className={`w-3.5 h-3.5 rounded flex items-center justify-center border shrink-0 ${
+                              className={`w-3.5 h-3.5 rounded flex items-center justify-center border shrink-0 transition-colors ${
                                 isChecked ? 'bg-cyan border-cyan text-black' : 'border-white/20 bg-white/5'
                               }`}
                             >
@@ -953,9 +959,9 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
                           key={preset.label}
                           type="button"
                           onClick={() => setProposedFundingAmount(preset.val)}
-                          className={`px-2 py-0.5 rounded text-[10px] font-mono transition-colors cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-md text-[10px] font-mono transition-all cursor-pointer active:scale-95 ${
                             proposedFundingAmount === preset.val
-                              ? 'bg-emerald text-black font-bold'
+                              ? 'bg-emerald text-black font-bold shadow-sm'
                               : 'bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10'
                           }`}
                         >
@@ -1032,21 +1038,32 @@ export const SponsorEnquiryForm: React.FC<SponsorEnquiryFormProps> = ({
 
               {/* 5. Consent and Privacy Notice */}
               <div className="pt-3 border-t border-white/[0.08] space-y-3">
-                <label className="flex items-start gap-3 text-xs text-text-secondary cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.consentAgreed}
-                    onChange={(e) => handleChange('consentAgreed', e.target.checked)}
-                    className="mt-0.5 rounded border-white/20 bg-white/5 text-emerald focus:ring-emerald"
-                  />
-                  <span>
+                <label className="flex items-start gap-3.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] hover:border-emerald/30 transition-all text-xs text-text-secondary cursor-pointer select-none group">
+                  <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+                    <input
+                      type="checkbox"
+                      checked={formData.consentAgreed}
+                      onChange={(e) => handleChange('consentAgreed', e.target.checked)}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                        formData.consentAgreed
+                          ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                          : 'border-white/20 bg-white/5 group-hover:border-emerald/50'
+                      }`}
+                    >
+                      {formData.consentAgreed && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  </div>
+                  <span className={`leading-relaxed transition-colors ${formData.consentAgreed ? 'text-text-primary' : 'text-text-secondary'}`}>
                     I consent to being contacted by the RE—EARTH university partnership desk regarding
                     the founding corporate sponsorship pilot. I understand that submitting this enquiry
                     does not constitute a binding financial obligation until a formal MoU is agreed.
                   </span>
                 </label>
                 {errors.consentAgreed && (
-                  <span className="text-[11px] text-pink block">{errors.consentAgreed}</span>
+                  <span className="text-[11px] text-pink block font-mono">{errors.consentAgreed}</span>
                 )}
               </div>
 

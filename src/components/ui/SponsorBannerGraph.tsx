@@ -174,8 +174,9 @@ export const SponsorBannerGraph: React.FC<SponsorBannerGraphProps> = ({
         {/* Metric Selector Toggle (Monthly Pace vs Cumulative Total) */}
         <div className="flex items-center p-0.5 rounded-full bg-white/[0.06] border border-white/[0.08]">
           <button
+            type="button"
             onClick={() => setViewMetric('period')}
-            className={`px-2 py-0.5 rounded-full text-[9px] font-mono transition-all ${
+            className={`px-2 py-0.5 rounded-full text-[9px] font-mono transition-all cursor-pointer active:scale-95 ${
               viewMetric === 'period'
                 ? 'bg-white/20 text-white font-bold'
                 : 'text-text-muted hover:text-text-primary'
@@ -184,8 +185,9 @@ export const SponsorBannerGraph: React.FC<SponsorBannerGraphProps> = ({
             Pace
           </button>
           <button
+            type="button"
             onClick={() => setViewMetric('cumulative')}
-            className={`px-2 py-0.5 rounded-full text-[9px] font-mono transition-all ${
+            className={`px-2 py-0.5 rounded-full text-[9px] font-mono transition-all cursor-pointer active:scale-95 ${
               viewMetric === 'cumulative'
                 ? 'bg-white/20 text-white font-bold'
                 : 'text-text-muted hover:text-text-primary'
@@ -363,12 +365,13 @@ export const SponsorBannerGraph: React.FC<SponsorBannerGraphProps> = ({
           {SPONSORS.slice(0, 4).map((s) => (
             <button
               key={s.id}
+              type="button"
               onClick={() => {
                 setActiveSponsorId(s.id)
                 onSelectSponsor?.(s.id)
               }}
               title={`Switch canvas to ${s.name}`}
-              className={`w-4 h-4 rounded-full border transition-all ${
+              className={`w-4 h-4 rounded-full border transition-all cursor-pointer active:scale-95 ${
                 activeSponsorId === s.id
                   ? 'scale-125 border-white shadow-sm'
                   : 'opacity-40 hover:opacity-100 border-transparent'

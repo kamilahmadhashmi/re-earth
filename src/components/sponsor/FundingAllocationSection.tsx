@@ -57,8 +57,9 @@ export const FundingAllocationSection: React.FC = () => {
             {PROPOSED_BUDGET_ALLOCATION.map((item) => (
               <button
                 key={item.category}
+                type="button"
                 onClick={() => setSelectedCategory(item.category)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all cursor-pointer active:scale-95 ${
                   selectedCategory === item.category
                     ? 'border-white/40 bg-white/10'
                     : 'border-white/[0.06] bg-surface-elevated hover:border-white/20'

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import {
   ShieldCheck,
   CheckCircle2,
+  Check,
   ExternalLink,
   AlertTriangle,
   Lock,
@@ -118,13 +119,13 @@ export const Stage4DataWipeProtocol: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => toggleWipeStep(s.step)}
-                  className="flex items-start gap-3 text-left flex-1 min-w-0"
+                  className="flex items-start gap-3 text-left flex-1 min-w-0 cursor-pointer group active:scale-[0.99] transition-all"
                 >
                   <div
                     className={`w-6 h-6 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
                       isDone
-                        ? 'bg-emerald border-emerald text-black'
-                        : 'border-white/20 bg-white/5 hover:border-white/40'
+                        ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                        : 'border-white/20 bg-white/5 group-hover:border-white/40'
                     }`}
                   >
                     {isDone && <CheckCircle2 className="w-4 h-4" />}
@@ -137,7 +138,7 @@ export const Stage4DataWipeProtocol: React.FC = () => {
                       </span>
                       <h4
                         className={`text-xs sm:text-sm font-bold transition-colors ${
-                          isDone ? 'text-emerald line-through opacity-85' : 'text-text-primary'
+                          isDone ? 'text-emerald line-through opacity-85' : 'text-text-primary group-hover:text-emerald'
                         }`}
                       >
                         {s.title}
@@ -169,16 +170,29 @@ export const Stage4DataWipeProtocol: React.FC = () => {
 
       {/* CONFIRMATION CHECKBOX */}
       <div className="p-4 rounded-2xl liquid-glass-subtle border border-white/10 space-y-3">
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={wipeFinalConfirmed}
-            disabled={wipeExceptionRequested}
-            onChange={(e) => setWipeFinalConfirmed(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-white/20 text-emerald focus:ring-emerald/40 bg-white/5"
-          />
-          <div className="text-xs">
-            <span className="font-bold text-text-primary block">
+        <label className="flex items-start gap-3.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.05] hover:border-emerald/30 transition-all cursor-pointer group">
+          <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+            <input
+              type="checkbox"
+              checked={wipeFinalConfirmed}
+              disabled={wipeExceptionRequested}
+              onChange={(e) => setWipeFinalConfirmed(e.target.checked)}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+            />
+            <div
+              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                wipeFinalConfirmed
+                  ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
+                  : wipeExceptionRequested
+                  ? 'border-white/10 bg-white/5 opacity-40 cursor-not-allowed'
+                  : 'border-white/20 bg-white/5 group-hover:border-emerald/50'
+              }`}
+            >
+              {wipeFinalConfirmed && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+            </div>
+          </div>
+          <div className="text-xs select-none">
+            <span className={`font-bold block transition-colors ${wipeFinalConfirmed ? 'text-emerald' : 'text-text-primary'}`}>
               I have confirmed personal account sign-out and initiated factory erasure
             </span>
             <span className="text-text-muted block mt-0.5 leading-relaxed text-[11px]">
@@ -188,17 +202,28 @@ export const Stage4DataWipeProtocol: React.FC = () => {
         </label>
 
         {/* BROKEN DEVICE EXCEPTION PATH */}
-        <label className="pt-3 border-t border-white/[0.06] flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={wipeExceptionRequested}
-            onChange={(e) => {
-              setWipeExceptionRequested(e.target.checked)
-              if (e.target.checked) setWipeFinalConfirmed(false)
-            }}
-            className="mt-0.5 w-4 h-4 rounded border-amber/40 text-amber focus:ring-amber/40 bg-white/5 cursor-pointer"
-          />
-          <div className="text-xs">
+        <label className="flex items-start gap-3.5 p-3 rounded-xl bg-amber/[0.03] border border-amber/20 hover:bg-amber/[0.06] hover:border-amber/40 transition-all cursor-pointer group">
+          <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
+            <input
+              type="checkbox"
+              checked={wipeExceptionRequested}
+              onChange={(e) => {
+                setWipeExceptionRequested(e.target.checked)
+                if (e.target.checked) setWipeFinalConfirmed(false)
+              }}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            />
+            <div
+              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                wipeExceptionRequested
+                  ? 'bg-amber border-amber text-black shadow-amber-glow'
+                  : 'border-amber/40 bg-white/5 group-hover:border-amber'
+              }`}
+            >
+              {wipeExceptionRequested && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+            </div>
+          </div>
+          <div className="text-xs select-none">
             <span className="font-bold text-amber block">
               Device Inoperable / Cannot Access Screen (Hardware Shredder Protocol)
             </span>
@@ -212,19 +237,21 @@ export const Stage4DataWipeProtocol: React.FC = () => {
       {/* NAVIGATION */}
       <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
         <button
+          type="button"
           onClick={() => setCurrentStep(3)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors border border-white/10"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors border border-white/10 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Hazard Profile</span>
         </button>
 
         <button
+          type="button"
           disabled={!canProceed}
           onClick={() => setCurrentStep(5)}
           className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
             canProceed
-              ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98]'
+              ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
               : 'bg-white/10 text-text-muted cursor-not-allowed opacity-50'
           }`}
         >

@@ -219,16 +219,18 @@ export const Stage3HazardousMaterials: React.FC = () => {
       {/* NAVIGATION */}
       <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
         <button
+          type="button"
           onClick={() => setCurrentStep(2)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors border border-white/10"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Condition Triage</span>
         </button>
 
         <button
+          type="button"
           onClick={() => setCurrentStep(4)}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
         >
           <span>Continue to Data-Wipe Protocol</span>
           <ArrowRight className="w-3.5 h-3.5" />

@@ -102,8 +102,9 @@ export const SponsorInspectionCard: React.FC = () => {
           {/* HEADER BAR */}
           <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
             <button
+              type="button"
               onClick={handleClose}
-              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5"
+              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-all px-2.5 py-1.5 rounded-lg hover:bg-white/5 cursor-pointer active:scale-95"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back</span>
@@ -123,8 +124,9 @@ export const SponsorInspectionCard: React.FC = () => {
                 {sponsor.ticker}
               </span>
               <button
+                type="button"
                 onClick={handleClose}
-                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-all cursor-pointer active:scale-95"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -307,8 +309,9 @@ export const SponsorInspectionCard: React.FC = () => {
                 {affiliatedCampuses.map((c) => (
                   <button
                     key={c.id}
+                    type="button"
                     onClick={() => handleFocusCampus(c.id)}
-                    className="w-full text-left p-2 rounded-md bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] hover:border-white/15 transition-all flex items-center justify-between group"
+                    className="w-full text-left p-2 rounded-md bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] hover:border-white/15 transition-all flex items-center justify-between group cursor-pointer active:scale-[0.99]"
                   >
                     <div className="min-w-0 pr-2">
                       <p className="text-xs font-semibold text-text-primary group-hover:text-emerald transition-colors truncate">
@@ -344,8 +347,9 @@ export const SponsorInspectionCard: React.FC = () => {
           {/* FOOTER CTA */}
           <div className="p-4 border-t border-white/[0.08] bg-white/[0.02] space-y-2">
             <button
+              type="button"
               onClick={handleOpenPitch}
-              className="w-full py-2.5 px-4 rounded-md font-bold text-xs text-background hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 rounded-md font-bold text-xs text-background hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
               style={{
                 backgroundColor: sponsor.color
               }}

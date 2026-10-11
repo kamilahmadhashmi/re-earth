@@ -169,8 +169,9 @@ export const LeaderboardPreviewSection: React.FC<LeaderboardPreviewSectionProps>
       {/* Button to view current 3D Globe Leaderboard */}
       <div className="mt-6 text-center">
         <button
+          type="button"
           onClick={onReturnToOrbit}
-          className="inline-flex items-center gap-2 text-xs font-mono text-emerald hover:text-emerald-light transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-mono text-emerald hover:text-emerald-light active:scale-95 transition-all cursor-pointer"
         >
           <span>View 3D Planetary Skyline in Interactive Orbit</span>
           <ArrowRight className="w-3.5 h-3.5" />

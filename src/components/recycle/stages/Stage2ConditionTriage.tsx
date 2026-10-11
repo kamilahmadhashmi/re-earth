@@ -212,21 +212,23 @@ export const Stage2ConditionTriage: React.FC = () => {
       {/* STAGE NAVIGATION */}
       <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
         <button
+          type="button"
           onClick={() => setCurrentStep(1)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors border border-white/10"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Product Vault</span>
         </button>
 
         <button
+          type="button"
           disabled={!condition}
           onClick={() => setCurrentStep(3)}
           className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
             condition
               ? condition === 'swollen_battery'
-                ? 'bg-amber text-background shadow-amber-glow hover:brightness-105 active:scale-[0.98]'
-                : 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98]'
+                ? 'bg-amber text-background shadow-amber-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
+                : 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
               : 'bg-white/10 text-text-muted cursor-not-allowed opacity-50'
           }`}
         >

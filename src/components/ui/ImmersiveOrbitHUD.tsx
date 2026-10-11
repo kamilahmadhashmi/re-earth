@@ -118,13 +118,14 @@ export const ImmersiveOrbitHUD: React.FC = () => {
               return (
                 <button
                   key={preset.id}
+                  type="button"
                   onClick={() => {
                     playClick()
                     setOrbitalPreset(preset)
                   }}
                   onMouseEnter={() => playHover()}
                   title={`Focus ${preset.label} viewpoint (${preset.keyHint})`}
-                  className={`px-2 sm:px-2.5 py-1 text-xs font-medium rounded whitespace-nowrap transition-colors flex items-center gap-1 ${
+                  className={`px-2 sm:px-2.5 py-1 text-xs font-medium rounded whitespace-nowrap transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
                     isActive
                       ? 'bg-copper text-background font-bold'
                       : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
@@ -146,12 +147,13 @@ export const ImmersiveOrbitHUD: React.FC = () => {
 
           {/* Reset Camera View */}
           <button
+            type="button"
             onClick={() => {
               playClick()
               resetImmersiveCamera()
             }}
             onMouseEnter={() => playHover()}
-            className="flex items-center gap-1 px-2 py-1 rounded text-text-secondary hover:text-text-primary hover:bg-white/5 text-xs transition-colors"
+            className="flex items-center gap-1 px-2 py-1 rounded text-text-secondary hover:text-text-primary hover:bg-white/5 text-xs transition-all cursor-pointer active:scale-95"
             title="Reset camera zoom and center (R)"
           >
             <RotateCcw className="w-3 h-3 text-copper" />
@@ -162,12 +164,13 @@ export const ImmersiveOrbitHUD: React.FC = () => {
 
           {/* Exit Orbit Button */}
           <button
+            type="button"
             onClick={() => {
               playClick()
               exitImmersiveOrbit()
             }}
             onMouseEnter={() => playHover()}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/10 hover:bg-white/15 text-text-primary text-xs font-semibold transition-colors active:scale-98"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/10 hover:bg-white/15 text-text-primary text-xs font-semibold transition-all cursor-pointer active:scale-95"
             title="Exit Immersive Orbit (Esc)"
           >
             <span>Exit Orbit</span>
