@@ -14,6 +14,16 @@ export interface AwsServiceDeploymentConfig {
   useLocalStack: boolean
   localStackEndpoint: string
   services: {
+    apiGateway: {
+      apiId: string
+      endpoint: string
+      enabled: boolean
+    }
+    lambda: {
+      functionName: string
+      arn: string
+      runtime: string
+    }
     s3: {
       qrPassBucket: string
       certificatesBucket: string
@@ -23,6 +33,7 @@ export interface AwsServiceDeploymentConfig {
       kioskReservationsTable: string
       auditLedgerTable: string
       ttlAttribute: string
+      ttlSeconds: number
     }
     cedarPolicy: {
       policyFile: string
@@ -37,10 +48,20 @@ export interface AwsServiceDeploymentConfig {
 
 export const AWS_SERVICE_CONFIG: AwsServiceDeploymentConfig = {
   region: process.env.VITE_AWS_REGION || 'us-east-1',
-  environment: 'local_development',
-  useLocalStack: true,
+  environment: 'aws_cloud_production',
+  useLocalStack: false,
   localStackEndpoint: 'http://localhost:4566',
   services: {
+    apiGateway: {
+      apiId: 'bzj8npggw7',
+      endpoint: 'https://bzj8npggw7.execute-api.us-east-1.amazonaws.com',
+      enabled: true
+    },
+    lambda: {
+      functionName: 're-earth-api-service',
+      arn: 'arn:aws:lambda:us-east-1:346560662330:function:re-earth-api-service',
+      runtime: 'python3.11'
+    },
     s3: {
       qrPassBucket: 're-earth-certificates-346560662330',
       certificatesBucket: 're-earth-certificates-346560662330',
@@ -49,7 +70,8 @@ export const AWS_SERVICE_CONFIG: AwsServiceDeploymentConfig = {
     dynamoDb: {
       kioskReservationsTable: 'SmrtKioskReservations',
       auditLedgerTable: 'SmrtInstitutionalLedger',
-      ttlAttribute: 'reservationExpiresAt'
+      ttlAttribute: 'reservationExpiresAt',
+      ttlSeconds: 86400 // 24-hour retention window for testing & verification
     },
     cedarPolicy: {
       policyFile: 'src/services/cedarPolicies.cedar',

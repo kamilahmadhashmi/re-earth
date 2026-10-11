@@ -545,6 +545,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
       const baseXp = product?.baseXp || Math.round(declaredMassGrams * 0.7)
       const updatedPass: EphemeralPass = {
         ...state.activePass,
+        expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24-hour / 1-day pass reservation
         kioskId: kiosk.id,
         kioskName: kiosk.name,
         campusId: kiosk.campusId,
@@ -563,7 +564,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
         savedPasses: updatedList,
         currentStep: 6,
         mascotMood: 'celebrating',
-        mascotMessage: `Pass ${updatedPass.passId} updated! Your 15-minute slot at ${kiosk.name} is reserved.`
+        mascotMessage: `Pass ${updatedPass.passId} updated! Your 1-day pass at ${kiosk.name} is reserved.`
       })
       return updatedPass
     }
@@ -606,7 +607,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
     const newPass: EphemeralPass = {
       passId,
       timestamp: Date.now(),
-      expiresAt: Date.now() + 15 * 60 * 1000, // 15 minute locker reservation
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24-hour (1-day) locker reservation pass
       productId: product?.id,
       customProduct: custom || undefined,
       productName,
@@ -642,7 +643,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
       savedPasses: updatedPasses,
       currentStep: 6,
       mascotMood: 'celebrating',
-      mascotMessage: `Pass ${passId} generated! Your 15-minute slot at ${kiosk.name} is locked in. Let's drop it off!`
+      mascotMessage: `Pass ${passId} generated! Your 1-day pass at ${kiosk.name} is locked in. Let's drop it off!`
     })
 
     return newPass

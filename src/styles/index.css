@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Suppress Leaflet attribution control pill */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
 :root {
   color-scheme: dark;
 }

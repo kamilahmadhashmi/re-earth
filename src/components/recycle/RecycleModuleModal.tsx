@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   X,
@@ -57,6 +57,9 @@ export const RecycleModuleModal: React.FC = () => {
     condition
   } = useRecycleStore()
 
+  const contentRef = useRef<HTMLDivElement>(null)
+  const outerOverlayRef = useRef<HTMLDivElement>(null)
+
   const isCollegeAdmin = currentUser?.role === 'college_admin' || currentUser?.role === 'central_admin'
   const isKioskOperator = currentUser?.role === 'kiosk_operator'
   const isStudent = currentUser?.role === 'student'
@@ -71,6 +74,31 @@ export const RecycleModuleModal: React.FC = () => {
       setActiveTab('student_flow')
     }
   }, [currentUser?.role, activeTab, isKioskOperator, isCollegeAdmin, isStudent, setActiveTab])
+
+  // Scroll to the very top whenever the step or tab shifts so the user always sees the top portion first
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (contentRef.current) {
+        contentRef.current.scrollTop = 0
+      }
+      if (outerOverlayRef.current) {
+        outerOverlayRef.current.scrollTop = 0
+      }
+    }
+
+    scrollToTop()
+    const rafId = requestAnimationFrame(scrollToTop)
+    const t1 = setTimeout(scrollToTop, 30)
+    const t2 = setTimeout(scrollToTop, 120)
+    const t3 = setTimeout(scrollToTop, 250)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
+  }, [currentStep, activeTab])
 
   // Handle ESC key to close
   useEffect(() => {
@@ -92,6 +120,7 @@ export const RecycleModuleModal: React.FC = () => {
 
   return (
     <div
+      ref={outerOverlayRef}
       className="fixed inset-0 z-[70] overflow-y-auto bg-black/80 backdrop-blur-2xl overscroll-contain"
       data-lenis-prevent="true"
       data-lenis-prevent-wheel="true"
@@ -104,6 +133,12 @@ export const RecycleModuleModal: React.FC = () => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 20 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          onWheel={(e) => {
+            // Forward wheel events over header, stepper, or mascot bar directly to the scrollable content container
+            if (contentRef.current && !contentRef.current.contains(e.target as Node)) {
+              contentRef.current.scrollTop += e.deltaY
+            }
+          }}
           className={`pointer-events-auto w-full ${
             (activeTab === 'student_flow' && currentStep === 5) || activeTab === 'sponsorships'
               ? 'max-w-6xl'
@@ -306,6 +341,7 @@ export const RecycleModuleModal: React.FC = () => {
           {/* MAIN SCROLLABLE CONTENT BODY (min-h-0 + data-lenis-prevent for full scroll) */}
           {/* ========================================================================= */}
           <div
+            ref={contentRef}
             className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5 sm:p-7"
             data-lenis-prevent="true"
             data-lenis-prevent-wheel="true"
@@ -319,6 +355,9 @@ export const RecycleModuleModal: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={{ duration: 0.2 }}
+                  onAnimationStart={() => {
+                    if (contentRef.current) contentRef.current.scrollTop = 0
+                  }}
                 >
                   {isStudent ? (
                     <>

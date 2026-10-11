@@ -33,8 +33,31 @@ export const Stage6EphemeralQRPass: React.FC = () => {
 
   const [qrDataUrl, setQrDataUrl] = useState<string>('')
   const [copied, setCopied] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(900) // 15 mins in seconds
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false)
+
+  // Calculate remaining time for 1-Day Pass (in hours, and in minutes when <= 1 hour; no seconds)
+  const getRemainingStatus = () => {
+    if (!activePass?.expiresAt) {
+      return { text: '24h REMAINING', isLow: false }
+    }
+    const diffMs = activePass.expiresAt - Date.now()
+    if (diffMs <= 0) {
+      return { text: 'EXPIRED', isLow: true }
+    }
+    const totalMinutes = Math.floor(diffMs / (1000 * 60))
+    const hours = Math.floor(totalMinutes / 60)
+
+    if (hours >= 1) {
+      // More than 1 hour remaining: display strictly in hours
+      return { text: `${hours}h REMAINING`, isLow: false }
+    } else {
+      // 1 hour or less remaining: display in minutes (no seconds)
+      const minutes = Math.max(1, totalMinutes)
+      return { text: `${minutes}m REMAINING`, isLow: minutes < 15 }
+    }
+  }
+
+  const [timeRemaining, setTimeRemaining] = useState(getRemainingStatus)
 
   useEffect(() => {
     if (activePass?.qrPayload) {
@@ -52,17 +75,14 @@ export const Stage6EphemeralQRPass: React.FC = () => {
     }
   }, [activePass])
 
-  // Countdown timer
+  // Periodic timer: updates calmly every 30 seconds without ticking every second
   useEffect(() => {
+    setTimeRemaining(getRemainingStatus())
     const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0))
-    }, 1000)
+      setTimeRemaining(getRemainingStatus())
+    }, 30000)
     return () => clearInterval(timer)
-  }, [])
-
-  const minutes = Math.floor(timeLeft / 60)
-  const seconds = timeLeft % 60
-  const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+  }, [activePass?.expiresAt])
 
   const copyRef = () => {
     if (activePass?.passId) {
@@ -101,7 +121,7 @@ export const Stage6EphemeralQRPass: React.FC = () => {
           Your device is ready for handover
         </h2>
         <p className="text-xs sm:text-sm text-text-secondary max-w-lg mx-auto">
-          Present this optical QR pass at the collection pod. The automated scale will verify your mass and lock the disposal hatch.
+          Present this optical 1-day pass at the collection pod. The automated scale will verify your mass and lock the disposal hatch.
         </p>
       </div>
 
@@ -124,15 +144,15 @@ export const Stage6EphemeralQRPass: React.FC = () => {
             ) : (
               <>
                 <ShieldCheck className="w-4 h-4 text-cyan" />
-                <span>EPHEMERAL DEPOSIT TOKEN</span>
+                <span>1-DAY DEPOSIT PASS</span>
               </>
             )}
           </div>
 
-          <div className="flex items-center gap-1 text-[11px] text-text-muted">
-            <Clock className="w-3.5 h-3.5" />
-            <span className={timeLeft < 180 ? 'text-amber font-bold animate-pulse' : ''}>
-              {isAccepted ? 'REDEEMED' : `${formattedTime} REMAINING`}
+          <div className="flex items-center gap-1.5 text-[11px] text-text-muted font-mono font-medium">
+            <Clock className="w-3.5 h-3.5 text-copper" />
+            <span className={timeRemaining.isLow ? 'text-amber font-bold animate-pulse' : 'text-text-secondary'}>
+              {isAccepted ? 'REDEEMED' : timeRemaining.text}
             </span>
           </div>
         </div>

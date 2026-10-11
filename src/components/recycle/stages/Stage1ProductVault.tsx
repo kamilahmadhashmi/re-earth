@@ -95,7 +95,7 @@ export const Stage1ProductVault: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${(selectedProduct || customProduct) ? 'pb-24' : ''}`}>
       {/* SECTION HEADER */}
       <div className="space-y-1">
         <div className="flex items-center justify-between">
@@ -161,64 +161,10 @@ export const Stage1ProductVault: React.FC = () => {
         </div>
       </div>
 
-      {/* ACTIVE SELECTION BANNER IF SELECTED */}
-      {(selectedProduct || customProduct) && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-2xl bg-emerald/10 border border-emerald/30 liquid-glass-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-emerald-glow"
-        >
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-emerald/20 border border-emerald/40 flex items-center justify-center text-emerald shrink-0">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase px-2 py-0.2 rounded-full bg-emerald/20 text-emerald font-bold">
-                  {selectedProduct ? 'Catalog Verified' : 'Custom Specified'}
-                </span>
-                <span className="text-xs text-text-muted truncate">
-                  {selectedProduct?.manufacturer || customProduct?.manufacturer}
-                </span>
-              </div>
-              <h3 className="text-base font-bold text-text-primary truncate">
-                {selectedProduct?.model || customProduct?.model}
-              </h3>
-              <p className="text-xs text-text-secondary truncate font-mono">
-                {selectedProduct?.variant || customProduct?.variant} •{' '}
-                <span className="text-emerald font-semibold">
-                  {selectedProduct?.defaultMassGrams || customProduct?.estimatedMassGrams}g
-                </span>
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => {
-                selectProduct(null)
-                setCustomProduct(null)
-              }}
-              className="px-3 py-1.5 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10 hover:bg-white/5 transition-all cursor-pointer active:scale-95"
-            >
-              Change
-            </button>
-            <button
-              type="button"
-              onClick={() => setCurrentStep(2)}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
-            >
-              <span>Confirm & Triage</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </motion.div>
-      )}
-
-      {/* CATALOG GRID */}
+      {/* CATALOG GRID (Unified smooth scrolling, zero trapped scroll zones) */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto overscroll-contain pr-1 no-scrollbar"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
         data-lenis-prevent="true"
         data-lenis-prevent-wheel="true"
         data-lenis-prevent-touch="true"
@@ -282,6 +228,27 @@ export const Stage1ProductVault: React.FC = () => {
                   </span>
                 </div>
               </div>
+
+              {/* IN-CARD DIRECT CONFIRM ACTION (VISIBLE IMMEDIATELY ON SELECTION) */}
+              {isSelected && (
+                <div className="mt-2.5 pt-2 border-t border-emerald/30 flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-emerald font-bold flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Selected
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrentStep(2)
+                    }}
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald text-background text-[11px] font-bold shadow-emerald-glow hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Confirm</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
             </motion.div>
           )
         })}
@@ -322,6 +289,66 @@ export const Stage1ProductVault: React.FC = () => {
           <span>Manual Device Specification</span>
         </button>
       </div>
+
+      {/* PERSISTENT STICKY CONFIRMATION DOCK (ALWAYS VISIBLE AT BOTTOM WHEN PRODUCT SELECTED) */}
+      <AnimatePresence>
+        {(selectedProduct || customProduct) && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.2 }}
+            className="sticky bottom-0 z-30 -mx-5 -mb-5 sm:-mx-7 sm:-mb-7 p-3.5 sm:p-4 bg-[#0a0e14]/95 backdrop-blur-2xl border-t border-emerald/40 shadow-2xl flex items-center justify-between gap-3 rounded-b-3xl"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald/20 border border-emerald/40 flex items-center justify-center text-emerald shrink-0 shadow-emerald-glow">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald/20 text-emerald font-bold">
+                    {selectedProduct ? 'Catalog Verified' : 'Custom Specified'}
+                  </span>
+                  <span className="text-xs text-text-muted truncate hidden sm:inline">
+                    {selectedProduct?.manufacturer || customProduct?.manufacturer}
+                  </span>
+                </div>
+                <h3 className="text-sm sm:text-base font-bold text-text-primary truncate">
+                  {selectedProduct?.model || customProduct?.model}
+                </h3>
+                <p className="text-[11px] text-text-secondary truncate font-mono">
+                  {selectedProduct?.variant || customProduct?.variant} •{' '}
+                  <span className="text-emerald font-semibold">
+                    {selectedProduct?.defaultMassGrams || customProduct?.estimatedMassGrams}g
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  selectProduct(null)
+                  setCustomProduct(null)
+                }}
+                className="px-3 py-1.5 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10 hover:bg-white/5 transition-all cursor-pointer active:scale-95"
+              >
+                Change
+              </button>
+              <button
+                type="button"
+                id="btn-confirm-vault-sticky"
+                onClick={() => setCurrentStep(2)}
+                className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-emerald text-background font-bold text-xs uppercase tracking-wider shadow-emerald-glow hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <span>Confirm & Triage</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* MODAL DIALOG FOR CUSTOM DEVICE ENTRY */}
       <AnimatePresence>

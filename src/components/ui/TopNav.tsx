@@ -7,10 +7,12 @@ import {
   Trophy,
   Shield,
   GraduationCap,
-  Scan
+  Scan,
+  LogOut
 } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
 import { useAuthStore } from '../../store/useAuthStore'
+import { useRecycleStore } from '../../store/useRecycleStore'
 
 export const TopNav: React.FC = () => {
   const {
@@ -25,7 +27,11 @@ export const TopNav: React.FC = () => {
     navigateToSponsor
   } = useWorldStore()
 
-  const { isAuthenticated, currentUser, openLoginModal } = useAuthStore()
+  const { isAuthenticated, currentUser, openLoginModal, logout } = useAuthStore()
+
+  const isKioskOperator = currentUser?.role === 'kiosk_operator'
+  const isCollegeAdmin = currentUser?.role === 'college_admin' || currentUser?.role === 'central_admin'
+  const isStudentOrGuest = !isAuthenticated || currentUser?.role === 'student'
 
   const navChapters = [
     { id: 0, label: 'Story' },
@@ -85,48 +91,124 @@ export const TopNav: React.FC = () => {
 
           <div className="w-[1px] h-3.5 bg-white/10 mx-1" />
 
-          <button
-            type="button"
-            onClick={() => openModal('recycle')}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium text-emerald hover:text-emerald-light hover:bg-emerald/10 transition-all cursor-pointer active:scale-95"
-          >
-            Recycle
-          </button>
-          <button
-            type="button"
-            onClick={() => openModal('vault')}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer active:scale-95"
-          >
-            Vault
-          </button>
-          <button
-            type="button"
-            onClick={() => navigateToSponsor('corporate_sustainability')}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer font-semibold active:scale-95"
-          >
-            Sponsor
-          </button>
+          {/* 1. STUDENT OR GUEST / DEFAULT MODE */}
+          {isStudentOrGuest && (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  useRecycleStore.getState().setActiveTab('student_flow')
+                  openModal('recycle')
+                }}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-emerald hover:text-emerald-light hover:bg-emerald/10 transition-all cursor-pointer active:scale-95"
+              >
+                Recycle
+              </button>
+              <button
+                type="button"
+                onClick={() => openModal('vault')}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer active:scale-95"
+              >
+                Vault
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToSponsor('corporate_sustainability')}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer font-semibold active:scale-95"
+              >
+                Sponsor
+              </button>
+            </>
+          )}
+
+          {/* 2. KIOSK OPERATOR MODE */}
+          {isKioskOperator && (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  useRecycleStore.getState().setActiveTab('kiosk_terminal')
+                  openModal('recycle')
+                }}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-cyan hover:text-cyan-light hover:bg-cyan/10 transition-all cursor-pointer active:scale-95 font-semibold"
+              >
+                Kiosk Operator Terminal
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToSponsor('corporate_sustainability')}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer font-semibold active:scale-95"
+              >
+                Sponsor
+              </button>
+            </>
+          )}
+
+          {/* 3. COLLEGE ADMIN MODE */}
+          {isCollegeAdmin && (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  useRecycleStore.getState().setActiveTab('tech_vault')
+                  openModal('recycle')
+                }}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-lavender hover:text-lavender-light hover:bg-lavender/10 transition-all cursor-pointer active:scale-95 font-semibold"
+              >
+                Admin Tech Vault
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToSponsor('corporate_sustainability')}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer font-semibold active:scale-95"
+              >
+                Sponsor
+              </button>
+            </>
+          )}
         </nav>
 
         {/* ACTIONS & VIEW SWITCHER */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* User Authentication Badge / Sign In */}
+          {/* User Authentication Badge / Sign In / Log Out */}
           {isAuthenticated && currentUser ? (
-            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono">
-              <span className="font-bold text-text-primary max-w-[100px] truncate">
-                {currentUser.name}
-              </span>
-              <span
-                className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
-                  currentUser.role === 'college_admin'
-                    ? 'bg-emerald/15 text-emerald border border-emerald/30'
-                    : currentUser.role === 'kiosk_operator'
-                    ? 'bg-amber/15 text-amber border border-amber/30'
-                    : 'bg-cyan/15 text-cyan border border-cyan/30'
-                }`}
+            <div className="flex items-center gap-1.5">
+              <div
+                id="btn-topnav-user-profile"
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/[0.03] border border-white/10 text-xs font-mono select-none"
               >
-                {currentUser.role === 'college_admin' ? 'ADMIN' : currentUser.role === 'kiosk_operator' ? 'OPERATOR' : 'STUDENT'}
-              </span>
+                <span className="font-bold text-text-primary max-w-[100px] truncate">
+                  {currentUser.name}
+                </span>
+                <span
+                  className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
+                    currentUser.role === 'college_admin' || currentUser.role === 'central_admin'
+                      ? 'bg-emerald/15 text-emerald border border-emerald/30'
+                      : currentUser.role === 'kiosk_operator'
+                      ? 'bg-amber/15 text-amber border border-amber/30'
+                      : 'bg-cyan/15 text-cyan border border-cyan/30'
+                  }`}
+                >
+                  {currentUser.role === 'college_admin' || currentUser.role === 'central_admin'
+                    ? 'ADMIN'
+                    : currentUser.role === 'kiosk_operator'
+                    ? 'OPERATOR'
+                    : 'STUDENT'}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                id="btn-topnav-logout"
+                onClick={async () => {
+                  await logout()
+                }}
+                title="Log Out of Current Session"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white/5 hover:bg-amber/20 hover:text-amber text-text-muted transition-all border border-white/10 hover:border-amber/30 text-xs font-mono font-bold cursor-pointer active:scale-95"
+              >
+                <LogOut className="w-3 h-3" />
+                <span className="hidden sm:inline">Log Out</span>
+              </button>
             </div>
           ) : (
             <button

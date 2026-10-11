@@ -138,7 +138,8 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       center: campusCenter,
       zoom: 16,
       zoomControl: false,
-      attributionControl: true,
+      attributionControl: false,
+      scrollWheelZoom: false, // Prevents scroll-trapping so the user can easily scroll the modal
       maxZoom: 19,
       minZoom: 12
     })
@@ -147,8 +148,6 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     const streetMap = L.tileLayer(
       'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
         maxZoom: 19,
         crossOrigin: true
       }
@@ -169,14 +168,29 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       map.invalidateSize()
     }, 250)
 
+    // Ctrl/Cmd + Wheel Zoom: Allow zooming if user holds Ctrl, but let normal wheel scroll the modal
+    const mapContainer = mapContainerRef.current
+    const handleMapWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault()
+        if (e.deltaY < 0) {
+          map.zoomIn()
+        } else if (e.deltaY > 0) {
+          map.zoomOut()
+        }
+      }
+    }
+    mapContainer.addEventListener('wheel', handleMapWheel, { passive: false })
+
     // ResizeObserver for reliable rendering across all viewport layouts
     const resizeObserver = new ResizeObserver(() => {
       map.invalidateSize()
     })
-    resizeObserver.observe(mapContainerRef.current)
+    resizeObserver.observe(mapContainer)
 
     return () => {
       clearTimeout(timer)
+      mapContainer.removeEventListener('wheel', handleMapWheel)
       resizeObserver.disconnect()
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove()
@@ -776,7 +790,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           <button
             type="button"
             onClick={handleZoomIn}
-            title="Zoom In"
+            title="Zoom In (+ or Ctrl+Scroll)"
             className="w-8 h-8 flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors text-sm font-bold font-mono cursor-pointer active:scale-95"
           >
             +
@@ -785,7 +799,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           <button
             type="button"
             onClick={handleZoomOut}
-            title="Zoom Out"
+            title="Zoom Out (− or Ctrl+Scroll)"
             className="w-8 h-8 flex items-center justify-center text-text-primary hover:bg-white/10 transition-colors text-sm font-bold font-mono cursor-pointer active:scale-95"
           >
             −

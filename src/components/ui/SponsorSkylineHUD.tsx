@@ -19,7 +19,7 @@ export const SponsorSkylineHUD: React.FC = () => {
   if (viewMode !== 'skyline') return null
 
   return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+    <div className="fixed top-3 sm:top-5 left-0 right-0 z-50 pointer-events-none flex justify-center px-4">
       <motion.button
         type="button"
         initial={{ opacity: 0, y: -15 }}
@@ -27,7 +27,7 @@ export const SponsorSkylineHUD: React.FC = () => {
         exit={{ opacity: 0, y: -15 }}
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         onClick={() => setViewMode('globe')}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#131922] border border-white/10 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 active:scale-95 cursor-pointer shadow-xl transition-all"
+        className="pointer-events-auto flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#090A0E]/95 backdrop-blur-xl border border-white/10 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 active:scale-95 cursor-pointer shadow-xl transition-all"
         title="Return to World View (Esc)"
       >
         <Globe2 className="w-3.5 h-3.5 text-copper" />

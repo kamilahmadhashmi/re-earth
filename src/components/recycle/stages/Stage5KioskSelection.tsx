@@ -337,7 +337,7 @@ export const Stage5KioskSelection: React.FC = () => {
       {/* ===================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* MAP CANVAS (7 cols on lg) */}
-        <div className="lg:col-span-7 flex flex-col h-[480px] lg:h-[530px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
+        <div className="lg:col-span-7 flex flex-col h-[420px] lg:h-[460px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative">
           <CampusInteractiveMap
             campusCenter={campusCenter}
             campusName={currentCampus.name}
@@ -365,7 +365,7 @@ export const Stage5KioskSelection: React.FC = () => {
         </div>
 
         {/* OPERATIONS SIDEBAR & DISPATCH CONSOLE (5 cols on lg) */}
-        <div className="lg:col-span-5 flex flex-col h-[480px] lg:h-[530px] rounded-2xl liquid-glass specular-rim border border-white/10 p-3.5 space-y-3 overflow-hidden">
+        <div className="lg:col-span-5 flex flex-col h-[420px] lg:h-[460px] rounded-2xl liquid-glass specular-rim border border-white/10 p-3.5 space-y-3 overflow-hidden">
           {/* SEARCH & FILTER CONTROLS */}
           <div className="space-y-2 shrink-0">
             <div className="flex items-center gap-2">
@@ -458,10 +458,8 @@ export const Stage5KioskSelection: React.FC = () => {
 
           {/* TAB CONTENT LIST (SCROLLABLE) */}
           <div
-            className="flex-1 overflow-y-auto overscroll-contain space-y-2 pr-1 no-scrollbar min-h-0"
+            className="flex-1 overflow-y-auto space-y-2 pr-1 no-scrollbar min-h-0 overscroll-contain"
             data-lenis-prevent="true"
-            data-lenis-prevent-wheel="true"
-            data-lenis-prevent-touch="true"
           >
             {/* --------------------------------------------------------------- */}
             {/* TAB 1: DROP-OFF KIOSK PODS                                      */}
@@ -759,7 +757,7 @@ export const Stage5KioskSelection: React.FC = () => {
               <div className="flex items-center justify-between text-[11px] font-mono">
                 <span className="text-emerald font-bold flex items-center gap-1">
                   <Lock className="w-3 h-3" />
-                  15-MINUTE RESERVATION LOCK
+                  1-DAY RESERVATION PASS
                 </span>
                 <span className="text-amber font-bold">
                   {selectedKiosk.turfBonusMultiplier}x Multiplier
@@ -774,7 +772,7 @@ export const Stage5KioskSelection: React.FC = () => {
                 )}
               </div>
               <div className="text-[10px] font-mono text-text-secondary">
-                Locker slot held for 15 minutes once Ephemeral QR pass is generated. (Simulated Demo Pod)
+                Locker slot held for 24 hours once 1-day drop-off pass is generated. (Simulated Demo Pod)
               </div>
             </div>
           )}
@@ -782,13 +780,13 @@ export const Stage5KioskSelection: React.FC = () => {
       </div>
 
       {/* ===================================================================== */}
-      {/* NAVIGATION FOOTER                                                     */}
+      {/* STICKY DOCKED NAVIGATION FOOTER (ALWAYS ACCESSIBLE WITHOUT SCROLLING) */}
       {/* ===================================================================== */}
-      <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
+      <div className="sticky bottom-0 z-30 -mx-5 sm:-mx-7 -mb-5 sm:-mb-7 px-5 sm:px-7 py-3.5 bg-[#090A0E]/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_24px_rgba(0,0,0,0.7)] flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={() => setCurrentStep(4)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-[0.98] shrink-0"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Data-Wipe Protocol</span>
@@ -796,12 +794,13 @@ export const Stage5KioskSelection: React.FC = () => {
 
         <button
           type="button"
+          id="btn-generate-qr-pass"
           disabled={!canProceed}
           onClick={() => {
             const store = useRecycleStore.getState()
             store.generateQrPass()
           }}
-          className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
+          className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 shrink-0 ${
             canProceed
               ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
               : 'bg-white/10 text-text-muted cursor-not-allowed opacity-50'

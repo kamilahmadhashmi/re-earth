@@ -188,4 +188,20 @@ describe('useRecycleStore State Machine', () => {
 
     expect(pass1.passId).toBe(pass2.passId)
   })
+
+  it('generates 1-day pass with 24-hour expiration window', async () => {
+    const iphone = PRODUCT_CATALOG[0]
+    useRecycleStore.getState().selectProduct(iphone)
+    useRecycleStore.getState().setCondition('mint')
+    useRecycleStore.getState().selectKiosk('kiosk-dtu-mech')
+
+    const before = Date.now()
+    const pass = await useRecycleStore.getState().generateQrPass()
+
+    // 24 hours in milliseconds = 86,400,000 ms
+    const expectedTtlMs = 24 * 60 * 60 * 1000
+    expect(pass.expiresAt).toBeGreaterThanOrEqual(before + expectedTtlMs - 1000)
+    expect(pass.expiresAt).toBeLessThanOrEqual(Date.now() + expectedTtlMs + 1000)
+    expect(useRecycleStore.getState().mascotMessage).toContain('1-day pass')
+  })
 })
