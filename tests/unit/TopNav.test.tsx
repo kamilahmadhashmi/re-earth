@@ -34,12 +34,12 @@ describe('TopNav Component', () => {
     expect(screen.getByText('STUDENT')).toBeInTheDocument()
   })
 
-  it('renders action buttons: Recycle, Vault, Sponsor, Become a Sponsor', () => {
+  it('renders action buttons: Recycle, Vault, Sponsor', () => {
     render(<TopNav />)
     expect(screen.getByRole('button', { name: /^Recycle$/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Vault$/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Sponsor$/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Become a Sponsor/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Become a Sponsor/i })).not.toBeInTheDocument()
   })
 
   it('triggers Recycle modal on clicking Recycle button', () => {

@@ -513,7 +513,7 @@ export const ScrollStorySections: React.FC = () => {
             </div>
           </div>
 
-          {/* 3 Refined Action Buttons */}
+          {/* Refined Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -526,13 +526,6 @@ export const ScrollStorySections: React.FC = () => {
               className="px-5 py-2.5 rounded-md bg-emerald text-background font-semibold text-xs hover:brightness-105 active:scale-[0.98] transition-all"
             >
               Deploy Campus Kiosk
-            </button>
-
-            <button
-              onClick={() => openModal('sponsor_pitch')}
-              className="px-5 py-2.5 rounded-md bg-surface border border-white/10 text-text-primary hover:border-copper/40 hover:text-copper text-xs font-semibold tracking-wide transition-all"
-            >
-              Become a Corporate Sponsor
             </button>
 
             <button

@@ -7,7 +7,6 @@ import {
   Trophy,
   Volume2,
   VolumeX,
-  Sparkles,
   Shield,
   GraduationCap,
   Scan
@@ -110,15 +109,6 @@ export const TopNav: React.FC = () => {
 
         {/* ACTIONS & VIEW SWITCHER */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          {/* Become a Sponsor Direct Action */}
-          <button
-            onClick={() => navigateToSponsor('corporate_sustainability')}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-amber/15 hover:bg-amber/25 text-amber border border-amber/40 hover:border-amber/60 shadow-sm transition-all cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber animate-pulse" />
-            <span>Become a Sponsor</span>
-          </button>
-
           {/* User Authentication Badge / Sign In */}
           {isAuthenticated && currentUser ? (
             <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface/95 border border-white/10 text-xs font-mono">
