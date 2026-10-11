@@ -5,7 +5,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: process.env.BASE_PATH || (mode === 'production' ? '/re-earth/' : '/'),
+  base: process.env.BASE_PATH || (process.env.GITHUB_PAGES === 'true' ? '/re-earth/' : '/'),
   plugins: [
     react(),
     glsl({
