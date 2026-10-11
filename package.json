@@ -17,6 +17,7 @@
     "lint:deps": "depcruise src --config .dependency-cruiser.cjs --output-type err",
     "lint:unused": "knip",
     "monitor:aws": "python scripts/cloudwatch_probe.py",
+    "vault:s3": "python scripts/setup_s3_vault.py",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles"
   },

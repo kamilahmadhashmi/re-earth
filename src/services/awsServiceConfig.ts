@@ -42,8 +42,8 @@ export const AWS_SERVICE_CONFIG: AwsServiceDeploymentConfig = {
   localStackEndpoint: 'http://localhost:4566',
   services: {
     s3: {
-      qrPassBucket: 'smrt-kiosk-ephemeral-passes-demo',
-      certificatesBucket: 'smrt-kiosk-data-wipe-certs-demo',
+      qrPassBucket: 're-earth-certificates-346560662330',
+      certificatesBucket: 're-earth-certificates-346560662330',
       presignedUrlTtlSeconds: 900 // 15-minute lock matching locker timer
     },
     dynamoDb: {
