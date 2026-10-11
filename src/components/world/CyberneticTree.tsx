@@ -265,6 +265,9 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
   }, [sponsor.id, config])
 
   // Dynamic emissive pulsing materials
+  const groupRef = useRef<THREE.Group>(null)
+  const placardRef = useRef<HTMLDivElement>(null)
+  const tempVec = useRef(new THREE.Vector3()).current
   const conduitMatRef = useRef<THREE.MeshStandardMaterial>(null)
   const nodeMatRef = useRef<THREE.MeshStandardMaterial>(null)
   const foliageMatRef = useRef<THREE.MeshStandardMaterial>(null)
@@ -286,10 +289,24 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
     if (vineMatRef.current) {
       vineMatRef.current.opacity = (hovered || isSelected ? 0.95 : 0.7) * (0.8 + 0.2 * Math.sin(t * 3.0))
     }
+
+    if (placardRef.current && groupRef.current) {
+      groupRef.current.getWorldPosition(tempVec)
+      tempVec.y += config.treeHeight + 0.74
+      tempVec.project(state.camera)
+      const isBehindCam = tempVec.z > 1
+      const screenY = (1 - tempVec.y) * 0.5 * state.size.height
+      const isVisible = !isBehindCam && screenY >= 110
+      placardRef.current.style.opacity = isVisible ? '1' : '0'
+      placardRef.current.style.display = isVisible ? 'flex' : 'none'
+      placardRef.current.style.visibility = isVisible ? 'visible' : 'hidden'
+      placardRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
+    }
   })
 
   return (
     <group
+      ref={groupRef}
       position={config.position}
       onPointerDown={(e) => {
         pointerDownPos.current = { x: e.clientX, y: e.clientY }
@@ -561,6 +578,8 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
         className="pointer-events-auto select-none transition-all duration-200"
       >
         <div
+          ref={placardRef}
+          style={{ display: 'none', visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           onClick={(e) => {

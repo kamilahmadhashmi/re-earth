@@ -92,7 +92,7 @@ export const RecycleModuleModal: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-2xl overscroll-contain"
+      className="fixed inset-0 z-[70] overflow-y-auto bg-black/80 backdrop-blur-2xl overscroll-contain"
       data-lenis-prevent="true"
       data-lenis-prevent-wheel="true"
       data-lenis-prevent-touch="true"

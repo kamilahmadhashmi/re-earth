@@ -43,7 +43,7 @@ export const CampusInspectionCard: React.FC = () => {
         exit={{ opacity: 0, x: 50, scale: 0.98 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         data-prevent-drag="true"
-        className="fixed right-3 sm:right-5 top-16 sm:top-20 bottom-6 sm:bottom-16 z-50 w-[calc(100vw-24px)] sm:w-full max-w-[370px] pointer-events-auto"
+        className="fixed right-3 sm:right-5 top-[84px] sm:top-[88px] bottom-6 sm:bottom-16 z-50 w-[calc(100vw-24px)] sm:w-full max-w-[370px] pointer-events-auto"
       >
         <div className="h-full bg-[#131922] border border-white/10 rounded-xl flex flex-col overflow-hidden shadow-2xl">
           

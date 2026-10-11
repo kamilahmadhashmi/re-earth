@@ -39,11 +39,11 @@ export const TopNav: React.FC = () => {
   ]
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-5 pointer-events-none">
-      <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+    <header className="fixed top-0 left-0 right-0 z-[60] px-4 sm:px-8 py-5 pointer-events-none">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible no-scrollbar py-0.5">
         
         {/* BRAND BUTTON */}
-        <div className="flex items-center gap-3 pointer-events-auto">
+        <div className="flex items-center gap-3 pointer-events-auto shrink-0">
           <button
             onClick={() => {
               returnToWorld()
@@ -62,7 +62,7 @@ export const TopNav: React.FC = () => {
         </div>
 
         {/* RESTRAINED EDITORIAL NAV SEGMENTS */}
-        <nav className="hidden md:flex items-center gap-1 p-1 rounded-md bg-surface/95 border border-white/10 pointer-events-auto relative">
+        <nav className="hidden md:flex items-center gap-1 p-1 rounded-md bg-surface/95 border border-white/10 pointer-events-auto relative shrink-0">
           {navChapters.map((ch) => {
             const isActive = activeChapter === ch.id
             return (
@@ -108,7 +108,7 @@ export const TopNav: React.FC = () => {
         </nav>
 
         {/* ACTIONS & VIEW SWITCHER */}
-        <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="flex items-center gap-2 pointer-events-auto shrink-0">
           {/* User Authentication Badge / Sign In */}
           {isAuthenticated && currentUser ? (
             <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface/95 border border-white/10 text-xs font-mono">

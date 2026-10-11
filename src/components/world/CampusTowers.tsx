@@ -97,6 +97,8 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
   const [hovered, setHovered] = useState(false)
   const groupRef = useRef<THREE.Group>(null)
   const clusterCrestRef = useRef<HTMLDivElement>(null)
+  const tempVec = useRef(new THREE.Vector3()).current
+  const { activeModal, isLeftDrawerOpen, selectedCampusId } = useWorldStore()
 
   const sponsor = useMemo(() => {
     return SPONSOR_MAP.get(cluster.dominantSponsorId) || SPONSOR_MAP.get('google')!
@@ -119,16 +121,49 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
       groupRef.current.scale.setScalar(hovered ? 1.25 : pulse)
     }
 
-    // Horizon occlusion culling against spherical Earth
+    // Horizon occlusion culling against spherical Earth + Screen TopNav & Sub-Menu Safe Zone
     if (clusterCrestRef.current) {
       const camDist = state.camera.position.length()
       const cosAngle = normal.dot(state.camera.position) / camDist
       const safeD = Math.max(GLOBE_RADIUS + 0.1, camDist)
       const maxAngle = Math.acos(GLOBE_RADIUS / safeD) + Math.acos(GLOBE_RADIUS / (GLOBE_RADIUS + 0.2))
       const cosCutoff = Math.cos(maxAngle) + 0.04
-      const isVisible = cosAngle > cosCutoff
-      clusterCrestRef.current.style.opacity = isVisible ? '1' : '0'
-      clusterCrestRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
+      const isHorizonVisible = cosAngle > cosCutoff
+
+      if (groupRef.current && isHorizonVisible) {
+        groupRef.current.getWorldPosition(tempVec)
+        tempVec.addScaledVector(normal, hovered ? 0.28 : 0.22)
+        tempVec.project(state.camera)
+
+        const isBehindCam = tempVec.z > 1
+        const screenY = (1 - tempVec.y) * 0.5 * state.size.height
+        const screenX = (tempVec.x + 1) * 0.5 * state.size.width
+
+        // Strictly avoid TopNav buttons & header controls (top 0 to 80px + margin: 110px threshold)
+        const inTopNavZone = screenY < 110
+
+        // Never overlap with Rankings drawer when open (left 360px)
+        const inRankingsZone = isLeftDrawerOpen && screenX < 360
+
+        // Never overlap with Inspection card when open (right 410px)
+        const inInspectionZone =
+          (!!selectedCampusId || !!useWorldStore.getState().selectedSponsorId) &&
+          screenX > state.size.width - 410
+
+        // Never show during full-screen modal
+        const inModalZone = !!activeModal
+
+        const isVisible = !isBehindCam && !inTopNavZone && !inRankingsZone && !inInspectionZone && !inModalZone
+        clusterCrestRef.current.style.opacity = isVisible ? '1' : '0'
+        clusterCrestRef.current.style.display = isVisible ? 'flex' : 'none'
+        clusterCrestRef.current.style.visibility = isVisible ? 'visible' : 'hidden'
+        clusterCrestRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
+      } else {
+        clusterCrestRef.current.style.opacity = '0'
+        clusterCrestRef.current.style.display = 'none'
+        clusterCrestRef.current.style.visibility = 'hidden'
+        clusterCrestRef.current.style.pointerEvents = 'none'
+      }
     }
   })
 
@@ -203,6 +238,7 @@ const CampusClusterNode: React.FC<CampusClusterNodeProps> = ({ cluster, onClick 
       >
         <div
           ref={clusterCrestRef}
+          style={{ display: 'none', visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           onClick={(e) => {
@@ -308,6 +344,8 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
   const crestContainerRef = useRef<HTMLDivElement>(null)
   const [hovered, setHovered] = useState(false)
   const growthProgress = useRef(0)
+  const tempVec = useRef(new THREE.Vector3()).current
+  const { activeModal, isLeftDrawerOpen, selectedCampusId: activeSelectedCampusId } = useWorldStore()
 
   const sponsor = useMemo(() => {
     return SPONSOR_MAP.get(campus.sponsorId) || SPONSOR_MAP.get('google')!
@@ -405,16 +443,50 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
       groupRef.current.scale.z += (targetScale - groupRef.current.scale.z) * Math.min(1, delta * 8)
     }
 
-    // Horizon occlusion culling against spherical Earth
+    // Horizon occlusion culling against spherical Earth + Screen TopNav & Sub-Menu Safe Zone
     if (crestContainerRef.current) {
       const camDist = state.camera.position.length()
       const cosAngle = normal.dot(state.camera.position) / camDist
       const safeD = Math.max(GLOBE_RADIUS + 0.1, camDist)
       const maxAngle = Math.acos(GLOBE_RADIUS / safeD) + Math.acos(GLOBE_RADIUS / (GLOBE_RADIUS + height))
       const cosCutoff = Math.cos(maxAngle) + 0.04
-      const isVisible = cosAngle > cosCutoff
-      crestContainerRef.current.style.opacity = isVisible ? '1' : '0'
-      crestContainerRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
+      const isHorizonVisible = cosAngle > cosCutoff
+
+      if (groupRef.current && isHorizonVisible) {
+        groupRef.current.getWorldPosition(tempVec)
+        tempVec.addScaledVector(normal, height + (hovered || isSelected ? 0.12 : 0.06))
+        tempVec.project(state.camera)
+
+        const isBehindCam = tempVec.z > 1
+        const screenY = (1 - tempVec.y) * 0.5 * state.size.height
+        const screenX = (tempVec.x + 1) * 0.5 * state.size.width
+
+        // Strictly avoid TopNav buttons & header controls (top 0 to 80px + margin: 110px threshold)
+        const inTopNavZone = screenY < 110
+
+        // Never overlap with Rankings drawer when open (left 360px)
+        const inRankingsZone = isLeftDrawerOpen && screenX < 360
+
+        // Never overlap with Inspection card when open (right 410px), unless selected
+        const inInspectionZone =
+          (!!activeSelectedCampusId || !!useWorldStore.getState().selectedSponsorId) &&
+          !isSelected &&
+          screenX > state.size.width - 410
+
+        // Never show during full-screen modal
+        const inModalZone = !!activeModal
+
+        const isVisible = !isBehindCam && !inTopNavZone && !inRankingsZone && !inInspectionZone && !inModalZone
+        crestContainerRef.current.style.opacity = isVisible ? '1' : '0'
+        crestContainerRef.current.style.display = isVisible ? 'flex' : 'none'
+        crestContainerRef.current.style.visibility = isVisible ? 'visible' : 'hidden'
+        crestContainerRef.current.style.pointerEvents = isVisible ? 'auto' : 'none'
+      } else {
+        crestContainerRef.current.style.opacity = '0'
+        crestContainerRef.current.style.display = 'none'
+        crestContainerRef.current.style.visibility = 'hidden'
+        crestContainerRef.current.style.pointerEvents = 'none'
+      }
     }
   })
 
@@ -536,6 +608,7 @@ const SingleCampusTower: React.FC<SingleCampusTowerProps> = ({
       >
         <div
           ref={crestContainerRef}
+          style={{ display: 'none', visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           onClick={(e) => {

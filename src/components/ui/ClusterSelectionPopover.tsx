@@ -13,7 +13,7 @@ export const ClusterSelectionPopover: React.FC = () => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[70] pointer-events-none flex items-center justify-center p-4">
         {/* Backdrop Dismissal */}
         <motion.div
           initial={{ opacity: 0 }}

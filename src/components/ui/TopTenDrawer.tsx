@@ -33,7 +33,7 @@ export const TopTenDrawer: React.FC = () => {
   return (
     <>
       {/* DESKTOP COLLAPSIBLE LEFT DRAWER */}
-      <aside className="hidden lg:block fixed left-5 top-20 bottom-16 z-30 pointer-events-none">
+      <aside className="hidden lg:block fixed left-5 top-[84px] sm:top-[88px] bottom-16 z-30 pointer-events-none">
         <div className="flex items-start h-full pointer-events-auto">
           <AnimatePresence initial={false}>
             {isLeftDrawerOpen && (

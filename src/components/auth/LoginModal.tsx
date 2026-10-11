@@ -59,7 +59,7 @@ export const LoginModal: React.FC = () => {
       data-lenis-prevent="true"
       data-lenis-prevent-wheel="true"
       data-lenis-prevent-touch="true"
-      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-2xl"
+      className="fixed inset-0 z-[70] overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-2xl"
     >
       <div className="min-h-full flex items-center justify-center p-4 sm:p-6 pointer-events-none">
         <motion.div
