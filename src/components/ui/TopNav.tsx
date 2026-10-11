@@ -6,9 +6,14 @@ import {
   Layers,
   Trophy,
   Volume2,
-  VolumeX
+  VolumeX,
+  Sparkles,
+  Shield,
+  GraduationCap,
+  Scan
 } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
+import { useAuthStore } from '../../store/useAuthStore'
 import { useSpatialAudio } from '../../hooks/useSpatialAudio'
 
 export const TopNav: React.FC = () => {
@@ -20,9 +25,11 @@ export const TopNav: React.FC = () => {
     scrollToChapter,
     activeChapter,
     toggleLeftDrawer,
-    isLeftDrawerOpen
+    isLeftDrawerOpen,
+    navigateToSponsor
   } = useWorldStore()
 
+  const { isAuthenticated, currentUser, openLoginModal } = useAuthStore()
   const { isAudioEnabled, toggleAudio } = useSpatialAudio()
 
   const navChapters = [
@@ -83,20 +90,62 @@ export const TopNav: React.FC = () => {
 
           <button
             onClick={() => openModal('recycle')}
-            className="px-2.5 py-1 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all"
+            className="px-2.5 py-1 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
           >
             Recycle
           </button>
           <button
             onClick={() => openModal('vault')}
-            className="px-2.5 py-1 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all"
+            className="px-2.5 py-1 rounded text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-white/5 transition-all cursor-pointer"
           >
             Vault
+          </button>
+          <button
+            onClick={() => navigateToSponsor('corporate_sustainability')}
+            className="px-2.5 py-1 rounded text-xs font-medium text-amber hover:text-amber-light hover:bg-amber/10 transition-all cursor-pointer"
+          >
+            Sponsor
           </button>
         </nav>
 
         {/* ACTIONS & VIEW SWITCHER */}
         <div className="flex items-center gap-2 pointer-events-auto">
+          {/* Become a Sponsor Direct Action */}
+          <button
+            onClick={() => navigateToSponsor('corporate_sustainability')}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-amber/15 hover:bg-amber/25 text-amber border border-amber/40 hover:border-amber/60 shadow-sm transition-all cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber animate-pulse" />
+            <span>Become a Sponsor</span>
+          </button>
+
+          {/* User Authentication Badge / Sign In */}
+          {isAuthenticated && currentUser ? (
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface/95 border border-white/10 text-xs font-mono">
+              <span className="font-bold text-text-primary max-w-[100px] truncate">
+                {currentUser.name}
+              </span>
+              <span
+                className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
+                  currentUser.role === 'college_admin'
+                    ? 'bg-emerald/15 text-emerald border border-emerald/30'
+                    : currentUser.role === 'kiosk_operator'
+                    ? 'bg-amber/15 text-amber border border-amber/30'
+                    : 'bg-cyan/15 text-cyan border border-cyan/30'
+                }`}
+              >
+                {currentUser.role === 'college_admin' ? 'ADMIN' : currentUser.role === 'kiosk_operator' ? 'OPERATOR' : 'STUDENT'}
+              </span>
+            </div>
+          ) : (
+            <button
+              onClick={() => openLoginModal()}
+              className="hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface/95 border border-white/10 text-xs font-medium text-text-secondary hover:text-text-primary hover:border-white/20 transition-all cursor-pointer"
+            >
+              Sign In
+            </button>
+          )}
+
           {/* Spatial Synthetic Audio Toggle */}
           <button
             onClick={toggleAudio}
@@ -156,6 +205,7 @@ export const TopNav: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode('skyline')}
+              title="3D Sponsor Skyline Forest"
               className={`relative flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold tracking-wide transition-colors z-10 ${
                 viewMode === 'skyline' ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
               }`}
@@ -168,7 +218,7 @@ export const TopNav: React.FC = () => {
                 />
               )}
               <Building2 className={`w-3.5 h-3.5 ${viewMode === 'skyline' ? 'text-gold' : 'text-text-muted'}`} />
-              <span className="hidden sm:inline">Sponsors</span>
+              <span className="hidden sm:inline">Forest</span>
             </button>
           </div>
         </div>

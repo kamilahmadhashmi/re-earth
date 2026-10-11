@@ -36,6 +36,12 @@ interface WorldState {
   immersiveResetTrigger: number
   orbitalPreset: { phi: number; theta: number; radius: number; label: string; id: number } | null
 
+  // Route state
+  currentRoute: 'world' | 'sponsor'
+  sponsorTierPrefill: string | null
+  navigateToSponsor: (tierPrefill?: string) => void
+  navigateToWorld: () => void
+
   // Actions
   loadData: () => Promise<void>
   setViewMode: (mode: ViewMode) => void
@@ -109,6 +115,39 @@ export const useWorldStore = create<WorldState>((set, get) => ({
     typeof window !== 'undefined' &&
     (new URLSearchParams(window.location.search).has('demo') ||
       localStorage.getItem('re_earth_demo_mode') === 'true'),
+
+  // Route state
+  currentRoute: 'world',
+  sponsorTierPrefill: null,
+
+  navigateToSponsor: (tierPrefill = 'corporate_sustainability') => {
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ route: 'sponsor' }, '', '#/sponsor')
+      } catch {
+        window.location.hash = '/sponsor'
+      }
+    }
+    set({
+      currentRoute: 'sponsor',
+      sponsorTierPrefill: tierPrefill || 'corporate_sustainability',
+      activeModal: null
+    })
+  },
+
+  navigateToWorld: () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cleanPath = window.location.pathname.replace(/\/sponsor\/?$/, '') || '/'
+        window.history.pushState({ route: 'world' }, '', cleanPath)
+      } catch {
+        window.location.hash = ''
+      }
+    }
+    set({
+      currentRoute: 'world'
+    })
+  },
 
   loadData: async () => {
     const campuses = await mockApi.getLeaderboard()

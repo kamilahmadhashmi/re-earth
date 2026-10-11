@@ -13,17 +13,47 @@ import { ScrollProgressHUD } from './components/ui/ScrollProgressHUD'
 import { ImmersiveOrbitHUD } from './components/ui/ImmersiveOrbitHUD'
 import { SponsorSkylineHUD } from './components/ui/SponsorSkylineHUD'
 import { SpatialCyberneticCursor } from './components/ui/SpatialCyberneticCursor'
+import { SponsorshipPage } from './components/sponsor/SponsorshipPage'
 import { useWorldStore } from './store/useWorldStore'
+import { useAuthStore } from './store/useAuthStore'
 import { useLenis } from './hooks/useLenis'
 
 export const App: React.FC = () => {
-  const { loadData, isEarthImmersive, toggleDemoMode, viewMode } = useWorldStore()
+  const {
+    loadData,
+    isEarthImmersive,
+    toggleDemoMode,
+    viewMode,
+    currentRoute,
+    navigateToWorld,
+    sponsorTierPrefill
+  } = useWorldStore()
+  const { checkSession } = useAuthStore()
 
   // Initialize Lenis smooth scroll engine
   useLenis()
 
   useEffect(() => {
     loadData()
+    checkSession()
+
+    // Global Browser History / Hash / Route Synchronization
+    const handleRouteChange = () => {
+      if (typeof window !== 'undefined') {
+        const isSponsor =
+          window.location.hash.includes('sponsor') ||
+          window.location.pathname.includes('/sponsor')
+        if (isSponsor) {
+          useWorldStore.setState({ currentRoute: 'sponsor' })
+        } else {
+          useWorldStore.setState({ currentRoute: 'world' })
+        }
+      }
+    }
+
+    handleRouteChange()
+    window.addEventListener('popstate', handleRouteChange)
+    window.addEventListener('hashchange', handleRouteChange)
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.shiftKey && e.key.toLowerCase() === 'd') {
@@ -32,8 +62,25 @@ export const App: React.FC = () => {
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [loadData, toggleDemoMode])
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('popstate', handleRouteChange)
+      window.removeEventListener('hashchange', handleRouteChange)
+    }
+  }, [loadData, toggleDemoMode, checkSession])
+
+  // Dedicated Sponsorship Portal View
+  if (currentRoute === 'sponsor') {
+    return (
+      <div className="relative min-h-screen bg-background select-none overflow-x-hidden">
+        <SponsorshipPage
+          onReturnToOrbit={navigateToWorld}
+          initialPrefillPathway={(sponsorTierPrefill as any) || 'corporate_sustainability'}
+        />
+        <SpatialCyberneticCursor />
+      </div>
+    )
+  }
 
   return (
     <div className="relative min-h-screen bg-background select-none overflow-x-hidden">

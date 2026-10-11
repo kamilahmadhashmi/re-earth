@@ -1,15 +1,113 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Layers, Building2, TrendingUp, ShieldCheck } from 'lucide-react'
+import { X, Layers, Building2, TrendingUp, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
+import { useRecycleStore } from '../../store/useRecycleStore'
+import { useAuthStore } from '../../store/useAuthStore'
+import { RecycleModuleModal } from '../recycle/RecycleModuleModal'
+import { LoginModal } from '../auth/LoginModal'
 
 export const Modals: React.FC = () => {
-  const { activeModal, openModal } = useWorldStore()
+  const { activeModal, openModal, navigateToSponsor } = useWorldStore()
+  const { setActiveTab } = useRecycleStore()
+  const { isAuthenticated, currentUser, isLoginModalOpen, openLoginModal } = useAuthStore()
+
   const [tier, setTier] = useState<1 | 3 | 5>(3)
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+    setIsSubmitted(true)
+  }
+
+  const handleClose = () => {
+    setIsSubmitted(false)
+    setEmail('')
+    openModal(null)
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  useEffect(() => {
+    if (!activeModal) return
+
+    const isStudent = currentUser?.role === 'student'
+    const isCollegeAdmin = currentUser?.role === 'college_admin' || currentUser?.role === 'central_admin'
+    const isKioskOperator = currentUser?.role === 'kiosk_operator'
+
+    if (activeModal === 'sponsorships') {
+      if (!isAuthenticated) {
+        openLoginModal('Please authenticate with an authorized college administrator account to access Sponsor Applications.')
+      } else if (!isCollegeAdmin) {
+        setActiveTab('student_flow')
+      } else {
+        setActiveTab('sponsorships')
+      }
+    } else if (activeModal === 'vault') {
+      if (!isAuthenticated) {
+        openLoginModal('Please authenticate with your student or campus admin account to access the Tech Vault.')
+      } else if (isKioskOperator) {
+        setActiveTab('kiosk_terminal')
+      } else {
+        setActiveTab('tech_vault')
+      }
+    } else if (activeModal === 'recycle') {
+      if (!isAuthenticated) {
+        openLoginModal('Please authenticate to access the Student Drop-Off portal.')
+      } else if (isCollegeAdmin) {
+        setActiveTab('sponsorships')
+      } else if (isKioskOperator) {
+        setActiveTab('kiosk_terminal')
+      } else {
+        setActiveTab('student_flow')
+      }
+    } else if (activeModal === 'terminal') {
+      if (!isAuthenticated) {
+        openLoginModal('Please authenticate with an authorized kiosk operator or college admin account.')
+      } else if (isStudent) {
+        setActiveTab('student_flow')
+      } else {
+        setActiveTab('kiosk_terminal')
+      }
+    }
+  }, [activeModal, isAuthenticated, currentUser?.role, setActiveTab, openLoginModal])
+
+  // Always render LoginModal if open
+  if (isLoginModalOpen) {
+    return <LoginModal />
+  }
+
   if (!activeModal) return null
+
+  // If user opens Recycle, Vault, Terminal, or Sponsorships and is authenticated, render RecycleModuleModal
+  if (
+    isAuthenticated &&
+    (activeModal === 'recycle' || activeModal === 'vault' || activeModal === 'terminal' || activeModal === 'sponsorships')
+  ) {
+    return (
+      <AnimatePresence>
+        <RecycleModuleModal />
+      </AnimatePresence>
+    )
+  }
+
+  // If unauthenticated and tried to open recycle/vault/terminal/sponsorships, show LoginModal
+  if (
+    !isAuthenticated &&
+    (activeModal === 'recycle' || activeModal === 'vault' || activeModal === 'terminal' || activeModal === 'sponsorships')
+  ) {
+    return <LoginModal />
+  }
 
   const isPitch = activeModal === 'sponsor_pitch'
 
@@ -41,22 +139,17 @@ export const Modals: React.FC = () => {
     }
   }[tier]
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    setIsSubmitted(true)
-  }
-
-  const handleClose = () => {
-    setIsSubmitted(false)
-    setEmail('')
-    openModal(null)
-  }
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 bg-black/90">
+      <div
+        onClick={(e) => {
+          if (e.target === e.currentTarget) handleClose()
+        }}
+        className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-sm"
+      >
         <motion.div
+          onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.98, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.98, y: 15 }}
