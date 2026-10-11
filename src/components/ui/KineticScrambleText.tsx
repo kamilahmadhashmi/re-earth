@@ -106,7 +106,7 @@ export const KineticScrambleText: React.FC<KineticScrambleTextProps> = ({
     as,
     {
       ref: elementRef,
-      className: `font-inherit inline-block ${className}`,
+      className: `font-inherit inline-block overflow-visible align-baseline ${className}`,
       onMouseEnter: handleMouseEnter,
       'aria-label': text
     },

@@ -64,15 +64,15 @@ export const ScrollStorySections: React.FC = () => {
 
           {/* Kinetic Scramble Staggered Masked Headline */}
           <div className="space-y-4">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden pb-4 sm:pb-5 -mb-4 sm:-mb-5">
               <motion.h1
                 initial={{ y: '100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight text-text-primary leading-[1.02]"
+                className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight text-text-primary leading-[1.14] pb-2 sm:pb-3"
               >
                 Turn Dead Tech into{' '}
-                <span className="text-text-primary block sm:inline">
+                <span className="text-text-primary block sm:inline pb-1">
                   <KineticScrambleText text="Living Earth." trigger="mount" duration={1100} />
                 </span>
               </motion.h1>
