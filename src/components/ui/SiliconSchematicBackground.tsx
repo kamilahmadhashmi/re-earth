@@ -112,13 +112,7 @@ export const SiliconSchematicBackground: React.FC = () => {
             <circle cx="2" cy="2" r="0.75" fill="#38BDF8" opacity="0.18" />
           </pattern>
 
-          {/* Copper Contact Pad Definition */}
-          <g id="contact-pin-group">
-            <rect x="0" y="0" width="6" height="12" rx="1" fill="#F59E0B" opacity="0.85" />
-            <rect x="10" y="0" width="6" height="12" rx="1" fill="#F59E0B" opacity="0.85" />
-            <rect x="20" y="0" width="6" height="12" rx="1" fill="#F59E0B" opacity="0.85" />
-            <rect x="30" y="0" width="6" height="12" rx="1" fill="#F59E0B" opacity="0.85" />
-          </g>
+
 
           {/* Circular Economy Recovery Icon Node */}
           <g id="circular-recovery-node">
@@ -285,29 +279,6 @@ export const SiliconSchematicBackground: React.FC = () => {
         {/* LAYER G: Corner Engineering IC Footprints & Recovery Nodes        */}
         {/* ================================================================= */}
 
-        {/* Structural IC Footprint — TOP LEFT (ASIC // RE-EARTH) */}
-        <g transform="translate(130, 220)">
-          <rect x="0" y="0" width="130" height="96" rx="4" fill="rgba(8, 14, 26, 0.45)" stroke="#38BDF8" strokeWidth="1.2" opacity="0.45" />
-          <rect x="10" y="10" width="110" height="76" rx="2" fill="none" stroke="#64748B" strokeWidth="0.6" strokeDasharray="3 3" opacity="0.35" />
-          <use href="#contact-pin-group" x="46" y="-12" />
-          <use href="#contact-pin-group" x="46" y="96" />
-
-          {/* Micro Power Indicator Dot */}
-          <circle cx="20" cy="22" r="2" fill="#34D399" opacity="0.85" />
-          <circle cx="20" cy="22" r="5" fill="none" stroke="#34D399" strokeWidth="0.6" opacity="0.4" />
-        </g>
-
-        {/* Secondary IC Footprint — BOTTOM RIGHT (PMIC // RECOVERY) */}
-        <g transform="translate(1650, 700)">
-          <rect x="0" y="0" width="124" height="88" rx="4" fill="rgba(8, 14, 26, 0.45)" stroke="#2DD4BF" strokeWidth="1.2" opacity="0.45" />
-          <rect x="9" y="9" width="106" height="70" rx="2" fill="none" stroke="#64748B" strokeWidth="0.6" strokeDasharray="3 3" opacity="0.35" />
-          <use href="#contact-pin-group" x="44" y="-12" />
-          <use href="#contact-pin-group" x="44" y="88" />
-
-          {/* Micro Power Indicator Dot */}
-          <circle cx="20" cy="20" r="2" fill="#38BDF8" opacity="0.85" />
-          <circle cx="20" cy="20" r="5" fill="none" stroke="#38BDF8" strokeWidth="0.6" opacity="0.4" />
-        </g>
 
         {/* Circular Recovery Nodes at Trace Junctions */}
         <use href="#circular-recovery-node" x="580" y="170" />
