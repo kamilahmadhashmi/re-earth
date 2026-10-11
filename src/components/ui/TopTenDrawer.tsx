@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trophy, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Trophy, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
 import { SPONSOR_MAP } from '../../data/sponsors'
 
 export const TopTenDrawer: React.FC = () => {
   const {
     campuses,
+    sponsors,
     selectedCampusId,
+    selectedSponsorId,
     selectCampus,
+    selectSponsor,
     isLeftDrawerOpen,
     toggleLeftDrawer,
     viewMode,
-    isIntro,
-    activeChapter,
     isDemoMode,
     toggleDemoMode
   } = useWorldStore()
 
+  const [activeTab, setActiveTab] = useState<'campuses' | 'sponsors'>('campuses')
+
   if (viewMode !== 'globe') return null
 
-  // Computed Top 10 by allTimeKg
+  // Computed Top 10 campuses by allTimeKg
   const topTen = campuses.slice(0, 10)
+
+  // Sorted sponsors by totalKg
+  const sortedSponsors = [...sponsors].sort((a, b) => b.totalKg - a.totalKg)
 
   return (
     <>
@@ -38,119 +44,213 @@ export const TopTenDrawer: React.FC = () => {
                 className="h-full liquid-glass specular-rim flex flex-col overflow-hidden shadow-liquid-glass"
               >
                 {/* Header */}
-                <div className="px-4 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
+                <div className="px-4 py-3 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full bg-emerald/15 flex items-center justify-center text-emerald">
-                      <Trophy className="w-3.5 h-3.5" />
+                      {activeTab === 'campuses' ? (
+                        <Trophy className="w-3.5 h-3.5 text-copper" />
+                      ) : (
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald" />
+                      )}
                     </div>
                     <div>
-                      <h2 className="text-xs font-bold text-text-primary uppercase tracking-wider">
+                      <h2 className="text-xs font-bold text-text-primary tracking-wide">
                         Global Rankings
                       </h2>
-                      <p className="text-[10px] text-text-muted">Top 10 Verified Campuses</p>
+                      <p className="text-[10px] text-text-muted">
+                        {activeTab === 'campuses' ? 'Top 10 Campuses' : 'Corporate Underwriters'}
+                      </p>
                     </div>
                   </div>
+
                   <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald/10 border border-emerald/20 text-[10px] font-semibold text-emerald">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
                     <span>LIVE</span>
                   </div>
                 </div>
 
-                {/* List of 10 with Framer Motion Layout Reordering */}
+                {/* Segmented Tab Switcher */}
+                <div className="p-2 border-b border-white/[0.06] bg-white/[0.01]">
+                  <div className="grid grid-cols-2 p-0.5 rounded-lg bg-surface-elevated/70 border border-white/5">
+                    <button
+                      onClick={() => setActiveTab('campuses')}
+                      className={`py-1 text-[11px] font-medium rounded-md transition-all ${
+                        activeTab === 'campuses'
+                          ? 'bg-surface text-text-primary shadow-sm font-semibold'
+                          : 'text-text-muted hover:text-text-secondary'
+                      }`}
+                    >
+                      Campuses (10)
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('sponsors')}
+                      className={`py-1 text-[11px] font-medium rounded-md transition-all ${
+                        activeTab === 'sponsors'
+                          ? 'bg-surface text-text-primary shadow-sm font-semibold'
+                          : 'text-text-muted hover:text-text-secondary'
+                      }`}
+                    >
+                      Sponsors (8)
+                    </button>
+                  </div>
+                </div>
+
+                {/* List View */}
                 <div className="flex-1 overflow-y-auto p-2.5 space-y-1.5">
-                  <ul className="space-y-1.5">
-                    {topTen.map((campus) => {
-                      const isSelected = selectedCampusId === campus.id
-                      const sponsor = SPONSOR_MAP.get(campus.sponsorId)
+                  {activeTab === 'campuses' ? (
+                    /* Campus List */
+                    <ul className="space-y-1.5">
+                      {topTen.map((campus) => {
+                        const isSelected = selectedCampusId === campus.id
+                        const sponsor = SPONSOR_MAP.get(campus.sponsorId)
 
-                      return (
-                        <motion.li
-                          key={campus.id}
-                          layout
-                          transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-                        >
-                          <button
-                            onClick={() => selectCampus(campus.id)}
-                            className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group ${
-                              isSelected
-                                ? 'bg-surface-elevated border-copper shadow-sm'
-                                : 'bg-surface border-white/5 hover:border-white/15 hover:bg-surface-elevated'
-                            }`}
+                        return (
+                          <motion.li
+                            key={campus.id}
+                            layout
+                            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                           >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              {/* Medal or Rank Badge */}
-                              <div className="w-6 h-6 rounded flex items-center justify-center shrink-0 font-mono text-xs font-bold">
-                                {campus.allTimeRank === 1 ? (
-                                  <span className="text-gold font-extrabold text-xs px-1.5 py-0.5 rounded bg-gold/10 border border-gold/30">
-                                    #1
-                                  </span>
-                                ) : campus.allTimeRank === 2 ? (
-                                  <span className="text-palladium-light font-extrabold text-xs px-1.5 py-0.5 rounded bg-palladium/10 border border-palladium/30">
-                                    #2
-                                  </span>
-                                ) : campus.allTimeRank === 3 ? (
-                                  <span className="text-copper font-extrabold text-xs px-1.5 py-0.5 rounded bg-copper/10 border border-copper/30">
-                                    #3
-                                  </span>
-                                ) : (
-                                  <span className="text-text-muted text-[11px]">
-                                    #{campus.allTimeRank}
-                                  </span>
-                                )}
-                              </div>
-
-                              <div className="min-w-0">
-                                <p className="text-xs font-bold text-text-primary truncate group-hover:text-emerald transition-colors">
-                                  {campus.shortName}
-                                </p>
-                                <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
-                                  <span>{campus.city}</span>
-                                  {sponsor && (
-                                    <>
-                                      <span>•</span>
-                                      <span style={{ color: sponsor.color }}>{sponsor.logoText}</span>
-                                    </>
+                            <button
+                              onClick={() => selectCampus(campus.id)}
+                              className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group ${
+                                isSelected
+                                  ? 'bg-surface-elevated border-copper shadow-sm'
+                                  : 'bg-surface border-white/5 hover:border-white/15 hover:bg-surface-elevated'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="w-6 h-6 rounded flex items-center justify-center shrink-0 font-mono text-xs font-bold">
+                                  {campus.allTimeRank === 1 ? (
+                                    <span className="text-gold font-extrabold text-xs px-1.5 py-0.5 rounded bg-gold/10 border border-gold/30">
+                                      #1
+                                    </span>
+                                  ) : campus.allTimeRank === 2 ? (
+                                    <span className="text-palladium-light font-extrabold text-xs px-1.5 py-0.5 rounded bg-palladium/10 border border-palladium/30">
+                                      #2
+                                    </span>
+                                  ) : campus.allTimeRank === 3 ? (
+                                    <span className="text-copper font-extrabold text-xs px-1.5 py-0.5 rounded bg-copper/10 border border-copper/30">
+                                      #3
+                                    </span>
+                                  ) : (
+                                    <span className="text-text-muted text-[11px]">
+                                      #{campus.allTimeRank}
+                                    </span>
                                   )}
                                 </div>
-                              </div>
-                            </div>
 
-                            {/* Mini Sponsor Sparkline & Weight */}
-                            <div className="text-right shrink-0 pl-2 flex flex-col items-end">
-                              <span className="font-mono text-xs font-bold text-text-primary block">
-                                {Math.round(campus.allTimeKg).toLocaleString()}
-                                <span className="text-[10px] text-text-muted font-normal ml-0.5">kg</span>
-                              </span>
-                              
-                              {/* Micro Branded Sparkline */}
-                              {sponsor && (
-                                <div className="flex items-center gap-1 mt-0.5" title={`Sponsored by ${sponsor.name}`}>
-                                  <svg width="28" height="8" className="overflow-visible">
-                                    <path
-                                      d="M 0 6 Q 7 2, 14 5 T 28 1"
-                                      fill="none"
-                                      stroke={sponsor.color}
-                                      strokeWidth="1.5"
-                                      strokeLinecap="round"
-                                    />
-                                  </svg>
-                                  <span className="text-[8px] font-mono font-bold" style={{ color: sponsor.color }}>
-                                    {sponsor.logoText.slice(0, 3)}
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-text-primary truncate group-hover:text-emerald transition-colors">
+                                    {campus.shortName}
+                                  </p>
+                                  <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
+                                    <span>{campus.city}</span>
+                                    {sponsor && (
+                                      <>
+                                        <span>•</span>
+                                        <span style={{ color: sponsor.color }}>{sponsor.logoText}</span>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="text-right shrink-0 pl-2 flex flex-col items-end">
+                                <span className="font-mono text-xs font-bold text-text-primary block">
+                                  {Math.round(campus.allTimeKg).toLocaleString()}
+                                  <span className="text-[10px] text-text-muted font-normal ml-0.5">kg</span>
+                                </span>
+
+                                {sponsor && (
+                                  <div className="flex items-center gap-1 mt-0.5" title={`Sponsored by ${sponsor.name}`}>
+                                    <svg width="28" height="8" className="overflow-visible">
+                                      <path
+                                        d="M 0 6 Q 7 2, 14 5 T 28 1"
+                                        fill="none"
+                                        stroke={sponsor.color}
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                      />
+                                    </svg>
+                                    <span className="text-[8px] font-mono font-bold" style={{ color: sponsor.color }}>
+                                      {sponsor.logoText.slice(0, 3)}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </button>
+                          </motion.li>
+                        )
+                      })}
+                    </ul>
+                  ) : (
+                    /* Sponsors List */
+                    <ul className="space-y-1.5">
+                      {sortedSponsors.map((sponsor, index) => {
+                        const isSelected = selectedSponsorId === sponsor.id
+                        const rank = index + 1
+
+                        return (
+                          <motion.li
+                            key={sponsor.id}
+                            layout
+                            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                          >
+                            <button
+                              onClick={() => selectSponsor(sponsor.id)}
+                              className={`w-full text-left p-2.5 rounded-md transition-all duration-150 border flex items-center justify-between group ${
+                                isSelected
+                                  ? 'bg-surface-elevated border-emerald shadow-sm'
+                                  : 'bg-surface border-white/5 hover:border-white/15 hover:bg-surface-elevated'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="w-6 h-6 rounded flex items-center justify-center shrink-0 font-mono text-xs font-bold">
+                                  <span
+                                    className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border"
+                                    style={{
+                                      backgroundColor: `${sponsor.color}15`,
+                                      color: sponsor.color,
+                                      borderColor: `${sponsor.color}40`
+                                    }}
+                                  >
+                                    #{rank}
                                   </span>
                                 </div>
-                              )}
-                            </div>
-                          </button>
-                        </motion.li>
-                      )
-                    })}
-                  </ul>
+
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-text-primary truncate group-hover:text-emerald transition-colors">
+                                    {sponsor.name}
+                                  </p>
+                                  <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
+                                    <span>{sponsor.ticker}</span>
+                                    <span>•</span>
+                                    <span>{sponsor.campusCount} {sponsor.campusCount === 1 ? 'Campus' : 'Campuses'}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="text-right shrink-0 pl-2 flex flex-col items-end">
+                                <span className="font-mono text-xs font-bold text-text-primary block">
+                                  {Math.round(sponsor.totalKg).toLocaleString()}
+                                  <span className="text-[10px] text-text-muted font-normal ml-0.5">kg</span>
+                                </span>
+                                <span className="text-[9px] font-medium text-emerald">
+                                  Inspect Partner
+                                </span>
+                              </div>
+                            </button>
+                          </motion.li>
+                        )
+                      })}
+                    </ul>
+                  )}
                 </div>
 
                 {/* Footer hint with Demo / Simulation Mode switch */}
                 <div className="px-4 py-2.5 border-t border-white/[0.08] flex items-center justify-between bg-white/[0.01]">
                   <p className="text-[10px] text-text-muted">
-                    Click campus to inspect
+                    {activeTab === 'campuses' ? 'Click campus to inspect' : 'Click sponsor to inspect'}
                   </p>
                   <button
                     onClick={toggleDemoMode}
@@ -183,7 +283,7 @@ export const TopTenDrawer: React.FC = () => {
         </div>
       </aside>
 
-      {/* MOBILE BOTTOM SHEET FOR TOP 3 */}
+      {/* MOBILE BOTTOM SHEET FOR TOP CAMPUSES */}
       <div className="lg:hidden fixed bottom-24 left-3 right-3 z-30 pointer-events-auto">
         <div className="liquid-glass specular-rim p-3 max-h-36 overflow-y-auto">
           <div className="flex items-center justify-between pb-2 border-b border-white/[0.08] mb-2">
@@ -218,3 +318,4 @@ export const TopTenDrawer: React.FC = () => {
   )
 }
 
+export default TopTenDrawer

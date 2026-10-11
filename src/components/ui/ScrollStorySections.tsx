@@ -12,6 +12,7 @@ import { useWorldStore } from '../../store/useWorldStore'
 import { KineticScrambleText } from './KineticScrambleText'
 import { ToxicityMatrix } from './ToxicityMatrix'
 import { ElementalHarvest } from './ElementalHarvest'
+import { SponsorPartnerMarquee } from './SponsorPartnerMarquee'
 
 export const ScrollStorySections: React.FC = () => {
   const {
@@ -303,6 +304,11 @@ export const ScrollStorySections: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Global Corporate Partner Marquee */}
+        <div className="max-w-6xl w-full mx-auto mt-10">
+          <SponsorPartnerMarquee />
         </div>
       </section>
 

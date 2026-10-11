@@ -5,6 +5,7 @@ import { TopNav } from './components/ui/TopNav'
 import { TopTenDrawer } from './components/ui/TopTenDrawer'
 import { WeeklyDerbyTicker } from './components/ui/WeeklyDerbyTicker'
 import { CampusInspectionCard } from './components/ui/CampusInspectionCard'
+import { SponsorInspectionCard } from './components/ui/SponsorInspectionCard'
 import { Modals } from './components/ui/Modals'
 import { ClusterSelectionPopover } from './components/ui/ClusterSelectionPopover'
 import { ScrollStorySections } from './components/ui/ScrollStorySections'
@@ -50,6 +51,9 @@ export const App: React.FC = () => {
 
       {/* 3. Campus Inspection Detail Card (Active in Globe Mode) */}
       {viewMode === 'globe' && <CampusInspectionCard />}
+
+      {/* 3b. Sponsor Inspection Detail Card (Active when any sponsor is selected) */}
+      <SponsorInspectionCard />
 
       {/* 4. Cluster Selection Popover for dense regional campus groups (Active in Globe Mode) */}
       {viewMode === 'globe' && <ClusterSelectionPopover />}

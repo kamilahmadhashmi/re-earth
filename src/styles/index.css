@@ -246,6 +246,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
   transform-origin: 960px 540px;
 }
 
+@keyframes marqueeScroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 42s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* Custom Cursor: Hide default OS pointer on fine pointer devices when app custom cursor is active */
 @media (pointer: fine) {
   html.has-custom-cursor,

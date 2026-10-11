@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ArrowLeft, Radio, MapPin, Award, Layers } from 'lucide-react'
+import { X, ArrowLeft, Radio, MapPin, Award, Layers, ArrowUpRight } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import { useWorldStore } from '../../store/useWorldStore'
 import { SPONSOR_MAP } from '../../data/sponsors'
@@ -10,6 +10,7 @@ export const CampusInspectionCard: React.FC = () => {
   const {
     campuses,
     selectedCampusId,
+    selectSponsor,
     returnToWorld,
     boostSelectedCampus,
     isBoosting,
@@ -163,9 +164,16 @@ export const CampusInspectionCard: React.FC = () => {
                 <span className="text-xs font-medium text-text-muted">
                   E-Waste Trajectory & Sponsor Canvas
                 </span>
-                <span className="text-[10px] font-medium text-emerald">
-                  Live Hardware Telemetry
-                </span>
+                {sponsor && (
+                  <button
+                    onClick={() => selectSponsor(sponsor.id)}
+                    className="text-[10px] font-semibold text-emerald hover:underline flex items-center gap-1 group"
+                    title={`Inspect ${sponsor.name} Scope 3 Metrics`}
+                  >
+                    <span>{sponsor.name} Partner</span>
+                    <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </button>
+                )}
               </div>
               <SponsorBannerGraph campus={campus} />
             </div>
