@@ -132,6 +132,13 @@ interface RecycleStoreState {
     batterySafetyVerified: boolean
     wipeVerified: boolean
   }
+  operatorPassChecklists: Record<string, {
+    modelMatches: boolean
+    conditionMatches: boolean
+    scaleWeightVerified: boolean
+    batterySafetyVerified: boolean
+    wipeVerified: boolean
+  }>
   simulatedScaleGrams: number
   operatorRejectionReason: string
   operatorRejectionNotes: string
@@ -157,6 +164,7 @@ interface RecycleStoreState {
   setOperatorInputToken: (token: string) => void
   lookupPass: (passId: string) => void
   toggleOperatorChecklist: (key: keyof RecycleStoreState['operatorChecklist']) => void
+  setOperatorChecklistItem: (key: keyof RecycleStoreState['operatorChecklist'], value: boolean) => void
   setSimulatedScaleGrams: (grams: number) => void
   setOperatorRejectionReason: (reason: string) => void
   setOperatorRejectionNotes: (notes: string) => void
@@ -357,6 +365,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
     batterySafetyVerified: false,
     wipeVerified: false
   },
+  operatorPassChecklists: {},
   simulatedScaleGrams: 194.0,
   operatorRejectionReason: 'mismatch_model',
   operatorRejectionNotes: '',
@@ -377,7 +386,25 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
   },
 
   setCurrentStep: (currentStep) => {
-    const { condition, selectedProduct } = get()
+    const { condition, selectedProduct, customProduct, wipeStepsCompleted, wipeFinalConfirmed, wipeExceptionRequested, selectedKioskId } = get()
+
+    // Step progression guards to prevent jumping forward without required state
+    if (currentStep > 1 && !selectedProduct && !customProduct) {
+      return
+    }
+    if (currentStep > 2 && !condition) {
+      return
+    }
+    if (currentStep > 4) {
+      const guidanceSteps = selectedProduct?.wipeGuidance?.steps || [1, 2, 3]
+      const allWipeDone = guidanceSteps.every((s: any) => !!wipeStepsCompleted[typeof s === 'number' ? s : s.step])
+      const canWipeProceed = (allWipeDone && wipeFinalConfirmed) || wipeExceptionRequested
+      if (!canWipeProceed) return
+    }
+    if (currentStep > 5 && !selectedKioskId) {
+      return
+    }
+
     let mood: MascotMood = 'curious'
     let message = "Let's keep going!"
 
@@ -391,7 +418,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
         : "How is the physical state of your device? Honest condition helps determine reuse vs parts recycling."
     } else if (currentStep === 3) {
       mood = 'eco_impact'
-      message = `Look at the impact! Diverting this ${selectedProduct?.model || 'device'} keeps hazardous e-waste out of landfills!`
+      message = `Look at the impact! Diverting this ${selectedProduct?.model || customProduct?.model || 'device'} keeps hazardous e-waste out of landfills!`
     } else if (currentStep === 4) {
       mood = 'security_wipe'
       message = "Your privacy is paramount! Follow each wipe step to ensure your personal accounts are sanitized."
@@ -420,13 +447,16 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
       return
     }
 
+    const prev = get().selectedProduct
+    const isSameProduct = prev?.id === selectedProduct.id
+
     set({
       selectedProduct,
       customProduct: null,
-      measuredMassGrams: selectedProduct.defaultMassGrams,
-      isCustomMassEntered: false,
-      wipeStepsCompleted: {},
-      wipeFinalConfirmed: false,
+      measuredMassGrams: isSameProduct ? get().measuredMassGrams : selectedProduct.defaultMassGrams,
+      isCustomMassEntered: isSameProduct ? get().isCustomMassEntered : false,
+      wipeStepsCompleted: isSameProduct ? get().wipeStepsCompleted : {},
+      wipeFinalConfirmed: isSameProduct ? get().wipeFinalConfirmed : false,
       mascotMood: 'curious',
       mascotMessage: `Great choice! Found ${selectedProduct.manufacturer} ${selectedProduct.model} (${selectedProduct.defaultMassGrams}g). Let's check its condition!`
     })
@@ -501,6 +531,43 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
     const custom = state.customProduct
     const kiosk = CAMPUS_KIOSKS.find((k) => k.id === state.selectedKioskId) || CAMPUS_KIOSKS[0]
 
+    // Reuse existing active pass if pending for the same selected device to prevent duplicate submissions
+    if (
+      state.activePass &&
+      state.activePass.status === 'pending' &&
+      ((product && state.activePass.productId === product.id) ||
+        (custom && state.activePass.productName === custom.model))
+    ) {
+      // Keep kiosk and mass synchronized if modified
+      const declaredMassGrams = state.measuredMassGrams || product?.defaultMassGrams || custom?.estimatedMassGrams || 200
+      const turfMultiplier = kiosk.turfBonusMultiplier || 1.0
+      const baseCredits = product?.baseEcoCredits || Math.round(declaredMassGrams * 0.5)
+      const baseXp = product?.baseXp || Math.round(declaredMassGrams * 0.7)
+      const updatedPass: EphemeralPass = {
+        ...state.activePass,
+        kioskId: kiosk.id,
+        kioskName: kiosk.name,
+        campusId: kiosk.campusId,
+        campusName: kiosk.campusName,
+        declaredMassGrams,
+        turfMultiplier,
+        projectedEcoCredits: Math.round(baseCredits * turfMultiplier),
+        projectedXp: Math.round(baseXp * turfMultiplier),
+        dataWipeConfirmed: state.wipeFinalConfirmed,
+        dataWipeException: state.wipeExceptionRequested
+      }
+      const updatedList = state.savedPasses.map((p) => p.passId === updatedPass.passId ? updatedPass : p)
+      savePassesToStorage(updatedList)
+      set({
+        activePass: updatedPass,
+        savedPasses: updatedList,
+        currentStep: 6,
+        mascotMood: 'celebrating',
+        mascotMessage: `Pass ${updatedPass.passId} updated! Your 15-minute slot at ${kiosk.name} is reserved.`
+      })
+      return updatedPass
+    }
+
     // Generate unique short token: SIG-[HEX6]-[CAMPUS]
     const randomHex = Math.random().toString(16).substring(2, 8).toUpperCase()
     const campusTag = (kiosk.campusId || 'CAMPUS').toUpperCase()
@@ -512,7 +579,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
     const category = product?.category || custom?.category || 'other'
     const condition = state.condition || 'mint'
     const isHazmat = condition === 'swollen_battery'
-    const declaredMassGrams = state.measuredMassGrams || product?.defaultMassGrams || 200
+    const declaredMassGrams = state.measuredMassGrams || product?.defaultMassGrams || custom?.estimatedMassGrams || 200
 
     const turfMultiplier = kiosk.turfBonusMultiplier || 1.0
     const baseCredits = product?.baseEcoCredits || Math.round(declaredMassGrams * 0.5)
@@ -561,7 +628,7 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
       projectedXp,
       status: 'pending',
       qrPayload,
-      userId: currentUser?.id,
+      userId: currentUser?.id || 'usr_student_dtu_01',
       studentName: currentUser?.name || 'Aarav Sharma',
       studentRollNo: currentUser?.studentRollNo || '2023/EE/042',
       department: currentUser?.department || 'Electrical Engineering'
@@ -602,29 +669,64 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
   setOperatorInputToken: (token) => set({ operatorInputToken: token }),
 
   lookupPass: (passIdToFind) => {
-    const term = passIdToFind.trim().toUpperCase()
-    const { savedPasses } = get()
-    const found = savedPasses.find(
-      (p) => p.passId.toUpperCase() === term || p.passId.toUpperCase().includes(term)
-    )
+    const raw = passIdToFind.trim()
+    let term = raw.toUpperCase()
+
+    // 2D Optical barcode scanners often output the full encoded JSON string
+    if (raw.startsWith('{') && raw.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(raw)
+        if (parsed.ref) term = String(parsed.ref).trim().toUpperCase()
+        else if (parsed.passId) term = String(parsed.passId).trim().toUpperCase()
+      } catch {
+        // Fallback to literal term
+      }
+    }
+
+    const { savedPasses, operatorPassChecklists } = get()
+    const found = savedPasses.find((p) => {
+      const pid = p.passId.toUpperCase()
+      return pid === term || pid.includes(term) || term.includes(pid)
+    })
 
     if (found) {
       // Simulate physical scale reading slightly varying by ±1-3% around expected mass
       const jitter = (Math.random() - 0.45) * 4.0
       const simWeight = parseFloat((found.declaredMassGrams + jitter).toFixed(1))
 
+      let checklistForPass = {
+        modelMatches: false,
+        conditionMatches: false,
+        scaleWeightVerified: false,
+        batterySafetyVerified: false,
+        wipeVerified: false
+      }
+
+      if (found.status === 'accepted') {
+        checklistForPass = {
+          modelMatches: true,
+          conditionMatches: true,
+          scaleWeightVerified: true,
+          batterySafetyVerified: true,
+          wipeVerified: true
+        }
+      } else if (operatorPassChecklists[found.passId]) {
+        checklistForPass = operatorPassChecklists[found.passId]
+      }
+
       set({
         operatorInspectedPass: found,
-        simulatedScaleGrams: simWeight,
-        operatorChecklist: {
-          modelMatches: false,
-          conditionMatches: false,
-          scaleWeightVerified: false,
-          batterySafetyVerified: false,
-          wipeVerified: false
+        simulatedScaleGrams: found.receipt?.verifiedWeightGrams || simWeight,
+        operatorChecklist: checklistForPass,
+        operatorPassChecklists: {
+          ...operatorPassChecklists,
+          [found.passId]: checklistForPass
         },
-        mascotMood: 'operator_scan',
-        mascotMessage: `Pass ${found.passId} located for ${found.productName}! Begin physical verification checklist.`
+        mascotMood: found.status === 'accepted' ? 'celebrating' : 'operator_scan',
+        mascotMessage:
+          found.status === 'accepted'
+            ? `Pass ${found.passId} is already accepted & redeemed. Certificate #${found.receipt?.certificateId}.`
+            : `Pass ${found.passId} located for ${found.productName}! Begin physical verification checklist.`
       })
     } else {
       set({
@@ -636,9 +738,29 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
   },
 
   toggleOperatorChecklist: (key) => {
-    const prev = get().operatorChecklist
-    const updated = { ...prev, [key]: !prev[key] }
-    set({ operatorChecklist: updated })
+    const { operatorChecklist, operatorInspectedPass, operatorPassChecklists } = get()
+    const updated = { ...operatorChecklist, [key]: !operatorChecklist[key] }
+    const updatedChecklists = operatorInspectedPass
+      ? { ...operatorPassChecklists, [operatorInspectedPass.passId]: updated }
+      : operatorPassChecklists
+
+    set({
+      operatorChecklist: updated,
+      operatorPassChecklists: updatedChecklists
+    })
+  },
+
+  setOperatorChecklistItem: (key, value) => {
+    const { operatorChecklist, operatorInspectedPass, operatorPassChecklists } = get()
+    const updated = { ...operatorChecklist, [key]: value }
+    const updatedChecklists = operatorInspectedPass
+      ? { ...operatorPassChecklists, [operatorInspectedPass.passId]: updated }
+      : operatorPassChecklists
+
+    set({
+      operatorChecklist: updated,
+      operatorPassChecklists: updatedChecklists
+    })
   },
 
   setSimulatedScaleGrams: (grams) => set({ simulatedScaleGrams: grams }),
@@ -646,16 +768,36 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
   setOperatorRejectionNotes: (notes) => set({ operatorRejectionNotes: notes }),
 
   acceptCurrentInspection: async (operatorName = 'Kavita Sharma (Lead Lab Tech)') => {
-    const { operatorInspectedPass, savedPasses, simulatedScaleGrams } = get()
-    if (!operatorInspectedPass || operatorInspectedPass.status === 'accepted') return false
+    const { operatorInspectedPass, savedPasses, simulatedScaleGrams, operatorChecklist, operatorPassChecklists } = get()
+    if (!operatorInspectedPass) {
+      throw new Error('No pass is currently loaded for inspection.')
+    }
+    if (operatorInspectedPass.status === 'accepted') {
+      throw new Error('Pass has already been accepted and redeemed. Duplicate deposit attempts are strictly prevented.')
+    }
 
+    const allChecksSatisfied =
+      operatorChecklist.modelMatches &&
+      operatorChecklist.conditionMatches &&
+      operatorChecklist.scaleWeightVerified &&
+      operatorChecklist.batterySafetyVerified &&
+      operatorChecklist.wipeVerified
+
+    if (!allChecksSatisfied) {
+      throw new Error('All 5 physical inspection criteria must be verified before accepting this pass.')
+    }
+
+    const nominalMass = operatorInspectedPass.declaredMassGrams || 194
     const variance = parseFloat(
       (
-        ((simulatedScaleGrams - operatorInspectedPass.declaredMassGrams) /
-          operatorInspectedPass.declaredMassGrams) *
+        ((simulatedScaleGrams - nominalMass) / nominalMass) *
         100
       ).toFixed(1)
     )
+
+    if (Math.abs(variance) > 5.0) {
+      throw new Error(`Scale mass variance (${Math.abs(variance)}%) exceeds ±5% tolerance threshold. Re-weigh device.`)
+    }
 
     const kgDiverted = parseFloat((simulatedScaleGrams / 1000).toFixed(3))
 
@@ -687,11 +829,18 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
 
     savePassesToStorage(updatedList)
 
+    const allChecked = {
+      modelMatches: true,
+      conditionMatches: true,
+      scaleWeightVerified: true,
+      batterySafetyVerified: true,
+      wipeVerified: true
+    }
+
     // BOOST CAMPUS TELEMETRY IN THE MAIN 3D GLOBE ENGINE!
     try {
       const worldStore = useWorldStore.getState()
       if (operatorInspectedPass.campusId) {
-        // Boost campus by the verified kilograms (or round up to 5kg demo chunk)
         await worldStore.boostSelectedCampus(Math.max(1, Math.round(kgDiverted)))
       }
     } catch (err) {
@@ -700,6 +849,11 @@ export const useRecycleStore = create<RecycleStoreState>((set, get) => ({
 
     set({
       operatorInspectedPass: updatedPass,
+      operatorChecklist: allChecked,
+      operatorPassChecklists: {
+        ...operatorPassChecklists,
+        [updatedPass.passId]: allChecked
+      },
       savedPasses: updatedList,
       activePass: get().activePass?.passId === updatedPass.passId ? updatedPass : get().activePass,
       mascotMood: 'celebrating',

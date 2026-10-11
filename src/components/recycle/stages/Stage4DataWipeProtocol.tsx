@@ -170,17 +170,21 @@ export const Stage4DataWipeProtocol: React.FC = () => {
 
       {/* CONFIRMATION CHECKBOX */}
       <div className="p-4 rounded-2xl liquid-glass-subtle border border-white/10 space-y-3">
-        <label className="flex items-start gap-3.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.05] hover:border-emerald/30 transition-all cursor-pointer group">
+        <label
+          htmlFor="chk-wipe-confirm"
+          className="flex items-start gap-3.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.05] hover:border-emerald/30 transition-all cursor-pointer group focus-within:ring-2 focus-within:ring-emerald/40"
+        >
           <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
             <input
+              id="chk-wipe-confirm"
               type="checkbox"
               checked={wipeFinalConfirmed}
               disabled={wipeExceptionRequested}
               onChange={(e) => setWipeFinalConfirmed(e.target.checked)}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+              className="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
             />
             <div
-              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-emerald ${
                 wipeFinalConfirmed
                   ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
                   : wipeExceptionRequested
@@ -202,19 +206,23 @@ export const Stage4DataWipeProtocol: React.FC = () => {
         </label>
 
         {/* BROKEN DEVICE EXCEPTION PATH */}
-        <label className="flex items-start gap-3.5 p-3 rounded-xl bg-amber/[0.03] border border-amber/20 hover:bg-amber/[0.06] hover:border-amber/40 transition-all cursor-pointer group">
+        <label
+          htmlFor="chk-wipe-exception"
+          className="flex items-start gap-3.5 p-3 rounded-xl bg-amber/[0.03] border border-amber/20 hover:bg-amber/[0.06] hover:border-amber/40 transition-all cursor-pointer group focus-within:ring-2 focus-within:ring-amber/40"
+        >
           <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
             <input
+              id="chk-wipe-exception"
               type="checkbox"
               checked={wipeExceptionRequested}
               onChange={(e) => {
                 setWipeExceptionRequested(e.target.checked)
                 if (e.target.checked) setWipeFinalConfirmed(false)
               }}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              className="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
             <div
-              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+              className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-amber ${
                 wipeExceptionRequested
                   ? 'bg-amber border-amber text-black shadow-amber-glow'
                   : 'border-amber/40 bg-white/5 group-hover:border-amber'

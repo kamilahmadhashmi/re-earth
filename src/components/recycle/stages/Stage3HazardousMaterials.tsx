@@ -31,26 +31,28 @@ export const Stage3HazardousMaterials: React.FC = () => {
   const custom = customProduct
 
   const defaultMass = product?.defaultMassGrams || custom?.estimatedMassGrams || 194
-  const massKg = (measuredMassGrams / 1000).toFixed(3)
+  const safeMass = Number.isFinite(measuredMassGrams) && measuredMassGrams > 0 ? measuredMassGrams : defaultMass
+  const massKg = (safeMass / 1000).toFixed(3)
 
   // Calculations:
   // CO2e avoided: typically ~70-80x device mass for complex microelectronics due to silicon wafer fab energy offsets
-  const co2eAvoided = (
-    product?.co2eAvoidedKg || Math.max(5, measuredMassGrams * 0.08)
-  ).toFixed(1)
+  const baseCo2e = product?.co2eAvoidedKg && Number.isFinite(product.co2eAvoidedKg)
+    ? product.co2eAvoidedKg
+    : Math.max(5, safeMass * 0.08)
+  const co2eAvoided = Number.isFinite(baseCo2e) ? baseCo2e.toFixed(1) : '15.0'
 
   // Estimated gold/silver/copper recovery based on typical concentration
   const goldMg = product
     ? product.materialDisclosures.find((m) => m.material.toLowerCase().includes('gold'))?.amount || '30mg'
-    : `${Math.round(measuredMassGrams * 0.15)}mg`
+    : `${Math.round(safeMass * 0.15)}mg`
 
   const copperG = product
     ? product.materialDisclosures.find((m) => m.material.toLowerCase().includes('copper'))?.amount || '15g'
-    : `${(measuredMassGrams * 0.09).toFixed(1)}g`
+    : `${(safeMass * 0.09).toFixed(1)}g`
 
   const oreDisplacedKg = (parseFloat(co2eAvoided) * 1.8).toFixed(1)
-  const ecoCredits = Math.round(measuredMassGrams * 0.6)
-  const xp = Math.round(measuredMassGrams * 0.8)
+  const ecoCredits = Math.round(safeMass * 0.6)
+  const xp = Math.round(safeMass * 0.8)
 
   return (
     <div className="space-y-6">
@@ -86,13 +88,21 @@ export const Stage3HazardousMaterials: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex items-center gap-2 bg-white/[0.04] px-3 py-1.5 rounded-xl border border-white/10">
+          <div className="flex items-center gap-2 bg-white/[0.04] px-3 py-1.5 rounded-xl border border-white/10 focus-within:border-emerald/50">
             <input
               type="number"
               min={10}
               max={25000}
-              value={measuredMassGrams}
-              onChange={(e) => setMeasuredMassGrams(Number(e.target.value))}
+              value={measuredMassGrams || ''}
+              onChange={(e) => {
+                const val = parseFloat(e.target.value)
+                setMeasuredMassGrams(Number.isFinite(val) ? val : 0)
+              }}
+              onBlur={() => {
+                if (!measuredMassGrams || measuredMassGrams <= 0) {
+                  setMeasuredMassGrams(defaultMass)
+                }
+              }}
               className="w-20 bg-transparent text-sm font-bold font-mono text-emerald text-right focus:outline-none"
             />
             <span className="text-xs font-mono text-text-muted">GRAMS</span>

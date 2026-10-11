@@ -5,15 +5,12 @@ import {
   Building2,
   Layers,
   Trophy,
-  Volume2,
-  VolumeX,
   Shield,
   GraduationCap,
   Scan
 } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
 import { useAuthStore } from '../../store/useAuthStore'
-import { useSpatialAudio } from '../../hooks/useSpatialAudio'
 
 export const TopNav: React.FC = () => {
   const {
@@ -29,7 +26,6 @@ export const TopNav: React.FC = () => {
   } = useWorldStore()
 
   const { isAuthenticated, currentUser, openLoginModal } = useAuthStore()
-  const { isAudioEnabled, toggleAudio } = useSpatialAudio()
 
   const navChapters = [
     { id: 0, label: 'Story' },
@@ -141,31 +137,6 @@ export const TopNav: React.FC = () => {
               Sign In
             </button>
           )}
-
-          {/* Spatial Audio Toggle */}
-          <button
-            type="button"
-            onClick={toggleAudio}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer active:scale-95 ${
-              isAudioEnabled
-                ? 'bg-emerald/10 text-emerald border border-emerald/30'
-                : 'bg-white/[0.04] border border-white/10 text-text-muted hover:text-text-primary'
-            }`}
-            title="Toggle Spatial Synthetic Audio Drone & Clicks"
-          >
-            {isAudioEnabled ? (
-              <span className="flex items-end gap-0.5 h-3 w-3">
-                <span className="w-0.5 bg-emerald h-full animate-[pulse_0.8s_ease-in-out_infinite]" />
-                <span className="w-0.5 bg-emerald h-2/3 animate-[pulse_1.2s_ease-in-out_infinite]" />
-                <span className="w-0.5 bg-emerald h-4/5 animate-[pulse_0.5s_ease-in-out_infinite]" />
-              </span>
-            ) : (
-              <VolumeX className="w-3.5 h-3.5" />
-            )}
-            <span className="hidden xl:inline text-xs font-medium">
-              {isAudioEnabled ? 'Audio On' : 'Muted'}
-            </span>
-          </button>
 
           {/* Rankings Drawer Toggle */}
           {viewMode === 'globe' && (

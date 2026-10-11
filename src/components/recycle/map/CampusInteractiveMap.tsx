@@ -1,22 +1,20 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import L from 'leaflet'
 import {
-  Maximize2,
-  Minimize2,
-  Layers,
-  MapPin,
   Shield,
+  MapPin,
   Navigation,
   Compass,
-  Zap,
+  RefreshCw,
+  Info,
   Flame,
   CheckCircle2,
-  RefreshCw,
-  Eye,
+  Clock,
+  Activity,
   AlertTriangle,
-  Info
+  X
 } from 'lucide-react'
-import type { CampusKiosk } from '../../../data/kiosks'
+import type { CampusKiosk, KioskOperationalStatus } from '../../../data/kiosks'
 import type {
   CampusGate,
   CampusDropOffZone,
@@ -63,7 +61,6 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
   const markersLayerGroupRef = useRef<L.LayerGroup | null>(null)
 
   // Display toggles
-  const [tileMode, setTileMode] = useState<'carto_dark' | 'osm_standard'>('carto_dark')
   const [showZones, setShowZones] = useState<boolean>(true)
   const [showGates, setShowGates] = useState<boolean>(true)
   const [showVehicles, setShowVehicles] = useState<boolean>(true)
@@ -71,11 +68,67 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
   const [showLegend, setShowLegend] = useState<boolean>(false)
   const [isMapReady, setIsMapReady] = useState<boolean>(false)
 
+  // Selected preview kiosk for in-map detail card
+  const [previewKioskId, setPreviewKioskId] = useState<string | null>(selectedKioskId || null)
+
+  // Simulation state for DEMO DATA pulse updates
+  const [simulatedKiosks, setSimulatedKiosks] = useState<CampusKiosk[]>(kiosks)
+  const [isPulsing, setIsPulsing] = useState<boolean>(false)
+  const [lastSyncLabel, setLastSyncLabel] = useState<string>('Live (Demo Telemetry)')
+
+  // Sync internal simulated kiosks with incoming props
+  useEffect(() => {
+    setSimulatedKiosks(kiosks)
+  }, [kiosks])
+
+  // Sync preview kiosk with external selectedKioskId
+  useEffect(() => {
+    if (selectedKioskId) {
+      setPreviewKioskId(selectedKioskId)
+    }
+  }, [selectedKioskId])
+
+  // Active kiosk object for compact detail panel
+  const activeKiosk = useMemo(() => {
+    const targetId = previewKioskId || selectedKioskId
+    if (!targetId) return null
+    return simulatedKiosks.find((k) => k.id === targetId) || null
+  }, [previewKioskId, selectedKioskId, simulatedKiosks])
+
+  // Controlled Demo Pulse that updates simulated kiosk telemetry
+  const handleSimulateTelemetryPulse = useCallback(() => {
+    setIsPulsing(true)
+    setTimeout(() => {
+      setSimulatedKiosks((prev) =>
+        prev.map((k) => {
+          if (k.status === 'OFFLINE') return k
+
+          // Deterministic minor fluctuation in occupancy
+          const delta = Math.random() > 0.5 ? 1 : -1
+          const nextOccupancy = Math.max(1, Math.min(k.capacity - 1, k.occupancy + delta))
+          const nextFill = Math.round((nextOccupancy / k.capacity) * 100)
+          const nextStatus: KioskOperationalStatus = nextFill >= 80 ? 'BUSY' : 'ACTIVE'
+
+          return {
+            ...k,
+            occupancy: nextOccupancy,
+            fillLevelPercent: nextFill,
+            availableLockerSlots: k.capacity - nextOccupancy,
+            status: nextStatus,
+            lastUpdated: new Date().toISOString()
+          }
+        })
+      )
+      setLastSyncLabel(`Updated ${new Date().toLocaleTimeString()} (DEMO)`)
+      setIsPulsing(false)
+    }, 400)
+  }, [])
+
   // Initialize Leaflet Map
   useEffect(() => {
     if (!mapContainerRef.current) return
 
-    // Avoid double initialization in React 18
+    // Avoid double initialization
     if (mapInstanceRef.current) {
       mapInstanceRef.current.remove()
       mapInstanceRef.current = null
@@ -90,19 +143,19 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       minZoom: 12
     })
 
-    // Setup base tile layer (CartoDB Dark Matter)
-    const cartoDark = L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    // Setup real street map tile layer (OpenStreetMap - 100% Free, NO API KEY REQUIRED)
+    const streetMap = L.tileLayer(
+      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 19
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+        crossOrigin: true
       }
     )
 
-    cartoDark.addTo(map)
-    tileLayerRef.current = cartoDark
+    streetMap.addTo(map)
+    tileLayerRef.current = streetMap
 
     // Create a LayerGroup to hold all interactive markers and polylines
     const markersGroup = L.layerGroup().addTo(map)
@@ -111,60 +164,46 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     mapInstanceRef.current = map
     setIsMapReady(true)
 
-    // Invalidate size once rendered inside dialog
+    // Invalidate size once rendered
     const timer = setTimeout(() => {
       map.invalidateSize()
     }, 250)
 
+    // ResizeObserver for reliable rendering across all viewport layouts
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize()
+    })
+    resizeObserver.observe(mapContainerRef.current)
+
     return () => {
       clearTimeout(timer)
+      resizeObserver.disconnect()
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove()
         mapInstanceRef.current = null
       }
     }
-  }, [campusCenter[0], campusCenter[1]])
+  }, [])
 
-  // Handle Tile Provider Switch
+  // Smoothly pan and center on the selected college when campusCenter changes
   useEffect(() => {
     const map = mapInstanceRef.current
     if (!map) return
 
-    if (tileLayerRef.current) {
-      map.removeLayer(tileLayerRef.current)
-    }
+    map.flyTo(campusCenter, 16, {
+      animate: true,
+      duration: 0.9
+    })
+    map.invalidateSize()
+  }, [campusCenter[0], campusCenter[1]])
 
-    const newLayer =
-      tileMode === 'carto_dark'
-        ? L.tileLayer(
-            'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-            {
-              attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-              subdomains: 'abcd',
-              maxZoom: 19
-            }
-          )
-        : L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            {
-              attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-              maxZoom: 19
-            }
-          )
-
-    newLayer.addTo(map)
-    tileLayerRef.current = newLayer
-  }, [tileMode])
-
-  // Center / FlyTo when selected item or campus center changes
+  // FlyTo selected kiosk
   useEffect(() => {
     const map = mapInstanceRef.current
     if (!map) return
 
     if (selectedKioskId) {
-      const selectedKiosk = kiosks.find((k) => k.id === selectedKioskId)
+      const selectedKiosk = simulatedKiosks.find((k) => k.id === selectedKioskId)
       if (selectedKiosk && selectedKiosk.coords) {
         map.flyTo(selectedKiosk.coords, 17, {
           animate: true,
@@ -172,7 +211,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
         })
       }
     }
-  }, [selectedKioskId, kiosks])
+  }, [selectedKioskId, simulatedKiosks])
 
   // FlyTo selected vehicle
   useEffect(() => {
@@ -202,7 +241,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     }
   }, [selectedZoneId, zones])
 
-  // Render Markers & Vectors whenever data or layers change
+  // Render Markers & Vectors whenever data or layer toggles change
   useEffect(() => {
     const map = mapInstanceRef.current
     const group = markersLayerGroupRef.current
@@ -211,9 +250,9 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     group.clearLayers()
 
     // -------------------------------------------------------------------------
-    // 1. ROUTE POLYLINES
+    // 1. ROUTE POLYLINES (Shown when showRoutes and showVehicles are active)
     // -------------------------------------------------------------------------
-    if (showRoutes && routes.length > 0) {
+    if (showRoutes && showVehicles && routes.length > 0) {
       routes.forEach((route) => {
         const poly = L.polyline(route.coordinates, {
           color: route.color,
@@ -233,7 +272,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     }
 
     // -------------------------------------------------------------------------
-    // 2. STUDENT DROP-OFF ZONES (Halos & Center Badges)
+    // 2. STUDENT DROP-OFF ZONES (Halos & Center Badges) - Controlled by showZones
     // -------------------------------------------------------------------------
     if (showZones && zones.length > 0) {
       zones.forEach((zone) => {
@@ -286,7 +325,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     }
 
     // -------------------------------------------------------------------------
-    // 3. SCHOOL GATES (Entrance / Exit)
+    // 3. CAMPUS PERIMETER GATES - Controlled by showGates
     // -------------------------------------------------------------------------
     if (showGates && gates.length > 0) {
       gates.forEach((gate) => {
@@ -325,7 +364,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
             <div class="font-bold text-text-primary">${gate.name}</div>
             <p class="text-[11px] text-text-secondary">${gate.description}</p>
             <div class="pt-1.5 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-text-muted">
-              <span>Security:</span>
+              <span>Security Check:</span>
               <span class="text-cyan">${gate.securityCheck}</span>
             </div>
           </div>
@@ -336,7 +375,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     }
 
     // -------------------------------------------------------------------------
-    // 4. TRANSIT SHUTTLES & LOGISTICS VEHICLES
+    // 4. TRANSIT SHUTTLES & LOGISTICS VEHICLES - Controlled by showVehicles
     // -------------------------------------------------------------------------
     if (showVehicles && vehicles.length > 0) {
       vehicles.forEach((veh) => {
@@ -410,33 +449,60 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
     }
 
     // -------------------------------------------------------------------------
-    // 5. CAMPUS COLLECTION KIOSKS & DROP-OFF PODS
+    // 5. DETERMINISTIC DELHI KIOSKS (CUSTOM MARKERS WITH RE—EARTH DESIGN)
     // -------------------------------------------------------------------------
-    kiosks.forEach((kiosk) => {
+    simulatedKiosks.forEach((kiosk) => {
       if (!kiosk.coords) return
 
       const isSelected = selectedKioskId === kiosk.id
       const isHazmat = kiosk.hazmatCertified
       const isRestrictedByHazard = isSwollenHazard && !isHazmat
 
+      // Normalize status to ACTIVE, BUSY, OFFLINE
+      const rawStatus = (kiosk.status || 'ACTIVE').toUpperCase()
+      const normalizedStatus: KioskOperationalStatus =
+        rawStatus === 'BUSY'
+          ? 'BUSY'
+          : rawStatus === 'OFFLINE' || rawStatus === 'MAINTENANCE'
+          ? 'OFFLINE'
+          : 'ACTIVE'
+
+      const isOffline = normalizedStatus === 'OFFLINE'
+      const isBusy = normalizedStatus === 'BUSY'
+
+      // Styling based on status
+      const statusBadgeClass = isOffline
+        ? 'bg-red-500/20 text-red-400 border-red-500/40'
+        : isBusy
+        ? 'bg-amber/20 text-amber border-amber/40'
+        : 'bg-emerald/20 text-emerald border-emerald/40'
+
+      const pinThemeClass = isSelected
+        ? 'bg-emerald text-black border-white shadow-emerald-glow scale-110'
+        : isOffline
+        ? 'bg-red-950/40 border-red-500/40 text-red-400 opacity-60'
+        : isBusy
+        ? 'bg-amber/20 border-amber/70 text-amber shadow-amber-glow'
+        : isHazmat
+        ? 'bg-amber/20 border-amber/60 text-amber shadow-amber-glow'
+        : 'bg-emerald/15 border-emerald/50 text-emerald'
+
+      const gateTag = kiosk.gateOrBayId ? kiosk.gateOrBayId.split(' ')[0] : 'POD'
+
       const kioskPinHtml = `
         <div class="relative cursor-pointer group flex flex-col items-center -translate-x-1/2 -translate-y-1/2 ${
-          isRestrictedByHazard ? 'opacity-40 grayscale' : ''
+          isRestrictedByHazard ? 'opacity-30 grayscale' : ''
         }">
           ${
             isSelected
-              ? '<div class="absolute -inset-2 rounded-full bg-emerald/30 animate-sonar-ring pointer-events-none"></div>'
+              ? '<div class="absolute -inset-2.5 rounded-full bg-emerald/30 animate-sonar-ring pointer-events-none"></div>'
               : ''
           }
-          <div class="relative w-8 h-8 rounded-xl flex items-center justify-center border shadow-xl backdrop-blur-md transition-all group-hover:scale-125 ${
-            isSelected
-              ? 'bg-emerald text-black border-white shadow-emerald-glow scale-110'
-              : isHazmat
-              ? 'bg-amber/20 border-amber/60 text-amber shadow-amber-glow'
-              : 'bg-emerald/15 border-emerald/50 text-emerald'
-          }">
+          <div class="relative w-8 h-8 rounded-xl flex items-center justify-center border shadow-xl backdrop-blur-md transition-all group-hover:scale-125 ${pinThemeClass}">
             ${
-              isHazmat
+              isOffline
+                ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'
+                : isHazmat
                 ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>'
                 : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>'
             }
@@ -444,9 +510,9 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           <div class="mt-1 px-1.5 py-0.2 rounded text-[8px] font-mono font-bold border whitespace-nowrap shadow-md ${
             isSelected
               ? 'bg-emerald text-black border-white'
-              : 'bg-black/90 border-white/20 text-emerald'
+              : `${statusBadgeClass} bg-black/90`
           }">
-            ${kiosk.name.split(' ')[0]} • ${kiosk.turfBonusMultiplier}x
+            ${gateTag} • ${normalizedStatus}
           </div>
         </div>
       `
@@ -454,57 +520,66 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       const kioskIcon = L.divIcon({
         html: kioskPinHtml,
         className: 'custom-leaflet-marker',
-        iconSize: [36, 48],
-        iconAnchor: [18, 24]
+        iconSize: [40, 52],
+        iconAnchor: [20, 26]
       })
 
-      const marker = L.marker(kiosk.coords, { icon: kioskIcon })
+      const marker = L.marker(kiosk.coords, {
+        icon: kioskIcon,
+        zIndexOffset: isSelected ? 1000 : 100
+      })
 
       marker.on('click', () => {
+        setPreviewKioskId(kiosk.id)
         if (!isRestrictedByHazard) {
           onSelectKiosk(kiosk.id)
         }
       })
 
-      // Informative Popup
+      // Compact informative popup on marker
       marker.bindPopup(`
         <div class="p-3 text-xs space-y-2 min-w-[240px]">
           <div class="flex items-center justify-between text-[10px] font-mono">
             <span class="text-emerald font-bold flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse"></span>
+              <span class="w-1.5 h-1.5 rounded-full ${isOffline ? 'bg-red-400' : 'bg-emerald animate-pulse'}"></span>
               ${kiosk.campusName}
             </span>
-            <span class="px-1.5 py-0.2 rounded bg-amber/15 text-amber border border-amber/30 font-bold">
-              ${kiosk.turfBonusMultiplier}x TURF
+            <span class="px-1.5 py-0.2 rounded ${statusBadgeClass} font-bold text-[9px]">
+              ${normalizedStatus}
             </span>
           </div>
 
           <div>
             <div class="font-bold text-sm text-text-primary">${kiosk.name}</div>
             <div class="text-[11px] text-text-secondary mt-0.5">${kiosk.landmark}</div>
+            <div class="text-[10px] font-mono text-cyan mt-0.5">${kiosk.gateOrBayId || 'Express Drop'}</div>
           </div>
 
           <div class="space-y-1 pt-1.5 border-t border-white/10">
             <div class="flex items-center justify-between text-[10px] font-mono text-text-muted">
-              <span>Bin Capacity Fill:</span>
-              <span class="text-text-primary font-bold">${kiosk.fillLevelPercent}%</span>
+              <span>Locker Occupancy:</span>
+              <span class="text-text-primary font-bold">${kiosk.occupancy || 0}/${kiosk.capacity || 20} (${kiosk.fillLevelPercent}%)</span>
             </div>
             <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div class="h-full bg-emerald" style="width: ${kiosk.fillLevelPercent}%"></div>
+              <div class="h-full ${isOffline ? 'bg-red-500' : isBusy ? 'bg-amber' : 'bg-emerald'}" style="width: ${kiosk.fillLevelPercent}%"></div>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1 text-text-muted">
             <div>
-              <span>Lockers Available:</span>
-              <span class="block text-emerald font-bold">${kiosk.availableLockerSlots} Slots</span>
+              <span>Available Slots:</span>
+              <span class="block ${isOffline ? 'text-text-muted' : 'text-emerald'} font-bold">${kiosk.availableLockerSlots || (kiosk.capacity - kiosk.occupancy)} Slots</span>
             </div>
             <div>
-              <span>Hazmat Rated:</span>
-              <span class="block ${kiosk.hazmatCertified ? 'text-emerald' : 'text-text-muted'} font-bold">
+              <span>Hazmat Rating:</span>
+              <span class="block ${kiosk.hazmatCertified ? 'text-amber' : 'text-text-muted'} font-bold">
                 ${kiosk.hazmatCertified ? '✓ Certified Fire Safe' : 'Standard Pod'}
               </span>
             </div>
+          </div>
+
+          <div class="pt-1 text-[9px] font-mono text-amber/80 text-center border-t border-white/10">
+            DEMO DATA • SIMULATED DELHI TELEMETRY
           </div>
 
           ${
@@ -516,7 +591,11 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
                   type="button"
                   id="btn-kiosk-select-${kiosk.id}"
                   onclick="window.__selectCampusKiosk('${kiosk.id}')"
-                  class="w-full mt-2 py-1.5 px-3 rounded-lg bg-emerald hover:bg-emerald-bright active:scale-95 text-black font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-emerald-glow"
+                  class="w-full mt-2 py-1.5 px-3 rounded-lg ${
+                    isSelected
+                      ? 'bg-emerald text-black font-bold'
+                      : 'bg-emerald/20 hover:bg-emerald text-emerald hover:text-black border border-emerald/50'
+                  } text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-emerald-glow active:scale-95"
                 >
                   ${isSelected ? '✓ Currently Selected Pod' : 'Lock In 15-Min Reservation'}
                 </button>`
@@ -527,7 +606,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       group.addLayer(marker)
     })
   }, [
-    kiosks,
+    simulatedKiosks,
     gates,
     zones,
     vehicles,
@@ -548,6 +627,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
   // Expose global callback for popup button clicks
   useEffect(() => {
     ;(window as any).__selectCampusKiosk = (id: string) => {
+      setPreviewKioskId(id)
       onSelectKiosk(id)
     }
     return () => {
@@ -591,24 +671,27 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       {/* --------------------------------------------------------------------- */}
       {/* TOP FLOATING TELEMETRY HUD BAR                                        */}
       {/* --------------------------------------------------------------------- */}
-      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between gap-2 pointer-events-none">
-        {/* Status Pill */}
+      <div className="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+        {/* Campus Status & University Panel */}
         <div className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full liquid-glass border border-white/15 text-[11px] font-mono shadow-xl backdrop-blur-md">
           <span className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
           <span className="text-text-primary font-bold">{campusName}</span>
           <span className="text-text-muted">•</span>
           <span className="text-cyan">
-            {kiosks.length} Pods • {vehicles.length} Shuttles Active
+            {simulatedKiosks.length} Pods • {vehicles.length} Shuttles
+          </span>
+          <span className="px-1.5 py-0.2 rounded bg-amber/15 text-amber border border-amber/30 text-[9px] font-bold">
+            DEMO DATA
           </span>
         </div>
 
         {/* Tile & Layer Controls Pill */}
         <div className="pointer-events-auto flex items-center gap-1.5 p-1 rounded-full liquid-glass border border-white/15 shadow-xl backdrop-blur-md">
-          {/* Layer toggles dropdown/buttons */}
+          {/* Gates Layer Filter */}
           <button
             type="button"
             onClick={() => setShowGates(!showGates)}
-            title="Toggle Campus Entrance/Exit Gates"
+            title="Toggle Campus Entrance/Exit Gates Visibility"
             className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
               showGates
                 ? 'bg-emerald/20 text-emerald border border-emerald/40'
@@ -619,10 +702,11 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
             <span className="hidden sm:inline">Gates</span>
           </button>
 
+          {/* Zones Layer Filter */}
           <button
             type="button"
             onClick={() => setShowZones(!showZones)}
-            title="Toggle Student Drop-off Zones"
+            title="Toggle Student Drop-off Zones Visibility"
             className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
               showZones
                 ? 'bg-cyan/20 text-cyan border border-cyan/40'
@@ -633,10 +717,11 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
             <span className="hidden sm:inline">Zones</span>
           </button>
 
+          {/* Shuttles Layer Filter */}
           <button
             type="button"
             onClick={() => setShowVehicles(!showVehicles)}
-            title="Toggle Shuttles & Logistics Vehicles"
+            title="Toggle Shuttles & Logistics Vehicles Visibility"
             className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
               showVehicles
                 ? 'bg-lavender/20 text-lavender border border-lavender/40'
@@ -647,17 +732,18 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
             <span className="hidden sm:inline">Shuttles</span>
           </button>
 
+          {/* Controlled Demo Telemetry Sync Pulse */}
           <button
             type="button"
-            onClick={() =>
-              setTileMode(tileMode === 'carto_dark' ? 'osm_standard' : 'carto_dark')
-            }
-            title="Toggle Tile Style (Dark Telemetry / OSM Standard)"
-            className="px-2.5 py-1 rounded-full text-[10px] font-mono text-text-secondary hover:text-text-primary border border-white/10 hover:border-white/20 transition-all cursor-pointer active:scale-95"
+            onClick={handleSimulateTelemetryPulse}
+            title="Simulate Kiosk Telemetry Status Updates (Demo Mode)"
+            className="px-2.5 py-1 rounded-full text-[10px] font-mono text-amber hover:text-amber-bright bg-amber/10 border border-amber/30 transition-all cursor-pointer active:scale-95 flex items-center gap-1"
           >
-            {tileMode === 'carto_dark' ? 'OSM Classic' : 'Dark Telemetry'}
+            <RefreshCw className={`w-3 h-3 ${isPulsing ? 'animate-spin' : ''}`} />
+            <span className="hidden md:inline">Demo Pulse</span>
           </button>
 
+          {/* Legend Toggle */}
           <button
             type="button"
             onClick={() => setShowLegend(!showLegend)}
@@ -680,7 +766,7 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
         <button
           type="button"
           onClick={handleResetView}
-          title="Reset to Campus Overview"
+          title="Reset to Delhi Demonstration Overview"
           className="w-8 h-8 rounded-full liquid-glass border border-white/15 text-text-primary hover:text-emerald hover:border-emerald/40 transition-all flex items-center justify-center shadow-lg cursor-pointer active:scale-95"
         >
           <Compass className="w-4 h-4" />
@@ -708,10 +794,128 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
       </div>
 
       {/* --------------------------------------------------------------------- */}
+      {/* COMPACT KIOSK DETAIL PANEL (SHOWN ON MARKER CLICK / SELECTION)       */}
+      {/* --------------------------------------------------------------------- */}
+      {activeKiosk && (
+        <div className="absolute bottom-4 left-3 z-20 max-w-[320px] w-full p-3.5 rounded-2xl liquid-glass specular-rim border border-white/15 shadow-2xl backdrop-blur-xl text-xs space-y-2.5">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-cyan/15 text-cyan border border-cyan/30">
+                  {activeKiosk.id}
+                </span>
+                <span
+                  className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border ${
+                    activeKiosk.status === 'OFFLINE'
+                      ? 'bg-red-500/20 text-red-400 border-red-500/40'
+                      : activeKiosk.status === 'BUSY'
+                      ? 'bg-amber/20 text-amber border-amber/40'
+                      : 'bg-emerald/20 text-emerald border-emerald/40'
+                  }`}
+                >
+                  {activeKiosk.status}
+                </span>
+                {activeKiosk.hazmatCertified && (
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber/20 text-amber border border-amber/40 flex items-center gap-0.5">
+                    <Flame className="w-2.5 h-2.5" />
+                    HAZMAT
+                  </span>
+                )}
+              </div>
+              <h4 className="text-xs font-bold text-text-primary mt-1">
+                {activeKiosk.name}
+              </h4>
+            </div>
+            <button
+              type="button"
+              onClick={() => setPreviewKioskId(null)}
+              title="Close panel"
+              className="text-text-muted hover:text-text-primary cursor-pointer p-1 active:scale-95"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Location & Bay */}
+          <div className="space-y-0.5 text-[10px] font-mono text-text-secondary">
+            <div>
+              <span className="text-text-muted">Bay/Gate: </span>
+              <span className="text-text-primary font-bold">{activeKiosk.gateOrBayId || 'BAY-A'}</span>
+            </div>
+            <div>
+              <span className="text-text-muted">Coordinates: </span>
+              <span className="text-cyan">
+                {activeKiosk.coords[0].toFixed(4)}° N, {activeKiosk.coords[1].toFixed(4)}° E
+              </span>
+            </div>
+          </div>
+
+          {/* Occupancy and Capacity Progress */}
+          <div className="space-y-1 pt-1.5 border-t border-white/10">
+            <div className="flex items-center justify-between text-[10px] font-mono">
+              <span className="text-text-muted">Occupancy / Capacity:</span>
+              <span className="text-text-primary font-bold">
+                {activeKiosk.occupancy}/{activeKiosk.capacity} Slots ({activeKiosk.fillLevelPercent}%)
+              </span>
+            </div>
+            <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div
+                className={`h-full ${
+                  activeKiosk.status === 'OFFLINE'
+                    ? 'bg-red-500'
+                    : activeKiosk.status === 'BUSY'
+                    ? 'bg-amber'
+                    : 'bg-emerald'
+                }`}
+                style={{ width: `${activeKiosk.fillLevelPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Last Updated Timestamp & Telemetry Indicator */}
+          <div className="flex items-center justify-between text-[9px] font-mono text-text-muted pt-1 border-t border-white/[0.06]">
+            <span className="flex items-center gap-1">
+              <Clock className="w-2.5 h-2.5" />
+              <span>Sync: {activeKiosk.lastUpdated.split('T')[1]?.slice(0, 5) || '16:45'} UTC</span>
+            </span>
+            <span className="text-emerald font-bold">
+              {activeKiosk.turfBonusMultiplier}x Turf Multiplier
+            </span>
+          </div>
+
+          {/* Demo Data Disclaimer Badge */}
+          <div className="text-[9px] font-mono text-amber bg-amber/10 border border-amber/30 rounded-lg p-1 text-center font-bold">
+            DEMO DATA • SIMULATED DELHI TELEMETRY
+          </div>
+
+          {/* Action Button */}
+          {(!isSwollenHazard || activeKiosk.hazmatCertified) && (
+            <button
+              type="button"
+              onClick={() => onSelectKiosk(activeKiosk.id)}
+              className={`w-full py-1.5 px-3 rounded-xl font-bold text-[11px] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-emerald-glow active:scale-95 ${
+                selectedKioskId === activeKiosk.id
+                  ? 'bg-emerald text-black font-extrabold'
+                  : 'bg-emerald/20 hover:bg-emerald text-emerald hover:text-black border border-emerald/50'
+              }`}
+            >
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>
+                {selectedKioskId === activeKiosk.id
+                  ? '✓ Pod Locked for Drop-Off'
+                  : 'Select Drop-Off Pod'}
+              </span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* --------------------------------------------------------------------- */}
       {/* MAP LEGEND OVERLAY (WHEN TOGGLED)                                     */}
       {/* --------------------------------------------------------------------- */}
       {showLegend && (
-        <div className="absolute bottom-4 left-3 z-10 p-3 rounded-2xl liquid-glass border border-white/15 shadow-2xl backdrop-blur-xl text-xs space-y-2 max-w-[260px]">
+        <div className="absolute bottom-4 left-3 z-30 p-3.5 rounded-2xl liquid-glass border border-white/15 shadow-2xl backdrop-blur-xl text-xs space-y-2.5 max-w-[270px]">
           <div className="flex items-center justify-between text-[10px] font-mono font-bold text-text-muted">
             <span>OPERATIONAL MAP LEGEND</span>
             <button
@@ -726,11 +930,15 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
           <div className="space-y-1.5 text-[11px]">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-md bg-emerald/30 border border-emerald" />
-              <span className="text-text-secondary">Standard E-Waste Pod</span>
+              <span className="text-text-secondary">ACTIVE Kiosk Pod</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-md bg-amber/30 border border-amber" />
-              <span className="text-text-secondary">Hazmat Certified Fire Safe</span>
+              <span className="text-text-secondary">BUSY / High Fill Pod</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-md bg-red-500/30 border border-red-500" />
+              <span className="text-text-secondary">OFFLINE / Maintenance</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-cyan/30 border border-cyan" />
@@ -745,8 +953,14 @@ export const CampusInteractiveMap: React.FC<CampusInteractiveMapProps> = ({
               <span className="text-text-secondary">Transit Arterial Route</span>
             </div>
           </div>
+
+          <div className="pt-1.5 border-t border-white/10 text-[9px] font-mono text-amber">
+            Note: All displayed kiosk positions and telemetry are simulated demonstration data.
+          </div>
         </div>
       )}
     </div>
   )
 }
+
+export default CampusInteractiveMap

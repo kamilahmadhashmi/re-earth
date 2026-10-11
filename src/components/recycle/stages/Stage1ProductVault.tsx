@@ -91,6 +91,7 @@ export const Stage1ProductVault: React.FC = () => {
       batteryType: manualBattery,
       notes: manualNotes.trim()
     })
+    setManualEntryOpen(false)
   }
 
   return (
@@ -227,11 +228,20 @@ export const Stage1ProductVault: React.FC = () => {
           return (
             <motion.div
               key={product.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Select ${product.manufacturer} ${product.model}`}
               whileHover={{ y: -2 }}
               onClick={() => selectProduct(product)}
-              className={`p-3.5 rounded-2xl cursor-pointer transition-all duration-200 border text-left flex flex-col justify-between group ${
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  selectProduct(product)
+                }
+              }}
+              className={`p-3.5 rounded-2xl cursor-pointer transition-all duration-200 border text-left flex flex-col justify-between group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald ${
                 isSelected
-                  ? 'bg-emerald/15 border-emerald/50 shadow-emerald-glow'
+                  ? 'bg-emerald/15 border-emerald/50 shadow-emerald-glow ring-1 ring-emerald/40'
                   : 'liquid-glass-subtle border-white/[0.08] hover:border-white/20 hover:bg-white/[0.05]'
               }`}
             >

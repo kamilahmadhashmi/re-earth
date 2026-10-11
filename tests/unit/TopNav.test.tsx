@@ -66,4 +66,17 @@ describe('TopNav Component', () => {
     fireEvent.click(worldBtn)
     expect(useWorldStore.getState().viewMode).toBe('globe')
   })
+
+  it('does not render any mute/volume button, but keeps rankings and profile badge aligned', () => {
+    render(<TopNav />)
+    // Verify audio / mute button is absent
+    expect(screen.queryByTitle(/Toggle Spatial Synthetic Audio Drone/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Audio On/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Muted$/i)).not.toBeInTheDocument()
+
+    // Verify Rankings button and student badge remain present and aligned
+    expect(screen.getByRole('button', { name: /Rankings/i })).toBeInTheDocument()
+    expect(screen.getByText('Aarav Sharma')).toBeInTheDocument()
+    expect(screen.getByText('STUDENT')).toBeInTheDocument()
+  })
 })

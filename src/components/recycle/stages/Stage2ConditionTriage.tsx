@@ -108,13 +108,25 @@ export const Stage2ConditionTriage: React.FC = () => {
           return (
             <motion.div
               key={opt.id}
+              role="button"
+              tabIndex={0}
+              aria-pressed={isSelected}
+              aria-label={`Select condition: ${opt.title}`}
               whileHover={{ y: -2 }}
               onClick={() => setCondition(opt.id)}
-              className={`p-4 rounded-2xl cursor-pointer border transition-all duration-200 text-left flex flex-col justify-between group relative ${
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setCondition(opt.id)
+                }
+              }}
+              className={`p-4 rounded-2xl cursor-pointer border transition-all duration-200 text-left flex flex-col justify-between group relative focus:outline-none focus-visible:ring-2 ${
+                opt.isHazard ? 'focus-visible:ring-amber' : 'focus-visible:ring-emerald'
+              } ${
                 isSelected
                   ? opt.isHazard
-                    ? 'bg-amber/15 border-amber/60 shadow-amber-glow'
-                    : 'bg-emerald/15 border-emerald/50 shadow-emerald-glow'
+                    ? 'bg-amber/15 border-amber/60 shadow-amber-glow ring-1 ring-amber/50'
+                    : 'bg-emerald/15 border-emerald/50 shadow-emerald-glow ring-1 ring-emerald/50'
                   : opt.isHazard
                   ? 'liquid-glass-subtle border-amber/20 hover:border-amber/40'
                   : 'liquid-glass-subtle border-white/[0.08] hover:border-white/20 hover:bg-white/[0.04]'

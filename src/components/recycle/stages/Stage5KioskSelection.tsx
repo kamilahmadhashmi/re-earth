@@ -71,16 +71,84 @@ export const Stage5KioskSelection: React.FC = () => {
 
   // Telemetry map data for selected campus
   const mapData = useMemo(() => {
-    return (
-      CAMPUS_MAP_DATA[selectedCampusId] || {
-        gates: [],
-        zones: [],
-        vehicles: [],
-        routes: [],
-        events: []
-      }
-    )
-  }, [selectedCampusId])
+    if (CAMPUS_MAP_DATA[selectedCampusId]) {
+      return CAMPUS_MAP_DATA[selectedCampusId]
+    }
+    const [cLat, cLng] = [currentCampus.lat, currentCampus.lng]
+    return {
+      gates: [
+        {
+          id: `gate-${selectedCampusId}-main`,
+          campusId: selectedCampusId,
+          name: `${currentCampus.shortName} Main Campus Gate`,
+          type: 'entrance' as const,
+          coords: [cLat - 0.0012, cLng - 0.0015] as [number, number],
+          status: 'open' as const,
+          description: `Primary access portal for ${currentCampus.name}`,
+          operatingHours: '24/7 RFID Smart Access',
+          securityCheck: 'Automated Campus Barrier'
+        }
+      ],
+      zones: [
+        {
+          id: `zone-${selectedCampusId}-alpha`,
+          campusId: selectedCampusId,
+          name: `${currentCampus.shortName} Central Drop Bay`,
+          code: 'BAY-1',
+          coords: [cLat + 0.0008, cLng + 0.001] as [number, number],
+          radiusMeters: 40,
+          capacityBays: 6,
+          occupiedBays: 2,
+          status: 'available' as const,
+          zoneType: 'express_student' as const,
+          rules: 'Dedicated electronics drop-off and locker allocation.',
+          acceptedVehicles: 'All vehicles & pedestrians'
+        }
+      ],
+      vehicles: [
+        {
+          id: `veh-${selectedCampusId}-01`,
+          campusId: selectedCampusId,
+          name: `${currentCampus.shortName} Eco Shuttle #1`,
+          callSign: 'SHUTTLE-1',
+          vehicleType: 'electric_shuttle' as const,
+          status: 'en_route' as const,
+          currentCoords: [cLat - 0.0006, cLng - 0.0008] as [number, number],
+          headingDeg: 45,
+          speedKmh: 15,
+          etaMinutes: 2,
+          destinationZoneId: `zone-${selectedCampusId}-alpha`,
+          driverOrSystem: 'Autonomous Transit Pilot',
+          passengersOrLoad: '4 Students Onboard',
+          batteryPercent: 88
+        }
+      ],
+      routes: [
+        {
+          id: `route-${selectedCampusId}-loop`,
+          campusId: selectedCampusId,
+          name: `${currentCampus.shortName} Campus Transit Arterial`,
+          color: '#64D2FF',
+          coordinates: [
+            [cLat - 0.0012, cLng - 0.0015],
+            [cLat - 0.0006, cLng - 0.0008],
+            [cLat + 0.0008, cLng + 0.001]
+          ] as [number, number][]
+        }
+      ],
+      events: [
+        {
+          id: `evt-${selectedCampusId}-1`,
+          campusId: selectedCampusId,
+          timestamp: '2 mins ago',
+          type: 'locker_reserved' as const,
+          title: 'Locker Slot Reserved',
+          description: 'Student reserve lock active for 15 mins.',
+          actor: 'Campus Smart Locker'
+        }
+      ]
+    }
+  }, [selectedCampusId, currentCampus])
 
   // Filtered kiosks with eligibility
   const kiosksWithEligibility = useMemo(() => {
@@ -154,8 +222,29 @@ export const Stage5KioskSelection: React.FC = () => {
     })
   }, [kiosksWithEligibility, isSwollenHazard, filterHazmatOnly, searchQuery])
 
-  const selectedKiosk = displayKiosks.find((k) => k.id === selectedKioskId)
-  const canProceed = !!selectedKiosk && selectedKiosk.isEligible
+  const selectedKiosk = useMemo(() => {
+    return (
+      displayKiosks.find((k) => k.id === selectedKioskId) ||
+      CAMPUS_KIOSKS.find((k) => k.id === selectedKioskId)
+    )
+  }, [displayKiosks, selectedKioskId])
+
+  const canProceed = useMemo(() => {
+    if (!selectedKiosk) return false
+    const hazmatPass = !isSwollenHazard || selectedKiosk.hazmatCertified
+    const categoryPass = selectedKiosk.acceptedCategories.includes(deviceCategory)
+    return hazmatPass && categoryPass
+  }, [selectedKiosk, isSwollenHazard, deviceCategory])
+
+  const handleSelectKiosk = (id: string) => {
+    selectKiosk(id)
+    const k = CAMPUS_KIOSKS.find((kiosk) => kiosk.id === id)
+    if (k && k.campusId && k.campusId !== selectedCampusId) {
+      setSelectedCampusId(k.campusId)
+    }
+    setSelectedVehicle(null)
+    setSelectedZone(null)
+  }
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -207,8 +296,10 @@ export const Stage5KioskSelection: React.FC = () => {
             {/* Freshness Badge */}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-[11px] font-mono text-text-muted">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald" />
-              <span className="text-emerald font-bold">Live Telemetry</span>
-              <span className="text-text-muted hidden sm:inline">• Localhost &lt; 10ms</span>
+              <span className="text-emerald font-bold">Delhi Telemetry</span>
+              <span className="px-1.5 py-0.2 rounded bg-amber/15 text-amber border border-amber/30 text-[9px] font-bold">
+                DEMO DATA
+              </span>
             </div>
 
             {/* Refresh Action */}
@@ -259,9 +350,7 @@ export const Stage5KioskSelection: React.FC = () => {
             selectedVehicleId={selectedVehicle?.id}
             selectedZoneId={selectedZone?.id}
             onSelectKiosk={(id) => {
-              selectKiosk(id)
-              setSelectedVehicle(null)
-              setSelectedZone(null)
+              handleSelectKiosk(id)
             }}
             onSelectVehicle={(veh) => {
               setSelectedVehicle(veh)
@@ -402,13 +491,23 @@ export const Stage5KioskSelection: React.FC = () => {
                     return (
                       <div
                         key={kiosk.id}
-                        onClick={() => isEligible && selectKiosk(kiosk.id)}
-                        className={`p-3 rounded-xl border transition-all duration-200 text-left relative ${
+                        role="button"
+                        tabIndex={isEligible ? 0 : -1}
+                        aria-pressed={isSelected}
+                        aria-disabled={!isEligible}
+                        onClick={() => isEligible && handleSelectKiosk(kiosk.id)}
+                        onKeyDown={(e) => {
+                          if (isEligible && (e.key === 'Enter' || e.key === ' ')) {
+                            e.preventDefault()
+                            handleSelectKiosk(kiosk.id)
+                          }
+                        }}
+                        className={`p-3 rounded-xl border transition-all duration-200 text-left relative focus:outline-none ${
                           !isEligible
                             ? 'opacity-40 bg-white/[0.01] border-white/[0.04] cursor-not-allowed'
                             : isSelected
-                            ? 'bg-emerald/15 border-emerald/50 shadow-emerald-glow cursor-pointer'
-                            : 'bg-white/[0.03] border-white/[0.08] hover:border-white/20 hover:bg-white/[0.05] cursor-pointer'
+                            ? 'bg-emerald/15 border-emerald/50 shadow-emerald-glow cursor-pointer ring-1 ring-emerald/40'
+                            : 'bg-white/[0.03] border-white/[0.08] hover:border-white/20 hover:bg-white/[0.05] cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -418,6 +517,24 @@ export const Stage5KioskSelection: React.FC = () => {
                                 {kiosk.distanceKm < 1
                                   ? `${Math.round(kiosk.distanceKm * 1000)}m AWAY`
                                   : `${kiosk.distanceKm} km`}
+                              </span>
+
+                              {kiosk.gateOrBayId && (
+                                <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-white/5 text-text-secondary border border-white/10">
+                                  {kiosk.gateOrBayId.split(' ')[0]}
+                                </span>
+                              )}
+
+                              <span
+                                className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border ${
+                                  kiosk.status === 'OFFLINE'
+                                    ? 'bg-red-500/20 text-red-400 border-red-500/40'
+                                    : kiosk.status === 'BUSY'
+                                    ? 'bg-amber/20 text-amber border-amber/40'
+                                    : 'bg-emerald/20 text-emerald border-emerald/40'
+                                }`}
+                              >
+                                {kiosk.status}
                               </span>
 
                               {kiosk.hazmatCertified && (
@@ -650,9 +767,14 @@ export const Stage5KioskSelection: React.FC = () => {
               </div>
               <div className="text-[11px] text-text-primary">
                 Assigned Drop-Point: <span className="font-bold">{selectedKiosk.name}</span>
+                {selectedKiosk.gateOrBayId && (
+                  <span className="text-cyan font-mono text-[10px] ml-1.5">
+                    ({selectedKiosk.gateOrBayId})
+                  </span>
+                )}
               </div>
               <div className="text-[10px] font-mono text-text-secondary">
-                Locker slot held for 15 minutes once Ephemeral QR pass is generated.
+                Locker slot held for 15 minutes once Ephemeral QR pass is generated. (Simulated Demo Pod)
               </div>
             </div>
           )}

@@ -40,3 +40,6 @@ take_screenshots.cjs
 
 # OS generated files
 Thumbs.db
+
+# Scratch and test artifacts
+scratch/

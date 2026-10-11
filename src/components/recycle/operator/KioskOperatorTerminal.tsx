@@ -18,10 +18,12 @@ import {
   Search,
   RotateCcw,
   Sparkles,
-  Smartphone
+  Smartphone,
+  Printer
 } from 'lucide-react'
 import { useRecycleStore } from '../../../store/useRecycleStore'
 import { useAuthStore } from '../../../store/useAuthStore'
+import { PrintableCertificateModal } from '../PrintableCertificate'
 
 export const KioskOperatorTerminal: React.FC = () => {
   const { currentUser } = useAuthStore()
@@ -50,11 +52,14 @@ export const KioskOperatorTerminal: React.FC = () => {
   const [operatorName, setOperatorName] = useState(defaultOperatorName)
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
   const [isAccepting, setIsAccepting] = useState(false)
+  const [acceptError, setAcceptError] = useState<string | null>(null)
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false)
 
   const pass = operatorInspectedPass
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setAcceptError(null)
     if (operatorInputToken.trim()) {
       lookupPass(operatorInputToken.trim())
     }
@@ -67,31 +72,60 @@ export const KioskOperatorTerminal: React.FC = () => {
   )
   const isScaleWithinTolerance = variancePercent <= 5.0
 
-  // All checklist items must be checked to enable acceptance
-  const allChecksSatisfied =
-    operatorChecklist.modelMatches &&
-    operatorChecklist.conditionMatches &&
-    operatorChecklist.scaleWeightVerified &&
-    operatorChecklist.batterySafetyVerified &&
+  // Count satisfied inspection items
+  const completedChecksCount = [
+    operatorChecklist.modelMatches,
+    operatorChecklist.conditionMatches,
+    operatorChecklist.scaleWeightVerified,
+    operatorChecklist.batterySafetyVerified,
     operatorChecklist.wipeVerified
+  ].filter(Boolean).length
+
+  // All checklist items must be checked to enable acceptance
+  const allChecksSatisfied = completedChecksCount === 5
 
   const isAlreadyAccepted = pass?.status === 'accepted'
   const isRejected = pass?.status === 'rejected'
 
   const handleAccept = async () => {
-    if (!pass || isAlreadyAccepted || !allChecksSatisfied) return
+    setAcceptError(null)
+    if (!pass) {
+      setAcceptError('Please lookup an active pass reference before completing inspection.')
+      return
+    }
+    if (isAlreadyAccepted) {
+      setAcceptError(`Pass ${pass.passId} has already been accepted and redeemed on ${pass.receipt?.acceptedAt}. Duplicate redemptions are prohibited.`)
+      return
+    }
+    if (!allChecksSatisfied) {
+      const remaining = 5 - completedChecksCount
+      setAcceptError(`Physical inspection incomplete: All 5 criteria must be checked (${remaining} remaining).`)
+      return
+    }
+    if (!isScaleWithinTolerance) {
+      setAcceptError(`Scale weight variance (${variancePercent.toFixed(1)}%) exceeds ±5% tolerance threshold (nominal ${nominalMass}g vs measured ${simulatedScaleGrams}g).`)
+      return
+    }
+    if (pass.isHazmat && !operatorChecklist.batterySafetyVerified) {
+      setAcceptError('Critical safety failure: Hazardous thermal cell containment must be verified before intake.')
+      return
+    }
+
     setIsAccepting(true)
-
-    // Trigger celebration confetti
-    confetti({
-      particleCount: 120,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#30D158', '#64D2FF', '#FFD60A', '#FFFFFF']
-    })
-
-    await acceptCurrentInspection(operatorName)
-    setIsAccepting(false)
+    try {
+      await acceptCurrentInspection(operatorName)
+      // Trigger celebration confetti
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#30D158', '#64D2FF', '#FFD60A', '#FFFFFF']
+      })
+    } catch (err: any) {
+      setAcceptError(err.message || 'Inspection persistence failed. Please verify kiosk network connection.')
+    } finally {
+      setIsAccepting(false)
+    }
   }
 
   const handleReject = async () => {
@@ -199,17 +233,28 @@ export const KioskOperatorTerminal: React.FC = () => {
         >
           {/* DUPLICATE REDEMPTION WARNING */}
           {isAlreadyAccepted && (
-            <div className="p-4 rounded-2xl bg-emerald/15 border border-emerald/40 shadow-emerald-glow flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald shrink-0 mt-0.5" />
-              <div className="text-xs">
-                <h4 className="font-bold text-emerald text-sm">
-                  Pass Already Accepted & Redeemed
-                </h4>
-                <p className="text-text-primary mt-1">
-                  Certificate #{pass.receipt?.certificateId} was issued on {pass.receipt?.acceptedAt} by {pass.receipt?.operatorName}.
-                  Duplicate deposit attempts are strictly prevented.
-                </p>
+            <div className="p-4 rounded-2xl bg-emerald/15 border border-emerald/40 shadow-emerald-glow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald shrink-0 mt-0.5" />
+                <div className="text-xs">
+                  <h4 className="font-bold text-emerald text-sm">
+                    Pass Already Accepted & Redeemed
+                  </h4>
+                  <p className="text-text-primary mt-1">
+                    Certificate #{pass.receipt?.certificateId} was issued on {pass.receipt?.acceptedAt} by {pass.receipt?.operatorName}.
+                    Duplicate deposit attempts are strictly prevented.
+                  </p>
+                </div>
               </div>
+
+              <button
+                type="button"
+                onClick={() => setIsPrintModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald text-background font-bold text-xs shadow-emerald-glow hover:brightness-105 active:scale-95 transition-all cursor-pointer shrink-0"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Print Certificate</span>
+              </button>
             </div>
           )}
 
@@ -306,30 +351,46 @@ export const KioskOperatorTerminal: React.FC = () => {
                   <ShieldCheck className="w-3.5 h-3.5" />
                   PHYSICAL INSPECTION CRITERIA
                 </span>
-                <span className="text-[10px] font-mono text-text-muted">
-                  5 of 5 Required
+                <span className="text-[10px] font-mono font-bold text-emerald" aria-live="polite">
+                  {completedChecksCount} of 5 Completed
                 </span>
               </div>
 
               <div className="space-y-2 text-xs">
                 {/* 1. Model match */}
-                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
-                  isAlreadyAccepted
-                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
-                    : operatorChecklist.modelMatches
-                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
-                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
-                }`}>
+                <label
+                  htmlFor="chk-modelMatches"
+                  className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none focus-within:ring-2 focus-within:ring-cyan focus-within:ring-offset-2 focus-within:ring-offset-[#131922] ${
+                    isAlreadyAccepted
+                      ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                      : operatorChecklist.modelMatches
+                      ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                      : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                  }`}
+                >
                   <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
                     <input
+                      id="chk-modelMatches"
                       type="checkbox"
                       checked={operatorChecklist.modelMatches}
                       disabled={isAlreadyAccepted}
-                      onChange={() => toggleOperatorChecklist('modelMatches')}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                      onChange={() => {
+                        setAcceptError(null)
+                        toggleOperatorChecklist('modelMatches')
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          if (!isAlreadyAccepted) {
+                            setAcceptError(null)
+                            toggleOperatorChecklist('modelMatches')
+                          }
+                        }
+                      }}
+                      className="peer sr-only"
                     />
                     <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-cyan ${
                         operatorChecklist.modelMatches
                           ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
                           : 'border-white/20 bg-white/5'
@@ -338,7 +399,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                       {operatorChecklist.modelMatches && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <span className={`font-bold block transition-colors ${
                       operatorChecklist.modelMatches ? 'text-emerald' : 'text-text-primary'
                     }`}>
@@ -351,23 +412,39 @@ export const KioskOperatorTerminal: React.FC = () => {
                 </label>
 
                 {/* 2. Condition match */}
-                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
-                  isAlreadyAccepted
-                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
-                    : operatorChecklist.conditionMatches
-                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
-                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
-                }`}>
+                <label
+                  htmlFor="chk-conditionMatches"
+                  className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none focus-within:ring-2 focus-within:ring-cyan focus-within:ring-offset-2 focus-within:ring-offset-[#131922] ${
+                    isAlreadyAccepted
+                      ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                      : operatorChecklist.conditionMatches
+                      ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                      : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                  }`}
+                >
                   <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
                     <input
+                      id="chk-conditionMatches"
                       type="checkbox"
                       checked={operatorChecklist.conditionMatches}
                       disabled={isAlreadyAccepted}
-                      onChange={() => toggleOperatorChecklist('conditionMatches')}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                      onChange={() => {
+                        setAcceptError(null)
+                        toggleOperatorChecklist('conditionMatches')
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          if (!isAlreadyAccepted) {
+                            setAcceptError(null)
+                            toggleOperatorChecklist('conditionMatches')
+                          }
+                        }
+                      }}
+                      className="peer sr-only"
                     />
                     <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-cyan ${
                         operatorChecklist.conditionMatches
                           ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
                           : 'border-white/20 bg-white/5'
@@ -376,7 +453,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                       {operatorChecklist.conditionMatches && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <span className={`font-bold block transition-colors ${
                       operatorChecklist.conditionMatches ? 'text-emerald' : 'text-text-primary'
                     }`}>
@@ -389,23 +466,39 @@ export const KioskOperatorTerminal: React.FC = () => {
                 </label>
 
                 {/* 3. Scale weight */}
-                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
-                  isAlreadyAccepted
-                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
-                    : operatorChecklist.scaleWeightVerified
-                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
-                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
-                }`}>
+                <label
+                  htmlFor="chk-scaleWeightVerified"
+                  className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none focus-within:ring-2 focus-within:ring-cyan focus-within:ring-offset-2 focus-within:ring-offset-[#131922] ${
+                    isAlreadyAccepted
+                      ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                      : operatorChecklist.scaleWeightVerified
+                      ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                      : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                  }`}
+                >
                   <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
                     <input
+                      id="chk-scaleWeightVerified"
                       type="checkbox"
                       checked={operatorChecklist.scaleWeightVerified}
                       disabled={isAlreadyAccepted}
-                      onChange={() => toggleOperatorChecklist('scaleWeightVerified')}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                      onChange={() => {
+                        setAcceptError(null)
+                        toggleOperatorChecklist('scaleWeightVerified')
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          if (!isAlreadyAccepted) {
+                            setAcceptError(null)
+                            toggleOperatorChecklist('scaleWeightVerified')
+                          }
+                        }
+                      }}
+                      className="peer sr-only"
                     />
                     <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-cyan ${
                         operatorChecklist.scaleWeightVerified
                           ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
                           : 'border-white/20 bg-white/5'
@@ -414,7 +507,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                       {operatorChecklist.scaleWeightVerified && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <span className={`font-bold block transition-colors ${
                       operatorChecklist.scaleWeightVerified ? 'text-emerald' : 'text-text-primary'
                     }`}>
@@ -427,23 +520,39 @@ export const KioskOperatorTerminal: React.FC = () => {
                 </label>
 
                 {/* 4. Battery safety */}
-                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
-                  isAlreadyAccepted
-                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
-                    : operatorChecklist.batterySafetyVerified
-                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
-                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
-                }`}>
+                <label
+                  htmlFor="chk-batterySafetyVerified"
+                  className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none focus-within:ring-2 focus-within:ring-cyan focus-within:ring-offset-2 focus-within:ring-offset-[#131922] ${
+                    isAlreadyAccepted
+                      ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                      : operatorChecklist.batterySafetyVerified
+                      ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                      : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                  }`}
+                >
                   <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
                     <input
+                      id="chk-batterySafetyVerified"
                       type="checkbox"
                       checked={operatorChecklist.batterySafetyVerified}
                       disabled={isAlreadyAccepted}
-                      onChange={() => toggleOperatorChecklist('batterySafetyVerified')}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                      onChange={() => {
+                        setAcceptError(null)
+                        toggleOperatorChecklist('batterySafetyVerified')
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          if (!isAlreadyAccepted) {
+                            setAcceptError(null)
+                            toggleOperatorChecklist('batterySafetyVerified')
+                          }
+                        }
+                      }}
+                      className="peer sr-only"
                     />
                     <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-cyan ${
                         operatorChecklist.batterySafetyVerified
                           ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
                           : 'border-white/20 bg-white/5'
@@ -452,7 +561,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                       {operatorChecklist.batterySafetyVerified && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <span className={`font-bold block transition-colors ${
                       operatorChecklist.batterySafetyVerified ? 'text-emerald' : 'text-text-primary'
                     }`}>
@@ -467,23 +576,39 @@ export const KioskOperatorTerminal: React.FC = () => {
                 </label>
 
                 {/* 5. Wipe sanitized */}
-                <label className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none ${
-                  isAlreadyAccepted
-                    ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
-                    : operatorChecklist.wipeVerified
-                    ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
-                    : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
-                }`}>
+                <label
+                  htmlFor="chk-wipeVerified"
+                  className={`p-3 rounded-xl border flex items-start gap-3 transition-all select-none focus-within:ring-2 focus-within:ring-cyan focus-within:ring-offset-2 focus-within:ring-offset-[#131922] ${
+                    isAlreadyAccepted
+                      ? 'bg-white/[0.02] border-white/[0.04] opacity-75 cursor-not-allowed'
+                      : operatorChecklist.wipeVerified
+                      ? 'bg-emerald/10 border-emerald/40 cursor-pointer hover:bg-emerald/15 shadow-emerald-glow'
+                      : 'bg-white/[0.03] border-white/[0.08] cursor-pointer hover:bg-white/[0.06] hover:border-white/20'
+                  }`}
+                >
                   <div className="relative flex items-center justify-center mt-0.5 shrink-0 w-5 h-5">
                     <input
+                      id="chk-wipeVerified"
                       type="checkbox"
                       checked={operatorChecklist.wipeVerified}
                       disabled={isAlreadyAccepted}
-                      onChange={() => toggleOperatorChecklist('wipeVerified')}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 disabled:cursor-not-allowed"
+                      onChange={() => {
+                        setAcceptError(null)
+                        toggleOperatorChecklist('wipeVerified')
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          if (!isAlreadyAccepted) {
+                            setAcceptError(null)
+                            toggleOperatorChecklist('wipeVerified')
+                          }
+                        }
+                      }}
+                      className="peer sr-only"
                     />
                     <div
-                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none ${
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all pointer-events-none peer-focus-visible:ring-2 peer-focus-visible:ring-cyan ${
                         operatorChecklist.wipeVerified
                           ? 'bg-emerald border-emerald text-black shadow-emerald-glow'
                           : 'border-white/20 bg-white/5'
@@ -492,7 +617,7 @@ export const KioskOperatorTerminal: React.FC = () => {
                       {operatorChecklist.wipeVerified && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <span className={`font-bold block transition-colors ${
                       operatorChecklist.wipeVerified ? 'text-emerald' : 'text-text-primary'
                     }`}>
@@ -507,6 +632,14 @@ export const KioskOperatorTerminal: React.FC = () => {
                 </label>
               </div>
 
+              {/* MEANINGFUL VALIDATION ERROR DISPLAY */}
+              {acceptError && (
+                <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <span className="leading-snug">{acceptError}</span>
+                </div>
+              )}
+
               {/* ACTION BUTTONS */}
               <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
                 <button
@@ -518,19 +651,32 @@ export const KioskOperatorTerminal: React.FC = () => {
                   Reject / Flag Mismatch
                 </button>
 
-                <button
-                  type="button"
-                  disabled={isAlreadyAccepted || !allChecksSatisfied || isAccepting}
-                  onClick={handleAccept}
-                  className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
-                    !isAlreadyAccepted && allChecksSatisfied
-                      ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
-                      : 'bg-white/10 text-text-muted cursor-not-allowed opacity-50'
-                  }`}
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{isAlreadyAccepted ? 'Accepted' : 'Accept & Unlock Hatch'}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  {isAlreadyAccepted && (
+                    <button
+                      type="button"
+                      onClick={() => setIsPrintModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-text-primary text-xs font-bold border border-white/15 transition-all cursor-pointer active:scale-95"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Print Certificate</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    disabled={isAlreadyAccepted || isAccepting}
+                    onClick={handleAccept}
+                    className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 ${
+                      !isAlreadyAccepted && allChecksSatisfied
+                        ? 'bg-emerald text-background shadow-emerald-glow hover:brightness-105 active:scale-[0.98] cursor-pointer'
+                        : 'bg-white/10 text-text-muted hover:bg-white/15 cursor-pointer opacity-70'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>{isAlreadyAccepted ? 'Accepted & Redeemed' : isAccepting ? 'Processing...' : 'Accept & Unlock Hatch'}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -610,6 +756,16 @@ export const KioskOperatorTerminal: React.FC = () => {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* PRINTABLE OFFICIAL CERTIFICATE MODAL */}
+      <AnimatePresence>
+        {isPrintModalOpen && pass && (
+          <PrintableCertificateModal
+            pass={pass}
+            onClose={() => setIsPrintModalOpen(false)}
+          />
         )}
       </AnimatePresence>
     </div>

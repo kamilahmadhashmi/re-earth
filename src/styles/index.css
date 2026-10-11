@@ -382,4 +382,98 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
   animation: radar-sonar-pulse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* ========================================================================= */
+/* STRICT SINGLE-PAGE PRINT RULES FOR CERTIFICATES AND PASSES                */
+/* ========================================================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0b0f14 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .printable-certificate-container,
+  .printable-certificate-container * {
+    visibility: visible !important;
+  }
+
+  .printable-certificate-container {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 194mm !important;
+    max-height: 275mm !important;
+    margin: 0 auto !important;
+    padding: 16px 20px !important;
+    background: #ffffff !important;
+    color: #0b0f14 !important;
+    border: 2px solid #0b0f14 !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: hidden !important;
+    z-index: 9999999 !important;
+  }
+
+  .printable-certificate-container h1,
+  .printable-certificate-container h2,
+  .printable-certificate-container h3,
+  .printable-certificate-container strong,
+  .printable-certificate-container b {
+    color: #0b0f14 !important;
+  }
+
+  .printable-certificate-container p,
+  .printable-certificate-container span,
+  .printable-certificate-container div {
+    color: #1e293b !important;
+  }
+
+  .printable-certificate-container .text-emerald {
+    color: #059669 !important;
+  }
+
+  .printable-certificate-container .text-cyan {
+    color: #0284c7 !important;
+  }
+
+  .printable-certificate-container .text-amber {
+    color: #d97706 !important;
+  }
+
+  .printable-certificate-container .text-lavender {
+    color: #7c3aed !important;
+  }
+
+  .printable-certificate-container .bg-emerald\/10,
+  .printable-certificate-container .bg-emerald\/15 {
+    background: #f0fdf4 !important;
+    border-color: #86efac !important;
+  }
+
+  .printable-certificate-container .bg-white\/\[0\.02\],
+  .printable-certificate-container .bg-white\/\[0\.03\],
+  .printable-certificate-container .bg-black\/30 {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+  }
+}
+
 

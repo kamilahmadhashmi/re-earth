@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { useRecycleStore } from '../../../store/useRecycleStore'
 import { useAuthStore } from '../../../store/useAuthStore'
+import { PrintableCertificateModal } from '../PrintableCertificate'
 
 export const Stage6EphemeralQRPass: React.FC = () => {
   const { currentUser } = useAuthStore()
@@ -33,6 +34,7 @@ export const Stage6EphemeralQRPass: React.FC = () => {
   const [qrDataUrl, setQrDataUrl] = useState<string>('')
   const [copied, setCopied] = useState(false)
   const [timeLeft, setTimeLeft] = useState(900) // 15 mins in seconds
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false)
 
   useEffect(() => {
     if (activePass?.qrPayload) {
@@ -235,11 +237,11 @@ export const Stage6EphemeralQRPass: React.FC = () => {
         <div className="px-5 py-4 border-t border-white/10 bg-white/[0.02] flex items-center justify-between gap-2">
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={() => setIsPrintModalOpen(true)}
             className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs text-text-muted hover:text-text-primary hover:bg-white/5 transition-all border border-white/10 cursor-pointer active:scale-95"
           >
             <Printer className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Print / Save Pass</span>
+            <span className="hidden sm:inline">Print / Save Pass (1 Page)</span>
           </button>
 
           {/* FOR STUDENTS: VIEW IN MY TECH VAULT. FOR ADMIN/OPERATOR: SIMULATE TERMINAL */}
@@ -283,6 +285,14 @@ export const Stage6EphemeralQRPass: React.FC = () => {
           <span>Prepare another device submission</span>
         </button>
       </div>
+
+      {/* PRINTABLE OFFICIAL CERTIFICATE MODAL */}
+      {isPrintModalOpen && activePass && (
+        <PrintableCertificateModal
+          pass={activePass}
+          onClose={() => setIsPrintModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

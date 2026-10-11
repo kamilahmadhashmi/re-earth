@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { useRecycleStore, type EphemeralPass } from '../../../store/useRecycleStore'
 import { useAuthStore } from '../../../store/useAuthStore'
+import { PrintableCertificateModal } from '../PrintableCertificate'
 
 export const TechVaultDrawer: React.FC = () => {
   const { savedPasses, lookupPass, setActiveTab } = useRecycleStore()
@@ -218,7 +219,7 @@ export const TechVaultDrawer: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                    {isAccepted && p.receipt && (
+                    {isAccepted ? (
                       <button
                         type="button"
                         onClick={() => setSelectedReceiptPass(p)}
@@ -226,6 +227,15 @@ export const TechVaultDrawer: React.FC = () => {
                       >
                         <Award className="w-3.5 h-3.5" />
                         <span>View Certificate</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedReceiptPass(p)}
+                        className="px-3 py-1.5 rounded-full text-xs font-semibold text-cyan hover:bg-cyan/10 border border-cyan/30 transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Print Pass</span>
                       </button>
                     )}
 
@@ -274,97 +284,12 @@ export const TechVaultDrawer: React.FC = () => {
       </div>
 
       {/* MODAL DIALOG FOR CERTIFICATE DETAIL */}
-      <AnimatePresence>
-        {selectedReceiptPass?.receipt && (
-          <div
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setSelectedReceiptPass(null)
-            }}
-            className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md cursor-pointer"
-          >
-            <motion.div
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-lg liquid-glass specular-rim p-6 rounded-3xl border border-emerald/40 shadow-2xl space-y-4 cursor-default"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-emerald/20 flex items-center justify-center text-emerald">
-                    <Award className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-text-primary">
-                      Official E-Waste Diversion Certificate
-                    </h3>
-                    <p className="text-[10px] font-mono text-emerald">
-                      CERT ID: {selectedReceiptPass.receipt.certificateId}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedReceiptPass(null)}
-                  className="px-3 py-1 rounded-full text-xs text-text-muted hover:text-text-primary border border-white/10 cursor-pointer active:scale-95 transition-all"
-                >
-                  Close
-                </button>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] space-y-2 text-xs font-mono">
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Item Diverted:</span>
-                  <span className="font-bold text-text-primary">
-                    {selectedReceiptPass.productName} ({selectedReceiptPass.variant})
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Certified Mass:</span>
-                  <span className="font-bold text-emerald">
-                    {selectedReceiptPass.receipt.verifiedWeightGrams} g (
-                    {selectedReceiptPass.receipt.kgAddedToCampus} kg)
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Collection Pod:</span>
-                  <span className="text-text-primary">{selectedReceiptPass.receipt.kioskName}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Campus Host:</span>
-                  <span className="text-text-primary">{selectedReceiptPass.receipt.campusName}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Attending Operator:</span>
-                  <span className="text-text-primary">{selectedReceiptPass.receipt.operatorName}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Verification Timestamp:</span>
-                  <span className="text-text-primary">{selectedReceiptPass.receipt.acceptedAt}</span>
-                </div>
-                <div className="flex justify-between pt-2 border-t border-white/[0.06]">
-                  <span className="text-text-muted">Cryptographic Proof:</span>
-                  <span className="text-[10px] text-cyan font-mono">
-                    {selectedReceiptPass.receipt.digitalSignature}
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-xs text-text-primary flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
-                >
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Print Certificate</span>
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {selectedReceiptPass && (
+        <PrintableCertificateModal
+          pass={selectedReceiptPass}
+          onClose={() => setSelectedReceiptPass(null)}
+        />
+      )}
     </div>
   )
 }
