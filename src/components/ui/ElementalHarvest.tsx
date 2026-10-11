@@ -81,7 +81,7 @@ export const ElementalHarvest: React.FC = () => {
             </span>
           </div>
         </div>
-        <span className="text-xs font-mono text-emerald bg-emerald/10 px-2 py-0.5 rounded-md border border-emerald/20 font-medium">
+        <span className="text-xs font-semibold text-emerald bg-emerald/10 px-2 py-0.5 rounded-md border border-emerald/20">
           70x Ore Concentration
         </span>
       </div>
@@ -125,7 +125,7 @@ export const ElementalHarvest: React.FC = () => {
             <span className="text-sm font-bold text-text-primary" style={{ color: selectedYield.color }}>
               {selectedYield.name}
             </span>
-            <span className="text-xs font-mono font-medium text-emerald bg-emerald/10 px-2 py-0.5 rounded-md border border-emerald/25">
+            <span className="text-xs font-semibold text-emerald bg-emerald/10 px-2 py-0.5 rounded-md border border-emerald/25">
               {selectedYield.concentrationMultiplier}
             </span>
           </div>
@@ -133,7 +133,7 @@ export const ElementalHarvest: React.FC = () => {
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="p-3 rounded-md bg-emerald/10 border border-emerald/25 space-y-1">
               <span className="text-xs font-medium text-emerald block">
-                RE-EARTH Collegiate Recovery:
+                Re-Earth Collegiate Recovery:
               </span>
               <span className="text-sm font-bold font-mono text-text-primary block">
                 {selectedYield.ewasteYieldPerTonne}
@@ -152,8 +152,8 @@ export const ElementalHarvest: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs font-mono pt-1 text-text-muted">
-            <span>Terminal Benchmark Value:</span>
+          <div className="flex items-center justify-between text-xs pt-1 text-text-muted">
+            <span>Benchmark Market Value</span>
             <span className="font-bold text-copper font-mono">{selectedYield.marketValueKg}</span>
           </div>
         </motion.div>

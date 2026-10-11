@@ -295,13 +295,6 @@ export const SiliconSchematicBackground: React.FC = () => {
           {/* Micro Power Indicator Dot */}
           <circle cx="20" cy="22" r="2" fill="#34D399" opacity="0.85" />
           <circle cx="20" cy="22" r="5" fill="none" stroke="#34D399" strokeWidth="0.6" opacity="0.4" />
-
-          <text x="65" y="48" fill="#F1F5F9" fontSize="8" fontFamily="monospace" textAnchor="middle" letterSpacing="1.2" opacity="0.75" fontWeight="600">
-            ASIC // RE-EARTH
-          </text>
-          <text x="65" y="62" fill="#38BDF8" fontSize="6.5" fontFamily="monospace" textAnchor="middle" letterSpacing="0.8" opacity="0.65">
-            0.8nm CIRCULAR DIE
-          </text>
         </g>
 
         {/* Secondary IC Footprint — BOTTOM RIGHT (PMIC // RECOVERY) */}
@@ -314,13 +307,6 @@ export const SiliconSchematicBackground: React.FC = () => {
           {/* Micro Power Indicator Dot */}
           <circle cx="20" cy="20" r="2" fill="#38BDF8" opacity="0.85" />
           <circle cx="20" cy="20" r="5" fill="none" stroke="#38BDF8" strokeWidth="0.6" opacity="0.4" />
-
-          <text x="62" y="46" fill="#F1F5F9" fontSize="7.5" fontFamily="monospace" textAnchor="middle" letterSpacing="1.2" opacity="0.75" fontWeight="600">
-            PMIC // RECOVERY
-          </text>
-          <text x="62" y="58" fill="#34D399" fontSize="6" fontFamily="monospace" textAnchor="middle" letterSpacing="0.8" opacity="0.65">
-            WEEE DUAL-LOOP
-          </text>
         </g>
 
         {/* Circular Recovery Nodes at Trace Junctions */}
@@ -329,19 +315,6 @@ export const SiliconSchematicBackground: React.FC = () => {
         <use href="#circular-recovery-node" x="550" y="890" />
         <use href="#circular-recovery-node" x="1410" y="870" />
 
-        {/* ================================================================= */}
-        {/* Architectural Micro-Typography Annotations (Desktop Only)          */}
-        {/* ================================================================= */}
-        <g className="hidden md:inline" fill="#94A3B8" fontFamily="monospace" fontSize="7.5" letterSpacing="1.2" opacity="0.45">
-          <text x="75" y="80">PCB-REV.2026 // SUB-SURFACE SILICON SUBSTRATE</text>
-          <text x="75" y="94">CU-PURITY: 99.98% // AU-CONTACT: 24K VACUUM DEPOSITION</text>
-          <text x="1845" y="80" textAnchor="end">CIRCULAR HARDWARE ARCHITECTURE // WEEE CLASS 4</text>
-          <text x="1845" y="94" textAnchor="end">LITHIUM-COBALT CLOSED LOOP: OPERATIONAL</text>
-          <text x="75" y="980">ANODIZED RECYCLED CHASSIS SPEC // ZERO VIRGIN MINING</text>
-          <text x="75" y="995">TERRESTRIAL HARDWARE CAPTURE: 100% TRACEABLE</text>
-          <text x="1845" y="980" textAnchor="end">ISO-14040 LIFE-CYCLE METRICS // REAL-TIME TELEMETRY</text>
-          <text x="1845" y="995" textAnchor="end">RE-EARTH ENGINE // SPATIAL SILICON RECOVERY v2.6</text>
-        </g>
 
         {/* ================================================================= */}
         {/* Optical Fiducial Alignment Markers (4 Corners)                    */}

@@ -103,7 +103,7 @@ export const ImmersiveOrbitHUD: React.FC = () => {
           {/* Active Orbit Indicator */}
           <div className="flex items-center gap-2 pr-1">
             <span className="w-2 h-2 rounded-full bg-emerald" />
-            <span className="text-xs font-mono tracking-wider text-text-primary uppercase font-bold flex items-center gap-1.5">
+            <span className="text-xs tracking-wider text-text-primary uppercase font-bold flex items-center gap-1.5">
               <Globe2 className="w-3.5 h-3.5 text-copper" />
               <span className="hidden sm:inline">Direct 3D Orbit</span>
             </span>
@@ -124,7 +124,7 @@ export const ImmersiveOrbitHUD: React.FC = () => {
                   }}
                   onMouseEnter={() => playHover()}
                   title={`Focus ${preset.label} viewpoint (${preset.keyHint})`}
-                  className={`px-2 sm:px-2.5 py-1 text-xs font-mono rounded whitespace-nowrap transition-colors flex items-center gap-1 ${
+                  className={`px-2 sm:px-2.5 py-1 text-xs font-medium rounded whitespace-nowrap transition-colors flex items-center gap-1 ${
                     isActive
                       ? 'bg-copper text-background font-bold'
                       : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
@@ -188,7 +188,7 @@ export const ImmersiveOrbitHUD: React.FC = () => {
           transition={{ duration: 0.3, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-auto"
         >
-          <div className="flex items-center gap-3 px-4 py-1.5 rounded-md bg-surface/90 border border-white/10 text-xs text-text-secondary font-mono tracking-wide">
+          <div className="flex items-center gap-3 px-4 py-1.5 rounded-md bg-surface/90 border border-white/10 text-xs text-text-secondary font-medium tracking-wide">
             <Compass className="w-3.5 h-3.5 text-copper" />
             <span>Drag to rotate · Scroll to zoom · Jump 1-4 · Click tower to inspect</span>
           </div>

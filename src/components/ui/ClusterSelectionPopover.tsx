@@ -42,12 +42,12 @@ export const ClusterSelectionPopover: React.FC = () => {
                   <h3 className="text-sm font-bold text-text-primary tracking-tight">
                     Regional Campus Cluster
                   </h3>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-white/10 text-emerald font-bold">
-                    {activeCluster.campuses.length} HUBS
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-white/10 text-emerald">
+                    {activeCluster.campuses.length} Hubs
                   </span>
                 </div>
-                <p className="text-[10px] text-text-muted font-mono">
-                  {Math.round(activeCluster.totalAllTimeKg).toLocaleString()} kg Verified Diversion
+                <p className="text-xs text-text-muted mt-0.5">
+                  <span className="font-mono text-text-secondary font-medium">{Math.round(activeCluster.totalAllTimeKg).toLocaleString()} kg</span> Verified Diversion
                 </p>
               </div>
             </div>
@@ -110,8 +110,8 @@ export const ClusterSelectionPopover: React.FC = () => {
                         {Math.round(campus.allTimeKg).toLocaleString()}
                         <span className="text-[9px] text-text-muted font-normal ml-0.5">kg</span>
                       </span>
-                      <span className="text-[9px] text-cyan-light font-mono block">
-                        +{campus.weeklyKg.toFixed(0)}w
+                      <span className="text-[10px] text-cyan-light font-medium block">
+                        +{campus.weeklyKg.toFixed(0)} kg/wk
                       </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-text-primary transition-all" />
@@ -122,9 +122,9 @@ export const ClusterSelectionPopover: React.FC = () => {
           </div>
 
           {/* Footer note */}
-          <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-text-muted font-mono">
-            <span>ZOOM LEVEL: REGIONAL</span>
-            <span className="text-emerald font-medium">CLICK TO EXPAND TOWER</span>
+          <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-xs text-text-muted">
+            <span>Regional cluster</span>
+            <span className="text-emerald font-medium">Click to inspect campus</span>
           </div>
         </motion.div>
       </div>

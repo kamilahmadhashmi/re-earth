@@ -34,46 +34,46 @@ export const WeeklyDerbyTicker: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 min-w-0">
-            <span className="font-mono font-bold text-amber text-[10px] uppercase tracking-wider shrink-0 flex items-center gap-1">
+            <span className="font-bold text-amber text-[11px] uppercase tracking-wider shrink-0 flex items-center gap-1">
               <Flame className="w-3 h-3" />
-              DERBY:
+              Derby:
             </span>
 
             {/* NSUT Badge */}
             <button
               onClick={() => nsut && selectCampus(nsut.id)}
-              className={`px-2.5 py-1 rounded-full border font-mono text-xs transition-all duration-200 ${
+              className={`px-2.5 py-1 rounded-full border text-xs transition-all duration-200 ${
                 !dtuIsLeading
-                  ? 'bg-amber/20 border-amber/50 text-amber font-bold shadow-amber-glow'
+                  ? 'bg-amber/20 border-amber/50 text-amber font-semibold shadow-amber-glow'
                   : 'bg-white/[0.03] border-white/[0.08] text-text-secondary hover:text-text-primary hover:border-white/20'
               }`}
             >
-              NSUT <span className="font-bold ml-0.5">{nsutWeekly.toFixed(1)}kg</span>
+              NSUT <span className="font-bold font-mono ml-0.5">{nsutWeekly.toFixed(1)}kg</span>
             </button>
 
-            <span className="text-text-muted font-mono text-[10px]">vs</span>
+            <span className="text-text-muted text-[10px]">vs</span>
 
             {/* DTU Badge */}
             <button
               onClick={() => dtu && selectCampus(dtu.id)}
-              className={`px-2.5 py-1 rounded-full border font-mono text-xs transition-all duration-200 ${
+              className={`px-2.5 py-1 rounded-full border text-xs transition-all duration-200 ${
                 dtuIsLeading
-                  ? 'bg-emerald/20 border-emerald/50 text-emerald font-bold shadow-emerald-glow'
+                  ? 'bg-emerald/20 border-emerald/50 text-emerald font-semibold shadow-emerald-glow'
                   : 'bg-white/[0.03] border-white/[0.08] text-text-secondary hover:text-text-primary hover:border-white/20'
               }`}
             >
-              DTU <span className="font-bold ml-0.5">{dtuWeekly.toFixed(1)}kg</span>
+              DTU <span className="font-bold font-mono ml-0.5">{dtuWeekly.toFixed(1)}kg</span>
             </button>
 
             {/* Live gap indicator */}
             <span
-              className={`text-[10px] font-mono px-2 py-0.5 rounded-full border tracking-wide ${
+              className={`text-[10px] font-medium px-2 py-0.5 rounded-full border tracking-wide ${
                 dtuIsLeading
                   ? 'bg-emerald/15 text-emerald border-emerald/30 shadow-emerald-glow'
                   : 'bg-amber/15 text-amber border-amber/30 shadow-amber-glow'
               }`}
             >
-              {dtuIsLeading ? `DTU +${gap}kg ahead!` : `NSUT +${gap}kg ahead`}
+              {dtuIsLeading ? `DTU +${gap}kg ahead` : `NSUT +${gap}kg ahead`}
             </span>
           </div>
         </div>

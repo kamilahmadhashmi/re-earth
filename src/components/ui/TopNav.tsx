@@ -100,7 +100,7 @@ export const TopNav: React.FC = () => {
           {/* Spatial Synthetic Audio Toggle */}
           <button
             onClick={toggleAudio}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-150 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
               isAudioEnabled
                 ? 'bg-surface-elevated text-emerald border border-emerald/50'
                 : 'bg-surface/95 border border-white/10 text-text-muted hover:text-text-primary'
@@ -116,8 +116,8 @@ export const TopNav: React.FC = () => {
             ) : (
               <VolumeX className="w-3.5 h-3.5" />
             )}
-            <span className="hidden md:inline text-xs font-mono font-medium">
-              {isAudioEnabled ? 'AUDIO LIVE' : 'AUDIO OFF'}
+            <span className="hidden md:inline text-xs font-medium">
+              {isAudioEnabled ? 'Audio On' : 'Muted'}
             </span>
           </button>
 

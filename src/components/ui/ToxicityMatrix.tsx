@@ -81,8 +81,8 @@ export const ToxicityMatrix: React.FC = () => {
             </span>
           </div>
         </div>
-        <span className="text-xs font-mono text-text-muted bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
-          Isotope Telemetry
+        <span className="text-xs font-medium text-text-muted bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+          Isotope Profile
         </span>
       </div>
 
@@ -137,8 +137,8 @@ export const ToxicityMatrix: React.FC = () => {
                 ({activeElement.symbol} #{activeElement.atomicNumber})
               </span>
             </h4>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-300 border border-rose-500/20">
-              Half-Life: {activeElement.leachHalfLife}
+            <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-300 border border-rose-500/20">
+              Half-Life: <span className="font-mono">{activeElement.leachHalfLife}</span>
             </span>
           </div>
 

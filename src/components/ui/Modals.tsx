@@ -36,7 +36,7 @@ export const Modals: React.FC = () => {
               </div>
 
               <div>
-                <span className="text-xs font-mono font-bold text-copper block">
+                <span className="text-xs font-semibold tracking-wide text-copper block uppercase">
                   Corporate Metallurgy Partner
                 </span>
                 <h3 className="text-xl font-bold text-text-primary mt-1">
@@ -79,7 +79,7 @@ export const Modals: React.FC = () => {
               </div>
 
               <div>
-                <span className="text-xs font-mono font-medium text-copper block">
+                <span className="text-xs font-semibold tracking-wide text-copper block uppercase">
                   System Module
                 </span>
                 <h3 className="text-xl font-bold text-text-primary mt-1 capitalize">

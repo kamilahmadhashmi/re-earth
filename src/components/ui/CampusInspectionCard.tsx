@@ -72,8 +72,8 @@ export const CampusInspectionCard: React.FC = () => {
             {/* CAMPUS IDENTITY */}
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald/15 text-emerald border border-emerald/30">
-                  RANK #{campus.allTimeRank} GLOBAL
+                <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-emerald/15 text-emerald border border-emerald/30">
+                  Rank #{campus.allTimeRank} Global
                 </span>
                 <span className="text-xs text-text-muted flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-cyan" />
@@ -94,7 +94,7 @@ export const CampusInspectionCard: React.FC = () => {
                 <span className="text-4xl sm:text-5xl font-black text-text-primary font-mono tracking-tight">
                   {Math.round(campus.allTimeKg).toLocaleString()}
                 </span>
-                <span className="text-base font-bold text-emerald font-mono uppercase">
+                <span className="text-base font-bold text-emerald uppercase font-mono">
                   KG
                 </span>
               </div>
@@ -111,7 +111,7 @@ export const CampusInspectionCard: React.FC = () => {
                   {campus.weeklyKg.toFixed(1)}
                   <span className="text-xs font-normal text-text-muted ml-0.5">kg</span>
                 </p>
-                <span className="text-[10px] text-cyan-light font-mono block">
+                <span className="text-[11px] text-cyan-light font-medium block">
                   #{campus.weeklyRank} in Derby
                 </span>
               </div>
@@ -122,7 +122,7 @@ export const CampusInspectionCard: React.FC = () => {
                   {campus.activeKiosks}
                   <span className="text-xs font-normal text-text-muted ml-0.5">active</span>
                 </p>
-                <span className="text-[10px] text-emerald font-mono block">
+                <span className="text-[11px] text-emerald font-medium block">
                   IoT Weight Sensors
                 </span>
               </div>
@@ -135,7 +135,7 @@ export const CampusInspectionCard: React.FC = () => {
                   <Award className="w-3.5 h-3.5 text-amber" />
                   Dominant Stream
                 </span>
-                <span className="text-[10px] font-mono text-emerald bg-emerald/10 px-2 py-0.5 rounded-md border border-emerald/20">
+                <span className="text-xs font-semibold text-emerald bg-emerald/10 px-2.5 py-0.5 rounded-md border border-emerald/20">
                   {campus.topRecycledItem}
                 </span>
               </div>
@@ -148,7 +148,7 @@ export const CampusInspectionCard: React.FC = () => {
                   <div className="bg-lavender h-full w-[18%]" title="Cables / Chargers 18%" />
                   <div className="bg-amber h-full w-[12%]" title="Peripherals 12%" />
                 </div>
-                <div className="flex justify-between text-[9px] font-mono text-text-muted pt-0.5">
+                <div className="flex justify-between text-[10px] text-text-muted pt-0.5">
                   <span>Laptops 42%</span>
                   <span>Phones 28%</span>
                   <span>Cables 18%</span>
@@ -163,7 +163,7 @@ export const CampusInspectionCard: React.FC = () => {
                 <span className="text-xs font-medium text-text-muted">
                   E-Waste Trajectory & Sponsor Canvas
                 </span>
-                <span className="text-[9px] font-mono text-emerald">
+                <span className="text-[10px] font-medium text-emerald">
                   Live Hardware Telemetry
                 </span>
               </div>
@@ -171,14 +171,14 @@ export const CampusInspectionCard: React.FC = () => {
             </div>
 
             {/* HOLOGRAPHIC TELEMETRY */}
-            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs font-mono space-y-1">
+            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.06] text-xs space-y-1">
               <div className="flex justify-between text-text-muted">
-                <span>Holographic Tower Scale:</span>
-                <span className="text-text-primary">{campus.towerHeight.toFixed(2)}x</span>
+                <span>Holographic Tower Scale</span>
+                <span className="text-text-primary font-mono">{campus.towerHeight.toFixed(2)}x</span>
               </div>
               <div className="flex justify-between text-text-muted">
-                <span>Geo Coordinates:</span>
-                <span className="text-text-primary">
+                <span>Coordinates</span>
+                <span className="text-text-primary font-mono">
                   {campus.lat.toFixed(2)}°N, {campus.lng.toFixed(2)}°E
                 </span>
               </div>

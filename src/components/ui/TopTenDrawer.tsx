@@ -50,7 +50,7 @@ export const TopTenDrawer: React.FC = () => {
                       <p className="text-[10px] text-text-muted">Top 10 Verified Campuses</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald/10 border border-emerald/20 text-[10px] font-mono text-emerald">
+                  <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald/10 border border-emerald/20 text-[10px] font-semibold text-emerald">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
                     <span>LIVE</span>
                   </div>
@@ -154,14 +154,14 @@ export const TopTenDrawer: React.FC = () => {
                   </p>
                   <button
                     onClick={toggleDemoMode}
-                    className={`text-[9px] font-mono px-2 py-0.5 rounded-full border transition-all ${
+                    className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border transition-all ${
                       isDemoMode
-                        ? 'bg-emerald/20 border-emerald/40 text-emerald font-bold'
+                        ? 'bg-emerald/20 border-emerald/40 text-emerald font-semibold'
                         : 'bg-white/5 border-white/10 text-text-muted hover:text-text-primary'
                     }`}
                     title="Toggle Demo / Simulation Mode (Shift+D)"
                   >
-                    {isDemoMode ? 'SIMULATION ON' : 'SIMULATION OFF'}
+                    {isDemoMode ? 'Live Simulation' : 'Static Stream'}
                   </button>
                 </div>
               </motion.div>
@@ -191,7 +191,7 @@ export const TopTenDrawer: React.FC = () => {
               <Trophy className="w-3.5 h-3.5" />
               TOP CAMPUSES
             </span>
-            <span className="text-[10px] text-text-muted font-mono">TAP TO FOCUS</span>
+            <span className="text-[10px] text-text-muted">Tap to focus</span>
           </div>
           <div className="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
             {topTen.slice(0, 5).map((c) => (
