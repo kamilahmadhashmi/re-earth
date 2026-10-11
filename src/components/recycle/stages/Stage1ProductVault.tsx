@@ -310,8 +310,14 @@ export const Stage1ProductVault: React.FC = () => {
       {/* MODAL DIALOG FOR CUSTOM DEVICE ENTRY */}
       <AnimatePresence>
         {isManualEntryOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setManualEntryOpen(false)
+            }}
+            className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+          >
             <motion.div
+              onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -327,8 +333,10 @@ export const Stage1ProductVault: React.FC = () => {
                   </h3>
                 </div>
                 <button
+                  type="button"
+                  id="btn-close-manual-modal"
                   onClick={() => setManualEntryOpen(false)}
-                  className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary"
+                  className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>

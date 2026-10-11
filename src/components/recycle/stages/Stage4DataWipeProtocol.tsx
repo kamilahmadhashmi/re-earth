@@ -188,7 +188,7 @@ export const Stage4DataWipeProtocol: React.FC = () => {
         </label>
 
         {/* BROKEN DEVICE EXCEPTION PATH */}
-        <div className="pt-3 border-t border-white/[0.06] flex items-start gap-3">
+        <label className="pt-3 border-t border-white/[0.06] flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={wipeExceptionRequested}
@@ -196,7 +196,7 @@ export const Stage4DataWipeProtocol: React.FC = () => {
               setWipeExceptionRequested(e.target.checked)
               if (e.target.checked) setWipeFinalConfirmed(false)
             }}
-            className="mt-0.5 w-4 h-4 rounded border-amber/40 text-amber focus:ring-amber/40 bg-white/5"
+            className="mt-0.5 w-4 h-4 rounded border-amber/40 text-amber focus:ring-amber/40 bg-white/5 cursor-pointer"
           />
           <div className="text-xs">
             <span className="font-bold text-amber block">
@@ -206,7 +206,7 @@ export const Stage4DataWipeProtocol: React.FC = () => {
               If your device does not turn on or screen is dead, check this box. Kiosk operator will physically route the logic board for audited mechanical perforation/shredding.
             </span>
           </div>
-        </div>
+        </label>
       </div>
 
       {/* NAVIGATION */}

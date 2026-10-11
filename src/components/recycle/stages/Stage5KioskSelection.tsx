@@ -278,23 +278,39 @@ export const Stage5KioskSelection: React.FC = () => {
         <div className="lg:col-span-5 flex flex-col h-[480px] lg:h-[530px] rounded-2xl liquid-glass specular-rim border border-white/10 p-3.5 space-y-3 overflow-hidden">
           {/* SEARCH & FILTER CONTROLS */}
           <div className="space-y-2 shrink-0">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search pods, gates, bays or shuttles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black/60 text-text-primary text-xs pl-8 pr-3 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-cyan placeholder:text-text-muted transition-colors font-sans"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary text-xs"
-                >
-                  ✕
-                </button>
-              )}
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="w-3.5 h-3.5 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search pods, gates, bays or shuttles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-black/60 text-text-primary text-xs pl-8 pr-3 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-cyan placeholder:text-text-muted transition-colors font-sans"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary text-xs"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setFilterHazmatOnly(!filterHazmatOnly)}
+                title="Toggle Hazmat Certified Only filter"
+                className={`px-2.5 py-2 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5 border transition-all shrink-0 cursor-pointer ${
+                  filterHazmatOnly
+                    ? 'bg-amber/20 text-amber border-amber/50 shadow-amber-glow'
+                    : 'bg-white/[0.04] text-text-muted border-white/10 hover:text-text-primary hover:border-white/20'
+                }`}
+              >
+                <Flame className="w-3 h-3" />
+                <span>Hazmat</span>
+              </button>
             </div>
 
             {/* TAB SELECTOR: PODS / SHUTTLES / ZONES / EVENTS */}

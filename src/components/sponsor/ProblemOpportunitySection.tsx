@@ -29,19 +29,19 @@ export const ProblemOpportunitySection: React.FC = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-card border border-white/10 liquid-glass p-7 sm:p-8 flex flex-col justify-between"
+          className="rounded-2xl border border-white/[0.08] bg-surface p-7 sm:p-8 flex flex-col justify-between shadow-spatial"
         >
           <div className="space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-pink/15 text-pink flex items-center justify-center border border-pink/30">
+                <div className="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center border border-rose-500/30">
                   <AlertCircle className="w-4 h-4" />
                 </div>
                 <h3 className="font-bold text-sm text-text-primary uppercase tracking-wide">
                   The Fragmented Reality
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-pink bg-pink/10 px-2 py-0.5 rounded border border-pink/20">
+              <span className="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
                 CURRENT BOTTLENECK
               </span>
             </div>
@@ -53,7 +53,7 @@ export const ProblemOpportunitySection: React.FC = () => {
 
             <ul className="space-y-4 text-xs sm:text-sm text-text-secondary">
               <li className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-pink/10 text-pink flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
                   ×
                 </div>
                 <div>
@@ -66,7 +66,7 @@ export const ProblemOpportunitySection: React.FC = () => {
               </li>
 
               <li className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-pink/10 text-pink flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
                   ×
                 </div>
                 <div>
@@ -79,7 +79,7 @@ export const ProblemOpportunitySection: React.FC = () => {
               </li>
 
               <li className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-pink/10 text-pink flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-5 h-5 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">
                   ×
                 </div>
                 <div>
@@ -93,7 +93,7 @@ export const ProblemOpportunitySection: React.FC = () => {
             </ul>
           </div>
 
-          <div className="pt-6 mt-6 border-t border-white/[0.08] text-xs font-mono text-text-muted">
+          <div className="pt-6 mt-6 border-t border-white/[0.06] text-xs font-mono text-text-muted">
             Result: Uncollected waste, uncredited recyclers, unmeasured budgets.
           </div>
         </motion.div>
@@ -104,7 +104,7 @@ export const ProblemOpportunitySection: React.FC = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-card border border-emerald/30 bg-emerald/[0.03] liquid-glass p-7 sm:p-8 flex flex-col justify-between relative shadow-emerald-glow/20"
+          className="rounded-2xl border border-emerald/30 bg-[#0E1318] p-7 sm:p-8 flex flex-col justify-between relative shadow-spatial"
         >
           <div className="space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-emerald/20">
@@ -171,42 +171,42 @@ export const ProblemOpportunitySection: React.FC = () => {
 
       {/* 4 Pillars Grid */}
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/15 transition-colors">
+        <div className="p-5 rounded-xl bg-surface border border-white/[0.06] hover:border-white/[0.15] transition-colors shadow-spatial">
           <Users className="w-5 h-5 text-emerald mb-2.5" />
           <h4 className="text-xs font-bold text-text-primary uppercase tracking-wide">
             Collegiate Mobilization
           </h4>
-          <p className="text-xs text-text-secondary mt-1">
+          <p className="text-xs text-text-secondary mt-1 leading-relaxed">
             Student-driven energy turns circular habits into campus culture.
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/15 transition-colors">
+        <div className="p-5 rounded-xl bg-surface border border-white/[0.06] hover:border-white/[0.15] transition-colors shadow-spatial">
           <Truck className="w-5 h-5 text-cyan mb-2.5" />
           <h4 className="text-xs font-bold text-text-primary uppercase tracking-wide">
             Dignified Recycling
           </h4>
-          <p className="text-xs text-text-secondary mt-1">
+          <p className="text-xs text-text-secondary mt-1 leading-relaxed">
             Fair honorariums and safety equipment for local waste workers.
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/15 transition-colors">
-          <Wrench className="w-5 h-5 text-amber mb-2.5" />
+        <div className="p-5 rounded-xl bg-surface border border-white/[0.06] hover:border-white/[0.15] transition-colors shadow-spatial">
+          <Wrench className="w-5 h-5 text-copper mb-2.5" />
           <h4 className="text-xs font-bold text-text-primary uppercase tracking-wide">
             Hardware & Logistics
           </h4>
-          <p className="text-xs text-text-secondary mt-1">
+          <p className="text-xs text-text-secondary mt-1 leading-relaxed">
             Sponsored bins, weighing scales, and reliable transport routes.
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-white/15 transition-colors">
+        <div className="p-5 rounded-xl bg-surface border border-white/[0.06] hover:border-white/[0.15] transition-colors shadow-spatial">
           <BarChart3 className="w-5 h-5 text-lavender mb-2.5" />
           <h4 className="text-xs font-bold text-text-primary uppercase tracking-wide">
             Public Telemetry
           </h4>
-          <p className="text-xs text-text-secondary mt-1">
+          <p className="text-xs text-text-secondary mt-1 leading-relaxed">
             Zero double-counting. Public verification on the global leaderboard.
           </p>
         </div>

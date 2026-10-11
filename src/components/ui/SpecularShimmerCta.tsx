@@ -16,14 +16,14 @@ export const SpecularShimmerCta: React.FC<SpecularShimmerCtaProps> = ({
 }) => {
   const baseVariant =
     variant === 'emerald'
-      ? 'bg-emerald text-background font-semibold hover:brightness-105 shadow-emerald-glow'
+      ? 'bg-emerald text-zinc-950 font-semibold hover:bg-emerald-light shadow-sm'
       : variant === 'amber'
-      ? 'bg-amber text-background font-bold hover:brightness-105 shadow-amber-glow'
-      : 'bg-surface border border-white/10 hover:border-white/20 text-text-primary'
+      ? 'bg-amber text-zinc-950 font-bold hover:bg-amber-light shadow-sm'
+      : 'bg-white/[0.06] border border-white/10 hover:border-white/20 text-text-primary hover:bg-white/[0.1]'
 
   return (
     <button
-      className={`group relative overflow-hidden px-6 py-3 rounded-md text-xs tracking-wide transition-all active:scale-[0.98] cursor-pointer ${baseVariant} ${className}`}
+      className={`group relative overflow-hidden px-6 py-3 rounded-xl text-xs font-semibold tracking-wide transition-all active:scale-[0.98] cursor-pointer ${baseVariant} ${className}`}
       {...props}
     >
       {/* Specular shimmer highlight sweep */}

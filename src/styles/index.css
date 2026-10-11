@@ -66,40 +66,44 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
 /* avoid-ai-design-ignore: SD2 */
 .spatial-glass,
 .liquid-glass {
-  background: #131922;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
+  background: rgba(14, 16, 21, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
 }
 
 .spatial-glass-subtle,
 .liquid-glass-subtle {
-  background: #161D27;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  background: rgba(18, 21, 28, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 20px -4px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
 }
 
 .spatial-pill,
 .liquid-glass-pill {
-  background: #1A222E;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 6px 18px -3px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
+  background: rgba(22, 26, 35, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px -2px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
 }
 
 /* Tactile Control for Interactive Buttons */
 .liquid-glass-control {
-  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-  will-change: border-color, background-color;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, border-color, background-color;
 }
 .liquid-glass-control:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(26, 34, 46, 0.96);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(26, 31, 42, 0.96);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
 }
 .liquid-glass-control:active {
-  transform: scale(0.99);
+  transform: scale(0.98);
 }
 
 /* Micro-beveled specular top-rim highlight */

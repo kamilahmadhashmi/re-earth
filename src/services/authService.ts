@@ -2,26 +2,66 @@ import type { AuthSession, UserProfile, UserRole } from '../types/auth'
 import { PRESET_USERS } from '../types/auth'
 
 const STORAGE_SESSION_KEY = 'smrt_kiosk_auth_token'
+const STORAGE_VAULT_KEY = 'smrt_kiosk_vault_sessions'
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // 8 hours
 
 // Server-side authoritative session registry (simulates backend token vault)
 class ServerSessionVault {
   private static sessions: Map<string, AuthSession> = new Map()
 
+  private static hydrate() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_VAULT_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw) as Record<string, AuthSession>
+        for (const [key, val] of Object.entries(parsed)) {
+          this.sessions.set(key, val)
+        }
+      }
+    } catch {
+      // storage unavailable or parse error fallback
+    }
+  }
+
+  private static persist() {
+    try {
+      const obj: Record<string, AuthSession> = {}
+      this.sessions.forEach((val, key) => {
+        obj[key] = val
+      })
+      sessionStorage.setItem(STORAGE_VAULT_KEY, JSON.stringify(obj))
+    } catch {
+      // storage unavailable fallback
+    }
+  }
+
   static register(session: AuthSession) {
+    this.hydrate()
     this.sessions.set(session.token, session)
+    this.persist()
   }
 
   static get(token: string): AuthSession | undefined {
+    if (!this.sessions.has(token)) {
+      this.hydrate()
+    }
     return this.sessions.get(token)
   }
 
   static invalidate(token: string): boolean {
-    return this.sessions.delete(token)
+    this.hydrate()
+    const result = this.sessions.delete(token)
+    this.persist()
+    return result
   }
 
   static purgeAll() {
     this.sessions.clear()
+    try {
+      sessionStorage.removeItem(STORAGE_VAULT_KEY)
+    } catch {
+      // storage unavailable fallback
+    }
   }
 }
 

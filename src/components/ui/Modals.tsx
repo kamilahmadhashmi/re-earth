@@ -101,12 +101,15 @@ export const Modals: React.FC = () => {
     )
   }
 
-  // If unauthenticated and tried to open recycle/vault/terminal/sponsorships, show LoginModal
+  // If unauthenticated and tried to open recycle/vault/terminal/sponsorships, show LoginModal only if active
   if (
     !isAuthenticated &&
     (activeModal === 'recycle' || activeModal === 'vault' || activeModal === 'terminal' || activeModal === 'sponsorships')
   ) {
-    return <LoginModal />
+    if (isLoginModalOpen) {
+      return <LoginModal />
+    }
+    return null
   }
 
   const isPitch = activeModal === 'sponsor_pitch'

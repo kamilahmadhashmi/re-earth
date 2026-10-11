@@ -444,12 +444,18 @@ export const KioskOperatorTerminal: React.FC = () => {
       {/* REJECTION MODAL */}
       <AnimatePresence>
         {isRejectModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsRejectModalOpen(false)
+            }}
+            className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md cursor-pointer"
+          >
             <motion.div
+              onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-md liquid-glass specular-rim p-6 rounded-2xl border border-red-500/30 shadow-2xl space-y-4"
+              className="w-full max-w-md liquid-glass specular-rim p-6 rounded-2xl border border-red-500/30 shadow-2xl space-y-4 cursor-default"
             >
               <div className="flex items-center gap-2 text-red-400 pb-2 border-b border-white/10">
                 <AlertTriangle className="w-5 h-5" />

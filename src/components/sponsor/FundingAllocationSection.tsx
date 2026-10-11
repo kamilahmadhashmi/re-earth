@@ -29,7 +29,7 @@ export const FundingAllocationSection: React.FC = () => {
       </div>
 
       {/* Interactive Visual Breakdown Card */}
-      <div className="rounded-card border border-white/10 liquid-glass p-7 sm:p-9 shadow-liquid-glass">
+      <div className="rounded-2xl border border-white/[0.08] bg-surface p-7 sm:p-9 shadow-spatial">
         {/* Horizontal Stacked Percentage Bar */}
         <div className="space-y-3">
           <div className="flex items-center justify-between text-xs font-mono">
@@ -53,15 +53,15 @@ export const FundingAllocationSection: React.FC = () => {
           </div>
 
           {/* Legend Chips */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-[11px] font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 text-[11px] font-mono">
             {PROPOSED_BUDGET_ALLOCATION.map((item) => (
               <button
                 key={item.category}
                 onClick={() => setSelectedCategory(item.category)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all cursor-pointer ${
                   selectedCategory === item.category
                     ? 'border-white/40 bg-white/10'
-                    : 'border-white/5 hover:border-white/20'
+                    : 'border-white/[0.06] bg-surface-elevated hover:border-white/20'
                 }`}
               >
                 <span
@@ -76,7 +76,7 @@ export const FundingAllocationSection: React.FC = () => {
         </div>
 
         {/* Detailed Allocation Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/[0.08]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/[0.06]">
           {PROPOSED_BUDGET_ALLOCATION.map((item) => {
             const isHighlighted = selectedCategory === item.category
             return (
@@ -84,10 +84,10 @@ export const FundingAllocationSection: React.FC = () => {
                 key={item.category}
                 whileHover={{ y: -2 }}
                 onClick={() => setSelectedCategory(item.category)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                className={`p-4 rounded-xl border transition-all cursor-pointer ${
                   isHighlighted
-                    ? 'bg-white/[0.06] border-emerald/50'
-                    : 'bg-white/[0.02] border-white/[0.06] hover:border-white/15'
+                    ? 'bg-surface-elevated border-emerald/50 shadow-sm'
+                    : 'bg-surface-elevated border-white/[0.06] hover:border-white/15'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -111,9 +111,9 @@ export const FundingAllocationSection: React.FC = () => {
           })}
 
           {/* In-Kind Equipment Option Card */}
-          <div className="p-4 rounded-2xl bg-amber/[0.03] border border-amber/20 flex flex-col justify-between">
+          <div className="p-4 rounded-xl bg-surface-elevated border border-copper/30 flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-1.5 text-amber text-xs font-bold font-mono uppercase tracking-wider">
+              <div className="flex items-center gap-1.5 text-copper text-xs font-bold font-mono uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>In-Kind Contribution Flexibility</span>
               </div>
@@ -122,7 +122,7 @@ export const FundingAllocationSection: React.FC = () => {
                 or transport vehicles, we credit that directly against program infrastructure requirements.
               </p>
             </div>
-            <span className="text-[10px] font-mono text-amber mt-3 block">
+            <span className="text-[10px] font-mono text-copper mt-3 block font-bold">
               100% credited against budget
             </span>
           </div>

@@ -548,6 +548,9 @@ export const CollegeAdminSponsorships: React.FC = () => {
                       {/* Actions */}
                       <td className="py-3 px-4 text-right">
                         <button
+                          type="button"
+                          title="Review Dossier"
+                          data-action="review-dossier"
                           onClick={(e) => {
                             e.stopPropagation()
                             setSelectedApp(app)
@@ -571,12 +574,18 @@ export const CollegeAdminSponsorships: React.FC = () => {
       {/* ========================================================================= */}
       <AnimatePresence>
         {selectedApp && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSelectedApp(null)
+            }}
+            className="fixed inset-0 z-[80] overflow-y-auto bg-black/80 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 cursor-pointer"
+          >
             <motion.div
+              onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="w-full max-w-3xl my-auto rounded-3xl liquid-glass specular-rim border border-white/20 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full max-w-3xl my-auto rounded-3xl liquid-glass specular-rim border border-white/20 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] cursor-default"
             >
               {/* Header */}
               <div className="p-5 border-b border-white/[0.08] flex items-center justify-between gap-3 bg-white/[0.02]">
@@ -597,6 +606,8 @@ export const CollegeAdminSponsorships: React.FC = () => {
                 </div>
 
                 <button
+                  type="button"
+                  id="btn-close-dossier-modal"
                   onClick={() => setSelectedApp(null)}
                   className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary border border-white/10 transition-colors cursor-pointer"
                 >
@@ -865,12 +876,22 @@ export const CollegeAdminSponsorships: React.FC = () => {
       {/* ========================================================================= */}
       <AnimatePresence>
         {confirmModal && (
-          <div className="fixed inset-0 z-60 overflow-y-auto bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4">
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setConfirmModal(null)
+                setRejectionReason('')
+                setActionNotes('')
+              }
+            }}
+            className="fixed inset-0 z-[90] overflow-y-auto bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4 cursor-pointer"
+          >
             <motion.div
+              onClick={(e) => e.stopPropagation()}
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="w-full max-w-md my-auto rounded-3xl liquid-glass specular-rim border border-white/20 p-6 space-y-4 shadow-2xl relative"
+              className="w-full max-w-md my-auto rounded-3xl liquid-glass specular-rim border border-white/20 p-6 space-y-4 shadow-2xl relative cursor-default"
             >
               <div className="flex items-center gap-3">
                 <div

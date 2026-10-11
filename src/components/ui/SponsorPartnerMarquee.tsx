@@ -46,17 +46,17 @@ export const SponsorPartnerMarquee: React.FC = () => {
       </div>
 
       {/* Marquee Track with Linear Gradient Edge Vignettes */}
-      <div className="relative w-full overflow-hidden rounded-2xl bg-surface/90 border border-white/10 p-3 shadow-2xl">
+      <div className="relative w-full overflow-hidden rounded-2xl bg-[#0D0F14]/90 backdrop-blur-xl border border-white/[0.08] p-3 shadow-2xl">
         {/* Left & Right edge masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#131922] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#131922] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#07080A] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#07080A] to-transparent z-10 pointer-events-none" />
 
         <div className="animate-marquee flex items-center gap-3.5 pl-8 sm:pl-16 pr-4">
           {marqueeItems.map((sponsor, idx) => (
             <button
               key={`${sponsor.id}-${idx}`}
               onClick={() => selectSponsor(sponsor.id)}
-              className="relative group shrink-0 px-4 py-3 rounded-xl bg-surface-elevated/80 hover:bg-surface-elevated border border-white/[0.08] hover:border-white/20 transition-all duration-200 flex items-center gap-3.5 text-left shadow-md hover:shadow-xl hover:-translate-y-0.5"
+              className="relative group shrink-0 px-4 py-3 rounded-xl bg-[#13161E]/90 hover:bg-[#181C26] border border-white/[0.08] hover:border-white/20 transition-all duration-200 flex items-center gap-3.5 text-left shadow-md hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
             >
               {/* Subtle brand color glow accent on hover */}
               <div

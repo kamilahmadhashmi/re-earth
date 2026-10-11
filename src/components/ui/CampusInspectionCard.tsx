@@ -45,13 +45,13 @@ export const CampusInspectionCard: React.FC = () => {
         data-prevent-drag="true"
         className="fixed right-3 sm:right-5 top-[84px] sm:top-[88px] bottom-6 sm:bottom-16 z-50 w-[calc(100vw-24px)] sm:w-full max-w-[370px] pointer-events-auto"
       >
-        <div className="h-full bg-[#131922] border border-white/10 rounded-xl flex flex-col overflow-hidden shadow-2xl">
+        <div className="h-full bg-[#0D0F14]/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl flex flex-col overflow-hidden shadow-spatial">
           
           {/* HEADER BAR */}
-          <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
+          <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
             <button
               onClick={returnToWorld}
-              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors px-2.5 py-1.5 rounded-md hover:bg-white/5"
+              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to World</span>
@@ -61,19 +61,19 @@ export const CampusInspectionCard: React.FC = () => {
             </button>
             <button
               onClick={returnToWorld}
-              className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* MAIN SCROLLABLE CONTENT */}
-          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
             
             {/* CAMPUS IDENTITY */}
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-emerald/15 text-emerald border border-emerald/30">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald/15 text-emerald border border-emerald/30">
                   Rank #{campus.allTimeRank} Global
                 </span>
                 <span className="text-xs text-text-muted flex items-center gap-1">
@@ -81,14 +81,14 @@ export const CampusInspectionCard: React.FC = () => {
                   {campus.city}, {campus.country}
                 </span>
               </div>
-              <h1 className="text-2xl font-bold text-text-primary tracking-tight">
+              <h1 className="text-xl font-bold text-text-primary tracking-tight">
                 {campus.name}
               </h1>
             </div>
 
             {/* GIANT HERO NUMBER: VERIFIED DIVERTED WEIGHT */}
-            <div className="p-4 rounded-lg bg-white/[0.02] border border-white/[0.06] text-center space-y-1">
-              <span className="text-xs font-medium text-text-muted block">
+            <div className="p-4 rounded-xl bg-surface-elevated border border-white/[0.06] text-center space-y-1">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-text-muted block">
                 Verified Diversion Telemetry
               </span>
               <div className="flex items-baseline justify-center gap-1.5">
@@ -106,7 +106,7 @@ export const CampusInspectionCard: React.FC = () => {
 
             {/* DUAL METRIC CARDS */}
             <div className="grid grid-cols-2 gap-2.5">
-              <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+              <div className="p-3.5 rounded-xl bg-surface-elevated border border-white/[0.06] space-y-1">
                 <p className="text-xs font-medium text-text-muted">Weekly Pace</p>
                 <p className="text-xl font-extrabold text-cyan font-mono">
                   {campus.weeklyKg.toFixed(1)}
@@ -117,7 +117,7 @@ export const CampusInspectionCard: React.FC = () => {
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-1">
+              <div className="p-3.5 rounded-xl bg-surface-elevated border border-white/[0.06] space-y-1">
                 <p className="text-xs font-medium text-text-muted">Smart Kiosks</p>
                 <p className="text-xl font-extrabold text-text-primary font-mono">
                   {campus.activeKiosks}

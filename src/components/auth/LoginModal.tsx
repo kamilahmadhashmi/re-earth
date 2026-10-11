@@ -15,6 +15,7 @@ import {
   Scan
 } from 'lucide-react'
 import { useAuthStore } from '../../store/useAuthStore'
+import { useWorldStore } from '../../store/useWorldStore'
 import { PRESET_USERS } from '../../types/auth'
 
 export const LoginModal: React.FC = () => {
@@ -31,6 +32,29 @@ export const LoginModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'student' | 'admin' | 'operator'>('student')
   const [email, setEmail] = useState<string>('aarav.sharma@dtu.ac.in')
   const [password, setPassword] = useState<string>('pass123')
+
+  const handleClose = () => {
+    closeLoginModal()
+    const currentModal = useWorldStore.getState().activeModal
+    if (
+      currentModal === 'recycle' ||
+      currentModal === 'vault' ||
+      currentModal === 'terminal' ||
+      currentModal === 'sponsorships'
+    ) {
+      useWorldStore.getState().openModal(null)
+    }
+  }
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isLoginModalOpen) {
+        handleClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isLoginModalOpen])
 
   if (!isLoginModalOpen) return null
 
@@ -59,10 +83,19 @@ export const LoginModal: React.FC = () => {
       data-lenis-prevent="true"
       data-lenis-prevent-wheel="true"
       data-lenis-prevent-touch="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose()
+      }}
       className="fixed inset-0 z-[70] overflow-y-auto overscroll-contain bg-black/80 backdrop-blur-2xl"
     >
-      <div className="min-h-full flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+      <div
+        onClick={(e) => {
+          if (e.target === e.currentTarget) handleClose()
+        }}
+        className="min-h-full flex items-center justify-center p-4 sm:p-6 pointer-events-none"
+      >
         <motion.div
+          onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -74,8 +107,8 @@ export const LoginModal: React.FC = () => {
         >
         {/* Close Button */}
         <button
-          onClick={closeLoginModal}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors border border-white/10 z-10"
+          onClick={handleClose}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors border border-white/10 z-10 cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>

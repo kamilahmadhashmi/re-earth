@@ -51,46 +51,42 @@ export const ScrollStorySections: React.FC = () => {
       >
         <div className="max-w-4xl w-full text-center space-y-8 pointer-events-auto">
           {/* Top Real-time Status Badge */}
-          <div className="overflow-hidden inline-block">
+          <div className="inline-block">
             <motion.div
-              initial={{ y: '100%', opacity: 0 }}
+              initial={{ y: 15, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-md bg-surface/90 border border-white/10 text-xs font-mono tracking-wide text-text-secondary"
+              className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/10 text-xs font-mono tracking-wide text-zinc-300 shadow-sm"
             >
-              <span className="w-2 h-2 rounded-full bg-emerald" />
-              <span>18 Universities Synced</span>
+              <span className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
+              <span className="font-medium">18 Universities Live</span>
               <span className="w-px h-3 bg-white/20" />
               <span className="text-emerald font-bold">{tickerKg.toLocaleString()} KG INGESTED</span>
             </motion.div>
           </div>
 
-          {/* Kinetic Scramble Staggered Masked Headline */}
+          {/* Staggered Masked Headline */}
           <div className="space-y-4">
-            <div className="overflow-hidden pb-4 sm:pb-5 -mb-4 sm:-mb-5">
-              <motion.h1
-                initial={{ y: '100%', opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight text-text-primary leading-[1.14] pb-2 sm:pb-3"
-              >
-                Turn Dead Tech into{' '}
-                <span className="text-text-primary block sm:inline pb-1">
-                  <KineticScrambleText text="Living Earth." trigger="mount" duration={1100} />
-                </span>
-              </motion.h1>
-            </div>
+            <motion.h1
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+              className="text-5xl sm:text-7xl md:text-8xl font-black tracking-[-0.03em] text-white leading-[1.06]"
+            >
+              Turn Dead Tech into{' '}
+              <span className="text-emerald inline-block">
+                Living Earth.
+              </span>
+            </motion.h1>
 
-            <div className="overflow-hidden">
-              <motion.p
-                initial={{ y: '100%', opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="text-base sm:text-xl text-text-secondary max-w-2xl mx-auto font-normal leading-relaxed"
-              >
-                A planetary computing instrument transforming discarded university electronics into verified collegiate architecture and closed-loop material recovery.
-              </motion.p>
-            </div>
+            <motion.p
+              initial={{ y: 15, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto font-normal leading-relaxed"
+            >
+              A planetary computing instrument transforming discarded university electronics into verified collegiate architecture and closed-loop material recovery.
+            </motion.p>
           </div>
 
           {/* Primary Action Controls */}
@@ -110,24 +106,22 @@ export const ScrollStorySections: React.FC = () => {
             <button
               onClick={() => enterImmersiveOrbit()}
               data-cursor="orbit"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-surface border border-white/10 hover:border-white/20 text-text-primary text-xs font-semibold tracking-wide transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 hover:border-white/20 text-white text-xs font-semibold tracking-wide transition-all hover:bg-white/[0.08] active:scale-[0.98] cursor-pointer"
             >
               <Orbit className="w-3.5 h-3.5 text-copper" />
               <span>Direct 3D Orbit [Esc]</span>
             </button>
           </motion.div>
 
-
-
           {/* Downward Navigation Cue */}
           <div className="pt-8">
             <motion.div
               animate={{ y: [0, 5, 0] }}
               transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-              className="inline-block cursor-pointer"
+              className="inline-block cursor-pointer p-2 rounded-full hover:bg-white/5 transition-colors"
               onClick={() => scrollToChapter(1)}
             >
-              <ChevronDown className="w-4 h-4 text-white/30 hover:text-emerald transition-colors" />
+              <ChevronDown className="w-4 h-4 text-white/40 hover:text-white transition-colors" />
             </motion.div>
           </div>
         </div>
@@ -156,32 +150,28 @@ export const ScrollStorySections: React.FC = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="overflow-hidden">
-                <motion.h2
-                  initial={{ y: '100%', opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-4xl sm:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.06]"
-                >
-                  62 Million Tonnes.{' '}
-                  <span className="block mt-1 text-copper">
-                    <KineticScrambleText text="Buried Every Year." trigger="inView" duration={1000} />
-                  </span>
-                </motion.h2>
-              </div>
+              <motion.h2
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="text-4xl sm:text-6xl font-black tracking-[-0.03em] text-white leading-[1.06]"
+              >
+                62 Million Tonnes.{' '}
+                <span className="block mt-1 text-copper">
+                  Buried Every Year.
+                </span>
+              </motion.h2>
 
-              <div className="overflow-hidden">
-                <motion.p
-                  initial={{ y: '100%', opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-base text-text-secondary leading-relaxed"
-                >
-                  Less than a quarter of modern electronics are formally documented as recycled. Discarded motherboards, lithium battery packs, and CRTs leach persistent neurotoxins into municipal aquifers.
-                </motion.p>
-              </div>
+              <motion.p
+                initial={{ y: 15, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="text-base text-zinc-400 leading-relaxed max-w-lg"
+              >
+                Less than a quarter of modern electronics are formally documented as recycled. Discarded motherboards, lithium battery packs, and CRTs leach persistent neurotoxins into municipal aquifers.
+              </motion.p>
             </div>
 
             {/* Two Clean Numbers with Immense Breathing Room */}
@@ -196,7 +186,7 @@ export const ScrollStorySections: React.FC = () => {
                 <div className="text-4xl sm:text-5xl font-mono font-bold text-copper">
                   <NumberTicker value={62} suffix="M T" delay={0.2} />
                 </div>
-                <div className="text-xs text-text-muted mt-1">
+                <div className="text-xs font-mono text-zinc-400 mt-1 uppercase tracking-wider">
                   Annual E-Waste
                 </div>
               </div>
@@ -205,7 +195,7 @@ export const ScrollStorySections: React.FC = () => {
                 <div className="text-4xl sm:text-5xl font-mono font-bold text-amber">
                   &lt; <NumberTicker value={22} suffix="%" delay={0.3} />
                 </div>
-                <div className="text-xs text-text-muted mt-1">
+                <div className="text-xs font-mono text-zinc-400 mt-1 uppercase tracking-wider">
                   Formally Recycled
                 </div>
               </div>
@@ -215,9 +205,9 @@ export const ScrollStorySections: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={() => openModal('vault')}
-                className="inline-flex items-center text-xs font-medium text-emerald hover:text-emerald-light transition-colors"
+                className="inline-flex items-center text-xs font-semibold text-emerald hover:text-emerald-light transition-colors cursor-pointer"
               >
-                Inspect Chemical Impact Ledger
+                Inspect Chemical Impact Ledger →
               </button>
             </div>
           </div>
@@ -244,45 +234,41 @@ export const ScrollStorySections: React.FC = () => {
 
           {/* Right Column: Story Copy */}
           <div className="lg:col-span-6 order-1 lg:order-2 space-y-6">
-            <div className="overflow-hidden">
+            <div>
               <motion.span
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: 15, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block text-xs font-semibold text-gold tracking-wide"
+                className="inline-block text-xs font-semibold text-amber uppercase tracking-widest font-mono"
               >
                 Chapter 02 — Architectural Beacons
               </motion.span>
             </div>
 
             <div className="space-y-4">
-              <div className="overflow-hidden">
-                <motion.h2
-                  initial={{ y: '100%', opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-4xl sm:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.06]"
-                >
-                  Monuments of{' '}
-                  <span className="block mt-1 text-gold">
-                    <KineticScrambleText text="Diversion." trigger="inView" duration={1000} />
-                  </span>
-                </motion.h2>
-              </div>
+              <motion.h2
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="text-4xl sm:text-6xl font-black tracking-[-0.03em] text-white leading-[1.06]"
+              >
+                Monuments of{' '}
+                <span className="block mt-1 text-amber">
+                  Diversion.
+                </span>
+              </motion.h2>
 
-              <div className="overflow-hidden">
-                <motion.p
-                  initial={{ y: '100%', opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-base text-text-secondary leading-relaxed"
-                >
-                  Universities rise as 3D holographic towers across the globe. Each tower is enveloped in the live banner of its sustainability partner, with physical elevation scaling directly to verified kilogram diversion.
-                </motion.p>
-              </div>
+              <motion.p
+                initial={{ y: 15, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="text-base text-zinc-400 leading-relaxed max-w-lg"
+              >
+                Universities rise as 3D holographic towers across the globe. Each tower is enveloped in the live banner of its sustainability partner, with physical elevation scaling directly to verified kilogram diversion.
+              </motion.p>
             </div>
 
             {/* Clean Metric Callout */}
@@ -293,8 +279,8 @@ export const ScrollStorySections: React.FC = () => {
               transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-3 pt-2"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface border border-white/10 text-xs font-medium text-emerald">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald" />
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-medium text-emerald">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
                 <span>Tower elevation dynamically calibrated to verified e-waste kilograms</span>
               </div>
             </motion.div>
@@ -303,16 +289,16 @@ export const ScrollStorySections: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={() => scrollToChapter(3)}
-                className="inline-flex items-center text-xs font-medium text-gold hover:text-gold-light transition-colors"
+                className="inline-flex items-center text-xs font-semibold text-amber hover:text-amber-light transition-colors cursor-pointer"
               >
-                Explore the competitive campus war
+                Explore the competitive campus war →
               </button>
             </div>
           </div>
         </div>
 
         {/* Global Corporate Partner Marquee */}
-        <div className="max-w-6xl w-full mx-auto mt-10">
+        <div className="max-w-6xl w-full mx-auto mt-12">
           <SponsorPartnerMarquee />
         </div>
       </section>
@@ -326,13 +312,13 @@ export const ScrollStorySections: React.FC = () => {
       >
         <div className="max-w-3xl w-full text-center space-y-8 pointer-events-auto">
           {/* Subtle Tag */}
-          <div className="overflow-hidden">
+          <div>
             <motion.span
-              initial={{ y: '100%', opacity: 0 }}
+              initial={{ y: 15, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-block text-xs font-semibold text-copper tracking-wide"
+              className="inline-block text-xs font-semibold text-copper uppercase tracking-widest font-mono"
             >
               Chapter 03 — Regional Collegiate Derby
             </motion.span>
@@ -340,32 +326,28 @@ export const ScrollStorySections: React.FC = () => {
 
           {/* Staggered Masked Headline */}
           <div className="space-y-4">
-            <div className="overflow-hidden">
-              <motion.h2
-                initial={{ y: '100%', opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="text-4xl sm:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.06]"
-              >
-                The Campus{' '}
-                <span className="text-text-primary block sm:inline">
-                  <KineticScrambleText text="Collegiate War." trigger="inView" duration={1000} />
-                </span>
-              </motion.h2>
-            </div>
+            <motion.h2
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-6xl font-black tracking-[-0.03em] text-white leading-[1.06]"
+            >
+              The Campus{' '}
+              <span className="text-white block sm:inline">
+                Collegiate War.
+              </span>
+            </motion.h2>
 
-            <div className="overflow-hidden">
-              <motion.p
-                initial={{ y: '100%', opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="text-base text-text-secondary max-w-xl mx-auto leading-relaxed"
-              >
-                Universities duel on a 7-day rolling cycle. Every verified gram of lithium and silicon logs cryptographically attested points to elevate the collegiate tower.
-              </motion.p>
-            </div>
+            <motion.p
+              initial={{ y: 15, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-base text-zinc-400 max-w-xl mx-auto leading-relaxed"
+            >
+              Universities duel on a 7-day rolling cycle. Every verified gram of lithium and silicon logs cryptographically attested points to elevate the collegiate tower.
+            </motion.p>
           </div>
 
           {/* Interactive Live Derby Duel Card */}
@@ -374,14 +356,14 @@ export const ScrollStorySections: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-surface/95 rounded-xl p-6 space-y-5 border border-white/10 shadow-xl"
+            className="bg-[#0D0F14]/90 backdrop-blur-xl rounded-2xl p-6 space-y-5 border border-white/10 shadow-2xl"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs">
-              <span className="text-xs font-semibold text-copper flex items-center gap-1.5 tracking-wide">
+            <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08] text-xs">
+              <span className="text-xs font-bold text-copper flex items-center gap-1.5 tracking-wider uppercase font-mono">
                 <Flame className="w-4 h-4 text-copper" />
                 Regional Derby Spotlight
               </span>
-              <span className="text-xs text-text-muted">Delhi NCR</span>
+              <span className="text-xs font-mono text-zinc-400">Delhi NCR Region</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
@@ -389,20 +371,20 @@ export const ScrollStorySections: React.FC = () => {
               {nsut && (
                 <div
                   onClick={() => selectCampus('nsut')}
-                  className="p-4 rounded-lg bg-surface-elevated border border-copper/30 hover:border-copper/70 cursor-pointer transition-all space-y-2 group"
+                  className="p-4 rounded-xl bg-white/[0.03] border border-copper/30 hover:border-copper/70 hover:bg-white/[0.06] cursor-pointer transition-all space-y-2 group shadow-sm"
                 >
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-copper">Rank #{nsut.allTimeRank}</span>
-                    <span className="text-text-muted">Infosys Partner</span>
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="font-bold text-copper">Rank #{nsut.allTimeRank}</span>
+                    <span className="text-zinc-500 text-[11px]">Infosys Partner</span>
                   </div>
-                  <h4 className="text-base font-bold text-text-primary group-hover:text-copper transition-colors">
+                  <h4 className="text-base font-bold text-white group-hover:text-copper transition-colors">
                     NSUT Delhi
                   </h4>
                   <div className="flex items-baseline justify-between pt-1">
                     <span className="text-2xl font-black font-mono text-copper">
                       {nsut.weeklyKg.toFixed(1)} <span className="text-xs font-normal">kg</span>
                     </span>
-                    <span className="text-xs text-text-muted flex items-center gap-1">
+                    <span className="text-xs text-zinc-400 flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-copper" /> Focus Tower
                     </span>
                   </div>
@@ -413,20 +395,20 @@ export const ScrollStorySections: React.FC = () => {
               {dtu && (
                 <div
                   onClick={() => selectCampus('dtu')}
-                  className="p-4 rounded-lg bg-surface-elevated border border-emerald/30 hover:border-emerald/70 cursor-pointer transition-all space-y-2 group"
+                  className="p-4 rounded-xl bg-white/[0.03] border border-emerald/30 hover:border-emerald/70 hover:bg-white/[0.06] cursor-pointer transition-all space-y-2 group shadow-sm"
                 >
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-emerald">Rank #{dtu.allTimeRank}</span>
-                    <span className="text-text-muted">TCS Partner</span>
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="font-bold text-emerald">Rank #{dtu.allTimeRank}</span>
+                    <span className="text-zinc-500 text-[11px]">TCS Partner</span>
                   </div>
-                  <h4 className="text-base font-bold text-text-primary group-hover:text-emerald transition-colors">
+                  <h4 className="text-base font-bold text-white group-hover:text-emerald transition-colors">
                     DTU Delhi
                   </h4>
                   <div className="flex items-baseline justify-between pt-1">
                     <span className="text-2xl font-black font-mono text-emerald">
                       {dtu.weeklyKg.toFixed(1)} <span className="text-xs font-normal">kg</span>
                     </span>
-                    <span className="text-xs text-text-muted flex items-center gap-1">
+                    <span className="text-xs text-zinc-400 flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-emerald" /> Focus Tower
                     </span>
                   </div>
@@ -435,15 +417,15 @@ export const ScrollStorySections: React.FC = () => {
             </div>
 
             {/* Duel Momentum Bar */}
-            <div className="space-y-1.5 pt-1">
-              <div className="h-2 w-full bg-surface-subtle rounded-sm overflow-hidden flex">
+            <div className="space-y-2 pt-1">
+              <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex">
                 <div className="h-full bg-copper w-[51%]" title="NSUT 51%" />
                 <div className="h-full bg-emerald w-[49%]" title="DTU 49%" />
               </div>
-              <div className="flex justify-between text-xs text-text-muted">
-                <span>NSUT Momentum: <span className="font-mono font-medium text-text-primary">51.2%</span></span>
-                <span className="text-copper font-medium">Gap: <span className="font-mono">1.5 kg</span></span>
-                <span>DTU Momentum: <span className="font-mono font-medium text-text-primary">48.8%</span></span>
+              <div className="flex justify-between text-xs font-mono text-zinc-400">
+                <span>NSUT: <span className="font-bold text-white">51.2%</span></span>
+                <span className="text-copper font-medium">Gap: 1.5 kg</span>
+                <span>DTU: <span className="font-bold text-white">48.8%</span></span>
               </div>
             </div>
 
@@ -451,10 +433,10 @@ export const ScrollStorySections: React.FC = () => {
             <div className="pt-2 flex justify-center">
               <button
                 onClick={toggleLeftDrawer}
-                className="px-5 py-2.5 rounded-md bg-surface-elevated border border-white/10 text-text-primary hover:border-copper/40 text-xs font-medium transition-all flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:border-copper/40 hover:bg-white/[0.08] text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Trophy className="w-3.5 h-3.5 text-copper" />
-                <span>Open Full Global Leaderboard</span>
+                <span>Open Global Collegiate Leaderboard</span>
               </button>
             </div>
           </motion.div>
@@ -472,45 +454,41 @@ export const ScrollStorySections: React.FC = () => {
 
         <div className="max-w-4xl w-full text-center space-y-8 pointer-events-auto">
           {/* Subtle Tag */}
-          <div className="overflow-hidden">
+          <div>
             <motion.span
-              initial={{ y: '100%', opacity: 0 }}
+              initial={{ y: 15, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-block text-xs font-semibold text-copper tracking-wide"
+              className="inline-block text-xs font-semibold text-emerald uppercase tracking-widest font-mono"
             >
               Chapter 04 — Circular Hardware Ecosystem
             </motion.span>
           </div>
 
           <div className="space-y-4">
-            <div className="overflow-hidden">
-              <motion.h2
-                initial={{ y: '100%', opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="text-4xl sm:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.06]"
-              >
-                Connect Your Campus.{' '}
-                <span className="text-text-primary block sm:inline">
-                  <KineticScrambleText text="Close the Planetary Loop." trigger="inView" duration={1100} />
-                </span>
-              </motion.h2>
-            </div>
+            <motion.h2
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-6xl font-black tracking-[-0.03em] text-white leading-[1.06]"
+            >
+              Connect Your Campus.{' '}
+              <span className="text-emerald block sm:inline">
+                Close the Loop.
+              </span>
+            </motion.h2>
 
-            <div className="overflow-hidden">
-              <motion.p
-                initial={{ y: '100%', opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="text-base text-text-secondary max-w-xl mx-auto leading-relaxed"
-              >
-                Deploy an automated kiosk node to your university, sponsor campus hardware diversion, or explore verified metallurgical recovery telemetry.
-              </motion.p>
-            </div>
+            <motion.p
+              initial={{ y: 15, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-base text-zinc-400 max-w-xl mx-auto leading-relaxed"
+            >
+              Deploy an automated kiosk node to your university, sponsor campus hardware diversion, or explore verified metallurgical recovery telemetry.
+            </motion.p>
           </div>
 
           {/* Refined Action Buttons */}
@@ -523,14 +501,14 @@ export const ScrollStorySections: React.FC = () => {
           >
             <button
               onClick={() => openModal('recycle')}
-              className="px-5 py-2.5 rounded-md bg-emerald text-background font-semibold text-xs hover:brightness-105 active:scale-[0.98] transition-all"
+              className="px-6 py-3 rounded-xl bg-emerald hover:bg-emerald-light text-zinc-950 font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-[0.98] cursor-pointer"
             >
               Deploy Campus Kiosk
             </button>
 
             <button
               onClick={() => openModal('vault')}
-              className="px-5 py-2.5 rounded-md bg-surface border border-white/10 text-text-primary hover:border-white/30 text-xs font-semibold tracking-wide transition-all"
+              className="px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:bg-white/[0.08] hover:border-white/20 text-xs font-semibold tracking-wide transition-all active:scale-[0.98] cursor-pointer"
             >
               Open Data Vault
             </button>
@@ -540,7 +518,7 @@ export const ScrollStorySections: React.FC = () => {
           <div className="pt-4">
             <button
               onClick={() => scrollToChapter(0)}
-              className="inline-flex items-center gap-2 text-xs font-medium text-text-muted hover:text-text-primary transition-colors"
+              className="inline-flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-white transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5 text-copper" />
               <span>Return to Top Orbit</span>

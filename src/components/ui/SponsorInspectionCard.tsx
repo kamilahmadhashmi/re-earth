@@ -97,13 +97,13 @@ export const SponsorInspectionCard: React.FC = () => {
         data-prevent-drag="true"
         className="fixed right-3 sm:right-5 top-[84px] sm:top-[88px] bottom-6 sm:bottom-16 z-50 w-[calc(100vw-24px)] sm:w-full max-w-[380px] pointer-events-auto"
       >
-        <div className="h-full bg-[#131922] border border-white/10 rounded-xl flex flex-col overflow-hidden shadow-2xl">
+        <div className="h-full bg-[#0D0F14]/95 backdrop-blur-2xl border border-white/[0.08] rounded-2xl flex flex-col overflow-hidden shadow-spatial">
           
           {/* HEADER BAR */}
-          <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
+          <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
             <button
               onClick={handleClose}
-              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors px-2.5 py-1.5 rounded-md hover:bg-white/5"
+              className="flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back</span>
@@ -124,7 +124,7 @@ export const SponsorInspectionCard: React.FC = () => {
               </span>
               <button
                 onClick={handleClose}
-                className="w-7 h-7 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+                className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -213,7 +213,7 @@ export const SponsorInspectionCard: React.FC = () => {
             </div>
 
             {/* SCOPE 3 ESG DIVIDENDS */}
-            <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+            <div className="p-3.5 rounded-xl bg-surface-elevated border border-white/[0.06] space-y-2.5">
               <div className="flex items-center justify-between text-xs pb-1 border-b border-white/[0.06]">
                 <span className="text-text-secondary font-medium flex items-center gap-1.5">
                   <Leaf className="w-3.5 h-3.5 text-emerald" />
@@ -225,19 +225,19 @@ export const SponsorInspectionCard: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded bg-white/[0.02] border border-white/[0.04]">
+                <div className="p-2 rounded-lg bg-surface border border-white/[0.04]">
                   <p className="text-[10px] text-text-muted">CO₂ Avoided</p>
                   <p className="text-sm font-bold text-text-primary font-mono mt-0.5">
                     {(co2AvoidedKg / 1000).toFixed(1)}t
                   </p>
                 </div>
-                <div className="p-2 rounded bg-white/[0.02] border border-white/[0.04]">
+                <div className="p-2 rounded-lg bg-surface border border-white/[0.04]">
                   <p className="text-[10px] text-text-muted">Copper</p>
                   <p className="text-sm font-bold text-copper font-mono mt-0.5">
                     {copperReclaimedKg}kg
                   </p>
                 </div>
-                <div className="p-2 rounded bg-white/[0.02] border border-white/[0.04]">
+                <div className="p-2 rounded-lg bg-surface border border-white/[0.04]">
                   <p className="text-[10px] text-text-muted">Rare Earths</p>
                   <p className="text-sm font-bold text-gold font-mono mt-0.5">
                     {rareEarthGrams}g
@@ -247,7 +247,7 @@ export const SponsorInspectionCard: React.FC = () => {
             </div>
 
             {/* 6-MONTH COLLECTION TRAJECTORY CHART */}
-            <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/[0.06] space-y-2.5">
+            <div className="p-3.5 rounded-xl bg-surface-elevated border border-white/[0.06] space-y-2.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-text-secondary font-medium flex items-center gap-1.5">
                   <TrendingUp className="w-3.5 h-3.5 text-cyan" />

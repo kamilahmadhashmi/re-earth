@@ -207,8 +207,8 @@ export const RecycleModuleModal: React.FC = () => {
               <button
                 id="btn-kiosk-modal-logout"
                 onClick={async () => {
-                  await logout()
                   openModal(null)
+                  await logout()
                 }}
                 title="Log Out of Current Session"
                 className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 hover:bg-amber/20 hover:text-amber text-text-muted transition-all border border-white/10 hover:border-amber/30 text-xs font-mono font-bold cursor-pointer"
@@ -222,6 +222,7 @@ export const RecycleModuleModal: React.FC = () => {
               </kbd>
 
               <button
+                id="btn-close-recycle-modal"
                 onClick={() => openModal(null)}
                 className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-text-muted hover:text-text-primary border border-white/10 transition-colors cursor-pointer"
               >

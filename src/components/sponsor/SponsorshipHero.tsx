@@ -12,7 +12,8 @@ import {
   Scale
 } from 'lucide-react'
 import { trackSponsorEvent } from '../../utils/sponsorAnalytics'
-import { TerraMascot } from './TerraMascot'
+import { SPONSORS } from '../../data/sponsors'
+import { SponsorLogo } from '../ui/SponsorLogo'
 
 interface SponsorshipHeroProps {
   onExploreHowItWorks: () => void
@@ -24,42 +25,35 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
   onBecomeSponsor
 }) => {
   return (
-    <section className="relative pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
-      {/* Subtle Ambient Glow Orbs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-emerald/10 blur-[130px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute top-1/3 right-10 w-[350px] h-[300px] bg-amber/8 blur-[110px] rounded-full pointer-events-none -z-10" />
+    <section className="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+      {/* Subtle Restrained Ambient Depth */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[360px] bg-emerald/[0.06] blur-[140px] rounded-full pointer-events-none -z-10" />
 
       {/* 1. Header Typography */}
-      <div className="text-center max-w-3xl mx-auto space-y-5">
-        {/* Terra Mascot & Eyebrow Pill */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <TerraMascot
-            pose="welcome"
-            size={56}
-            speechBubbleText="Hi, I'm Terra — let's build campus circularity!"
-          />
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass-pill specular-rim text-[11px] font-mono font-bold tracking-wider uppercase text-amber border border-amber/30 shadow-amber-glow"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber animate-pulse" />
-            <span>Founding Corporate Partnerships</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-amber" />
-          </motion.div>
-        </div>
+      <div className="text-center max-w-4xl mx-auto space-y-6">
+        {/* Institutional Eyebrow Pill */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl text-[11px] font-mono tracking-wider uppercase"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
+          <span className="text-emerald font-bold">Founding Corporate Underwriting</span>
+          <span className="text-white/20">•</span>
+          <span className="text-text-muted">Collegiate Circularity Pilot</span>
+        </motion.div>
 
         {/* Main Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary leading-[1.12]"
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary leading-[1.08]"
         >
-          Turn Your Brand Into a{' '}
-          <span className="text-emerald">
-            Force for Change.
+          Turn Dead Tech Into{' '}
+          <span className="bg-gradient-to-r from-emerald via-emerald-light to-cyan bg-clip-text text-transparent">
+            Living Earth.
           </span>
         </motion.h1>
 
@@ -68,10 +62,9 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="text-base sm:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed"
+          className="text-base sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed font-normal"
         >
-          Support college-led recycling, empower local recycling workers, and help turn environmental
-          commitments into measurable action.
+          Direct corporate capital into verified campus recovery pods, empower local waste recovery workers, and achieve audit-grade Scope 3 ESG attribution.
         </motion.p>
 
         {/* Primary & Secondary Call to Actions */}
@@ -79,16 +72,16 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center justify-center gap-4 pt-3"
+          className="flex flex-wrap items-center justify-center gap-4 pt-4"
         >
           <button
             onClick={() => {
               trackSponsorEvent('sponsor_package_selected', { source: 'hero_primary_cta' })
               onBecomeSponsor()
             }}
-            className="px-7 py-3.5 rounded-full bg-amber text-background font-bold text-sm tracking-wide shadow-amber-glow hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 group cursor-pointer"
+            className="px-8 py-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.98] text-black font-bold text-xs tracking-wider uppercase transition-all shadow-spatial flex items-center gap-2.5 group cursor-pointer"
           >
-            <span>Become a Founding Sponsor</span>
+            <span>Initiate Corporate Underwriting</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
 
@@ -97,9 +90,9 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
               trackSponsorEvent('sponsor_page_view', { source: 'hero_secondary_cta' })
               onExploreHowItWorks()
             }}
-            className="px-6 py-3.5 rounded-full liquid-glass-pill liquid-glass-control text-text-primary hover:text-white border-white/10 hover:border-emerald/40 text-sm font-semibold tracking-wide transition-all flex items-center gap-2 cursor-pointer"
+            className="px-7 py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-text-primary text-xs font-semibold tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer"
           >
-            <span>Explore How It Works</span>
+            <span>Explore 4-Node Ecosystem</span>
             <ChevronDown className="w-4 h-4 text-emerald" />
           </button>
         </motion.div>
@@ -108,6 +101,35 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
         <p className="text-[11px] font-mono text-text-muted pt-1">
           Proposed 90-day founding pilot • Direct campus attribution • Zero fabricated metrics
         </p>
+
+        {/* Corporate Underwriter Partner Logo Strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.35 }}
+          className="pt-8 border-t border-white/[0.06] mt-8"
+        >
+          <div className="text-[10px] font-mono uppercase tracking-widest text-text-muted mb-4">
+            Underwriting Alignment & Pilot Benchmarks
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 opacity-75 hover:opacity-100 transition-opacity">
+            {SPONSORS.map((s) => (
+              <div
+                key={s.id}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-white/[0.06] hover:border-white/[0.15] transition-all"
+                title={`${s.name} (${s.ticker})`}
+              >
+                <div className="w-5 h-5 flex items-center justify-center">
+                  <SponsorLogo sponsorId={s.id} className="w-4 h-4" />
+                </div>
+                <span className="text-xs font-semibold text-text-primary font-sans">{s.name}</span>
+                <span className="text-[9px] font-mono text-text-muted border-l border-white/10 pl-1.5">
+                  {s.ticker}
+                </span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       {/* 2. Visual Representation of the Ecosystem & Real Campus Photo */}
@@ -115,11 +137,11 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-        className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
+        className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
       >
         {/* Left: Authentic Campus Collection Hub Image with VisionOS Treatment */}
-        <div className="lg:col-span-7 relative rounded-card overflow-hidden border border-white/10 liquid-glass p-2 shadow-liquid-glass flex flex-col justify-between group">
-          <div className="relative rounded-[16px] overflow-hidden aspect-[16/10] sm:aspect-[16/9] w-full bg-surface-elevated">
+        <div className="lg:col-span-7 relative rounded-2xl overflow-hidden border border-white/[0.08] bg-surface p-2 shadow-spatial flex flex-col justify-between group">
+          <div className="relative rounded-xl overflow-hidden aspect-[16/10] sm:aspect-[16/9] w-full bg-surface-elevated">
             <img
               src="/images/campus_recycling_hero.jpg"
               alt="Collegiate e-waste sorting workshop and student sustainability drive"
@@ -127,16 +149,16 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
               loading="eager"
             />
             {/* Soft dark gradient vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/25 to-transparent" />
 
             {/* Inset Badge */}
-            <div className="absolute top-3.5 left-3.5 flex items-center gap-2 px-3 py-1 rounded-full bg-background/70 backdrop-blur-md border border-white/15 text-[11px] font-mono text-text-primary">
-              <span className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
+            <div className="absolute top-3.5 left-3.5 flex items-center gap-2 px-3 py-1 rounded-full bg-background/80 backdrop-blur-md border border-white/[0.12] text-[11px] font-mono text-text-primary">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
               <span>COLLEGIATE RECOVERY WORKSHOP</span>
             </div>
 
             {/* Inset Bottom Caption */}
-            <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between text-xs text-text-primary bg-background/60 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/10">
+            <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between text-xs text-text-primary bg-background/70 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-white/[0.1]">
               <span className="font-medium truncate mr-2">
                 Student mobilization meets local informal recycling collectors.
               </span>
@@ -148,9 +170,9 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
         </div>
 
         {/* Right: 4-Node Connected Ecosystem Schematic */}
-        <div className="lg:col-span-5 rounded-card border border-white/10 liquid-glass p-6 sm:p-7 flex flex-col justify-between shadow-liquid-glass">
+        <div className="lg:col-span-5 rounded-2xl border border-white/[0.08] bg-surface p-6 sm:p-7 flex flex-col justify-between shadow-spatial">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.06]">
               <div className="flex items-center gap-2">
                 <Layers className="w-4 h-4 text-emerald" />
                 <h3 className="text-xs font-bold font-mono uppercase text-text-primary tracking-wider">
@@ -168,16 +190,16 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
             </p>
 
             {/* 4 Interactive Nodes */}
-            <div className="space-y-3 mt-5">
+            <div className="space-y-2.5 mt-5">
               {/* Node 1: Corporate Sponsor */}
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-amber/20 hover:border-amber/40 transition-colors">
-                <div className="w-8 h-8 rounded-lg bg-amber/15 text-amber flex items-center justify-center shrink-0 font-bold text-xs border border-amber/30">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface-elevated border border-white/[0.06] hover:border-copper/40 transition-colors">
+                <div className="w-8 h-8 rounded-lg bg-copper/15 text-copper flex items-center justify-center shrink-0 font-bold text-xs border border-copper/30">
                   <Building2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-bold text-text-primary">1. Corporate Sponsor</h4>
-                    <span className="text-[9px] font-mono text-amber">CATALYST</span>
+                    <span className="text-[9px] font-mono text-copper">CATALYST</span>
                   </div>
                   <p className="text-[11px] text-text-secondary mt-0.5">
                     Provides bins, weighing scales, and operational logistics funding.
@@ -186,7 +208,7 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
               </div>
 
               {/* Node 2: College Campus */}
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-emerald/20 hover:border-emerald/40 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface-elevated border border-white/[0.06] hover:border-emerald/40 transition-colors">
                 <div className="w-8 h-8 rounded-lg bg-emerald/15 text-emerald flex items-center justify-center shrink-0 font-bold text-xs border border-emerald/30">
                   <GraduationCap className="w-4 h-4" />
                 </div>
@@ -202,7 +224,7 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
               </div>
 
               {/* Node 3: Kabadiwalas */}
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-cyan/20 hover:border-cyan/40 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface-elevated border border-white/[0.06] hover:border-cyan/40 transition-colors">
                 <div className="w-8 h-8 rounded-lg bg-cyan/15 text-cyan flex items-center justify-center shrink-0 font-bold text-xs border border-cyan/30">
                   <Truck className="w-4 h-4" />
                 </div>
@@ -218,7 +240,7 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
               </div>
 
               {/* Node 4: RE—EARTH Platform */}
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.03] border border-lavender/20 hover:border-lavender/40 transition-colors">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-surface-elevated border border-white/[0.06] hover:border-lavender/40 transition-colors">
                 <div className="w-8 h-8 rounded-lg bg-lavender/15 text-lavender flex items-center justify-center shrink-0 font-bold text-xs border border-lavender/30">
                   <Scale className="w-4 h-4" />
                 </div>
@@ -236,7 +258,7 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
           </div>
 
           {/* Bottom Trust Seal */}
-          <div className="pt-4 mt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-text-muted font-mono">
+          <div className="pt-4 mt-4 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-text-muted font-mono">
             <span className="flex items-center gap-1.5 text-text-secondary">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald" />
               <span>Independent Digital Verification</span>
@@ -248,3 +270,4 @@ export const SponsorshipHero: React.FC<SponsorshipHeroProps> = ({
     </section>
   )
 }
+

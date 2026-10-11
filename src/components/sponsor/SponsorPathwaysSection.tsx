@@ -40,11 +40,11 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
           const isFeatured = pathway.id === 'corporate_sustainability'
           const icon =
             pathway.id === 'local_business' ? (
-              <Building className="w-5 h-5" />
+              <Building className="w-5 h-5 text-copper" />
             ) : pathway.id === 'corporate_sustainability' ? (
-              <Landmark className="w-5 h-5" />
+              <Landmark className="w-5 h-5 text-emerald" />
             ) : (
-              <Globe className="w-5 h-5" />
+              <Globe className="w-5 h-5 text-cyan" />
             )
 
           return (
@@ -54,17 +54,21 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className={`rounded-card p-7 flex flex-col justify-between transition-all duration-300 relative group ${
+              className={`rounded-2xl p-7 flex flex-col justify-between transition-all duration-300 relative group ${
                 isFeatured
-                  ? 'liquid-glass border-emerald/50 bg-emerald/[0.04] shadow-liquid-glass lg:-translate-y-2'
-                  : 'liquid-glass border-white/10 hover:border-white/20'
+                  ? 'bg-[#0E1318] border border-emerald/40 shadow-spatial lg:-translate-y-1.5'
+                  : 'bg-surface border border-white/[0.08] hover:border-white/[0.15] shadow-spatial'
               }`}
             >
               {/* Top Banner Tag */}
               <div>
-                <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/[0.08]">
+                <div className="flex items-center justify-between gap-2 pb-4 border-b border-white/[0.06]">
                   <span
-                    className={`text-[10px] font-mono px-2.5 py-1 rounded-full font-bold uppercase tracking-wider border ${pathway.badgeColor}`}
+                    className={`text-[10px] font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider border ${
+                      isFeatured
+                        ? 'bg-emerald/15 text-emerald border-emerald/30'
+                        : 'bg-white/[0.04] text-text-muted border-white/[0.08]'
+                    }`}
                   >
                     {pathway.badge}
                   </span>
@@ -75,10 +79,10 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
 
                 {/* Title & Subtitle */}
                 <div className="mt-5">
-                  <div className="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-text-primary mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-surface-elevated border border-white/[0.08] flex items-center justify-center text-text-primary mb-3.5">
                     {icon}
                   </div>
-                  <h3 className="text-xl font-bold text-text-primary group-hover:text-emerald transition-colors">
+                  <h3 className="text-xl font-bold text-text-primary group-hover:text-emerald transition-colors tracking-tight">
                     {pathway.title}
                   </h3>
                   <p className="text-xs text-text-secondary mt-1.5 leading-relaxed">
@@ -87,8 +91,8 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
                 </div>
 
                 {/* Target Profile */}
-                <div className="mt-5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <span className="text-[10px] font-mono text-text-muted uppercase tracking-wider block">
+                <div className="mt-5 p-3.5 rounded-xl bg-surface-elevated border border-white/[0.06]">
+                  <span className="text-[10px] font-mono text-text-muted uppercase tracking-wider block font-bold">
                     Ideal Participant
                   </span>
                   <p className="text-xs text-text-secondary mt-1 leading-normal">
@@ -124,7 +128,7 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
               </div>
 
               {/* Bottom CTA Button */}
-              <div className="pt-8 mt-6 border-t border-white/[0.08]">
+              <div className="pt-8 mt-6 border-t border-white/[0.06]">
                 <button
                   onClick={() => {
                     trackSponsorEvent('sponsor_package_selected', {
@@ -133,10 +137,10 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
                     })
                     onSelectPathway(pathway.id)
                   }}
-                  className={`w-full py-3.5 px-4 rounded-full font-bold text-xs tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     isFeatured
-                      ? 'bg-emerald hover:brightness-105 active:scale-[0.98] text-background shadow-emerald-glow'
-                      : 'bg-white/10 hover:bg-white/15 active:scale-[0.98] text-text-primary hover:border-white/20 border border-white/10'
+                      ? 'bg-emerald hover:bg-emerald-light active:scale-[0.98] text-black shadow-spatial'
+                      : 'bg-white/[0.05] hover:bg-white/[0.1] active:scale-[0.98] text-text-primary border border-white/[0.08]'
                   }`}
                 >
                   <span>{pathway.ctaText}</span>
@@ -152,9 +156,9 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
       </div>
 
       {/* Flexible Budget Consultation Callout */}
-      <div className="mt-12 p-6 rounded-2xl bg-white/[0.02] border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="mt-12 p-6 rounded-2xl bg-surface border border-white/[0.08] shadow-spatial flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-amber/15 text-amber flex items-center justify-center shrink-0 border border-amber/30">
+          <div className="w-9 h-9 rounded-xl bg-copper/15 text-copper flex items-center justify-center shrink-0 border border-copper/30">
             <HelpCircle className="w-4 h-4" />
           </div>
           <div>
@@ -169,7 +173,7 @@ export const SponsorPathwaysSection: React.FC<SponsorPathwaysSectionProps> = ({
 
         <button
           onClick={() => onSelectPathway('corporate_sustainability')}
-          className="shrink-0 px-4 py-2 rounded-full text-xs font-semibold text-amber bg-amber/10 border border-amber/30 hover:bg-amber/20 transition-all cursor-pointer"
+          className="shrink-0 px-4 py-2 rounded-xl text-xs font-semibold text-text-primary bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] transition-all cursor-pointer uppercase font-mono tracking-wider"
         >
           Discuss Custom Pilot
         </button>
