@@ -18,6 +18,7 @@
     "lint:unused": "knip",
     "monitor:aws": "python scripts/cloudwatch_probe.py",
     "vault:s3": "python scripts/setup_s3_vault.py",
+    "services:aws": "python scripts/check_aws_services.py",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles"
   },
