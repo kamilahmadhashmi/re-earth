@@ -5,6 +5,7 @@ import { Html } from '@react-three/drei'
 import type { RankedSponsor } from '../../shared/ranking'
 import { SPONSOR_THEMES } from '../../data/sponsorBannerThemes'
 import type { TreeSpatialConfig } from '../../utils/treeSpatialLayout'
+import { SponsorLogo } from '../ui/SponsorLogo'
 
 interface CyberneticTreeProps {
   sponsor: RankedSponsor
@@ -583,6 +584,9 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
               {/* Header: Rank, Sponsor Name & Verified Weight */}
               <div className="flex items-center justify-between w-full pb-1.5 border-b border-white/[0.08] gap-2">
                 <div className="flex items-center gap-1.5 min-w-0">
+                  <div className="w-5 h-5 rounded bg-black/40 border border-white/10 flex items-center justify-center p-0.5 shrink-0">
+                    <SponsorLogo sponsorId={sponsor.id} className="w-3.5 h-3.5" />
+                  </div>
                   <span
                     className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0"
                     style={{ backgroundColor: `${sponsor.color}25`, color: sponsor.color }}
@@ -629,6 +633,9 @@ export const CyberneticTree: React.FC<CyberneticTreeProps> = ({
                 boxShadow: '0 4px 14px -2px rgba(0, 0, 0, 0.7)'
               }}
             >
+              <div className="w-4 h-4 rounded bg-black/40 border border-white/10 flex items-center justify-center p-0.5 shrink-0">
+                <SponsorLogo sponsorId={sponsor.id} className="w-3 h-3" />
+              </div>
               <span className="font-bold text-[11px] text-white tracking-tight">
                 {sponsor.name}
               </span>

@@ -24,8 +24,13 @@ async function run() {
   await page.evaluate(() => {
     const el = document.getElementById('chapter-beacons')
     if (el) el.scrollIntoView({ behavior: 'instant' })
+    const marquee = document.querySelector('.animate-marquee')
+    if (marquee) {
+      marquee.style.animation = 'none'
+      marquee.style.transform = 'translateX(0px)'
+    }
   })
-  await page.waitForTimeout(2000)
+  await page.waitForTimeout(1000)
   await page.screenshot({
     path: path.join(ARTIFACT_DIR, 'sponsor_showcase_marquee_chapter2.png'),
     fullPage: false

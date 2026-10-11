@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react'
 import { useWorldStore } from '../../store/useWorldStore'
 import { SPONSOR_MAP } from '../../data/sponsors'
+import { SponsorLogo } from './SponsorLogo'
 
 export const TopTenDrawer: React.FC = () => {
   const {
@@ -205,24 +206,30 @@ export const TopTenDrawer: React.FC = () => {
                               }`}
                             >
                               <div className="flex items-center gap-2.5 min-w-0">
-                                <div className="w-6 h-6 rounded flex items-center justify-center shrink-0 font-mono text-xs font-bold">
-                                  <span
-                                    className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border"
-                                    style={{
-                                      backgroundColor: `${sponsor.color}15`,
-                                      color: sponsor.color,
-                                      borderColor: `${sponsor.color}40`
-                                    }}
-                                  >
-                                    #{rank}
-                                  </span>
+                                <div
+                                  className="w-8 h-8 rounded-md bg-[#0E131A] border border-white/10 flex items-center justify-center p-1.5 shrink-0 shadow-inner"
+                                  style={{ boxShadow: `0 2px 6px -2px ${sponsor.color}35` }}
+                                >
+                                  <SponsorLogo sponsorId={sponsor.id} className="w-full h-full object-contain" />
                                 </div>
 
                                 <div className="min-w-0">
-                                  <p className="text-xs font-bold text-text-primary truncate group-hover:text-emerald transition-colors">
-                                    {sponsor.name}
-                                  </p>
-                                  <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
+                                  <div className="flex items-center gap-1.5">
+                                    <span
+                                      className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border"
+                                      style={{
+                                        backgroundColor: `${sponsor.color}15`,
+                                        color: sponsor.color,
+                                        borderColor: `${sponsor.color}40`
+                                      }}
+                                    >
+                                      #{rank}
+                                    </span>
+                                    <p className="text-xs font-bold text-text-primary truncate group-hover:text-emerald transition-colors">
+                                      {sponsor.name}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-[10px] text-text-muted mt-0.5">
                                     <span>{sponsor.ticker}</span>
                                     <span>•</span>
                                     <span>{sponsor.campusCount} {sponsor.campusCount === 1 ? 'Campus' : 'Campuses'}</span>

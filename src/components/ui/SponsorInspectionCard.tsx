@@ -13,6 +13,7 @@ import {
 import { useWorldStore } from '../../store/useWorldStore'
 import { SPONSOR_MAP } from '../../data/sponsors'
 import { SPONSOR_THEMES, generateCampusCollectionHistory } from '../../data/sponsorBannerThemes'
+import { SponsorLogo } from './SponsorLogo'
 
 export const SponsorInspectionCard: React.FC = () => {
   const {
@@ -152,10 +153,18 @@ export const SponsorInspectionCard: React.FC = () => {
                   Verified Partner
                 </span>
               </div>
-              <div className="flex items-baseline justify-between gap-2">
-                <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-                  {sponsor.name}
-                </h1>
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className="w-10 h-10 rounded-lg bg-[#0E131A] border border-white/10 flex items-center justify-center p-2 shrink-0 shadow-inner"
+                    style={{ boxShadow: `0 2px 8px -2px ${sponsor.color}35` }}
+                  >
+                    <SponsorLogo sponsorId={sponsor.id} className="w-full h-full object-contain" />
+                  </div>
+                  <h1 className="text-2xl font-bold text-text-primary tracking-tight truncate">
+                    {sponsor.name}
+                  </h1>
+                </div>
                 <a
                   href={sponsor.website}
                   target="_blank"
