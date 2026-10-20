@@ -13,8 +13,7 @@
 [![YouTube Demo](https://img.shields.io/badge/YouTube-Watch%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/iOFiawsw2dg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-A855F7?style=for-the-badge)](LICENSE)
 
-🔗 **Live Application (AWS Amplify):** [https://main.d3cukmq7nr5vg3.amplifyapp.com](https://main.d3cukmq7nr5vg3.amplifyapp.com)  
-🌐 **GitHub Pages Mirror:** [https://kamilahmadhashmi.github.io/re-earth/](https://kamilahmadhashmi.github.io/re-earth/)  
+🔗 **Live Application (AWS Amplify):** [https://main.d3cukmq7nr5vg3.amplifyapp.com/](https://main.d3cukmq7nr5vg3.amplifyapp.com/)  
 📺 **Full Video Demonstration:** [https://youtu.be/iOFiawsw2dg](https://youtu.be/iOFiawsw2dg)  
 🏆 **Built for:** [WeMakeDevs AWS Environmental Hackathon 2026](https://www.wemakedevs.org/aws/env)
 
